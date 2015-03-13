@@ -31,7 +31,10 @@ public class NetworkSyncedCart : MonoBehaviour
 		{
 			Vector3 pos = transform.localPosition;
 			Quaternion rot = transform.localRotation;
-			bool drift = cartCont.drifting;
+			bool drift;
+			if(cartCont != null)
+				drift = cartCont.drifting;
+			else drift = false;
 			stream.Serialize(ref pos);
 			stream.Serialize(ref rot);
 			stream.Serialize(ref drift);
@@ -84,7 +87,7 @@ public class NetworkSyncedCart : MonoBehaviour
 			// Use interpolation
 			// Check if latest state exceeds interpolation time, if this is the case then
 			// it is too old and extrapolation should be used
-			if (m_BufferedState[0].timestamp > interpolationTime)
+			if (m_BufferedState.Count > 1 && m_BufferedState[0].timestamp > interpolationTime)
 			{
 				for (int i=0;i<m_TimestampCount;i++)
 				{
