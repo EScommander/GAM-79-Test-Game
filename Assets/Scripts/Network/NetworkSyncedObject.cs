@@ -74,7 +74,7 @@ public class NetworkSyncedObject : MonoBehaviour
 			// Use interpolation
 			// Check if latest state exceeds interpolation time, if this is the case then
 			// it is too old and extrapolation should be used
-			if (m_BufferedState[0].timestamp > interpolationTime)
+			if (m_BufferedState.Count > 1 && m_BufferedState[0].timestamp > interpolationTime)
 			{
 				for (int i=0;i<m_TimestampCount;i++)
 				{

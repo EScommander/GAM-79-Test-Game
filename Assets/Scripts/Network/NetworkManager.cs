@@ -14,8 +14,8 @@ using System.Collections.Generic;
 
 public class NetworkManager : MonoBehaviour 
 {
-	private const string typeName = "MyUniqueGameType-NORCOGAM52_JER";
-	private string gameName = "Echo Chat!";
+	private const string typeName = "Norco-Studio-Class";
+	private string gameName = "KartRacer";
 
 	private HostData[] hostList; // USED FOR CLIENT ONLY
 	private Vector2 scrollPosition;
@@ -42,6 +42,10 @@ public class NetworkManager : MonoBehaviour
 
 	public GUIStyle countDownStyle;
 
+	bool searchingForGame = false;
+	bool connected = false;
+	int hostAttempt = 0;
+
 
 //	private CharacterUI charUI;
 
@@ -62,12 +66,27 @@ public class NetworkManager : MonoBehaviour
 			Camera.main.transform.localPosition = new Vector3(0,1.4f,-2.15f);
 		}
 
+
 		//MasterServer.ipAddress = YOUR OWN SERVER IP
 	}
-	
+
 	// Update is called once per frame
 	void Update () 
 	{
+		if (!connected && searchingForGame) 
+		{
+			RefreshHostList();
+			if(hostList != null)
+			{
+				if(hostAttempt < hostList.Length)
+				{
+					Network.Connect(hostList[hostAttempt]);
+					connected = true;
+				}
+				else StartServer();
+			}
+		}
+
 		if(!countDownStarted && Network.isServer)
 		{
 			if(clients.Count + 1 >= minPlayers)
@@ -95,41 +114,14 @@ public class NetworkManager : MonoBehaviour
 	{
 		if(isOnline)
 		{
-			if (!Network.isClient && !Network.isServer) 
+			if (!searchingForGame && !Network.isClient && !Network.isServer) 
 			{
-				GUI.Label ( new Rect(100,25, 100, 25), "Game Name:");
-				gameName = GUI.TextField( new Rect(100, 50, 200, 25), gameName);
-				if(GUI.Button (new Rect(100, 100, 250, 100), "Create Game"))
+				if(GUI.Button (new Rect(100, 100, 250, 100), "Find Game"))
 				{
-					StartServer();
+					searchingForGame = true;
 				}
-
-				//CLIENT ONLY
-				if(GUI.Button (new Rect(100, 250, 250, 100), "Join Game"))
-				{
-					RefreshHostList();
-				}
-
-				if(hostList != null)
-				{
-					scrollPosition = GUI.BeginScrollView(new Rect(400, 110, 320, 400), scrollPosition, new Rect(0, 0, 300, 110 *hostList.Length));
-					for(int i = 0; i < hostList.Length; i++)
-					{
-						if(GUI.Button (new Rect(0, 0 + (110*i), 300, 100), hostList[i].gameName))
-						{
-							JoinServer(hostList[i]);
-							Debug.Log ("Trying to connect to " + hostList[i].gameName);
-						}
-					}
-
-					GUI.EndScrollView();
-				}
-				//CLIENT END
 			}
-//			if(Network.isClient)
-//			{
-//
-//			}
+
 
 
 			if(!gameStarted && raceStart > Network.time)
@@ -152,7 +144,7 @@ public class NetworkManager : MonoBehaviour
 	private void StartServer()
 	{
 							  //(int connections, int listenPort, bool useNat) -- 20 used in FTP, 80 used for Internet traffic
-		Network.InitializeServer (32, 25000, !Network.HavePublicAddress ());
+		Network.InitializeServer (minPlayers, 25000, !Network.HavePublicAddress ());
 		MasterServer.RegisterHost (typeName, gameName);
 	}
 
@@ -186,6 +178,7 @@ public class NetworkManager : MonoBehaviour
 		//CharacterUI.GetInstance ().EnableGUI();
 //		CharacterUI.GetInstance ().NetworkInstantiateCharacter ();
 //		GameStateManager.GetInstance ().ConnectedToNetwork ();
+		connected = true;
 		Debug.Log (Network.player);
 		GameObject myCar = (GameObject)Network.Instantiate(carPrefab, carPrefab.transform.position, carPrefab.transform.rotation, 0);
 
@@ -195,9 +188,16 @@ public class NetworkManager : MonoBehaviour
 		Debug.Log ("Server Initialized");
 	}
 
+	void OnFailedToConnect(NetworkConnectionError error)
+	{
+		hostAttempt++;
+		connected = false;
+	}
+
 	void OnConnectedToServer()
 	{
 		Debug.Log ("Joined Server!");
+		connected = true;
 		JoinClientListOnServer ();
 		int playerPos = int.Parse(Network.player.ToString());
 		Debug.Log (playerPos);
@@ -211,6 +211,11 @@ public class NetworkManager : MonoBehaviour
 		//CharacterUI.GetInstance ().NetworkInstantiateCharacter ();
 		//GameStateManager.GetInstance ().ConnectedToNetwork ();
 		//SpawnPlayer();
+	}
+
+	void GetHostList()
+	{
+
 	}
 
 	void RefreshHostList()
