@@ -170,25 +170,60 @@ public class CartController : MonoBehaviour
 
 			RaycastHit hit;
 
-			if(Physics.Raycast(new Ray(transform.position, Vector3.down), out hit))
+			if(Physics.Raycast(new Ray(transform.position, -transform.up), out hit, 20.0f))
 			{
 				if(hit.distance > suspension)
 				{
-					this.rigidbody.AddForce(Vector3.down * cartGravity * (hit.distance - suspension));
+					this.rigidbody.AddForce(-transform.up * cartGravity * Mathf.Min(1,(hit.distance - suspension)));
 				}
 				else if(hit.distance < suspension)
 				{
-					this.rigidbody.AddForce(Vector3.up * cartGravity * (suspension - hit.distance));
+					this.rigidbody.AddForce(transform.up * cartGravity * Mathf.Min(1,(suspension - hit.distance)));
+				}
+			}
+			else
+			{
+				this.rigidbody.AddForce(Vector3.down * cartGravity);
+			}
+
+			if(Physics.Raycast(new Ray(transform.position + transform.right, -transform.up), out hit))
+			{
+				if(hit.distance < suspension)
+				{
+					this.rigidbody.AddTorque(transform.forward * Mathf.Min(1,(suspension - hit.distance)));
 				}
 			}
 
-			if(rigidbody.velocity.x >= this.topSpeed)
+			if(Physics.Raycast(new Ray(transform.position - transform.right, -transform.up), out hit))
+			{
+				if(hit.distance < suspension)
+				{
+					this.rigidbody.AddTorque(-transform.forward * Mathf.Min(1,(suspension - hit.distance)));
+				}
+			}
+
+			if(Physics.Raycast(new Ray(transform.position + (transform.forward * 2), -transform.up), out hit))
+			{
+				if(hit.distance < suspension)
+				{
+					this.rigidbody.AddTorque(-transform.right * Mathf.Min(1,((suspension - hit.distance) * 0.5f)) * (cartGravity * 0.5f));
+				}
+			}
+
+			if(Physics.Raycast(new Ray(transform.position - (transform.forward * 2), -transform.up), out hit))
+			{
+				if(hit.distance < suspension)
+				{
+					this.rigidbody.AddTorque(transform.right * Mathf.Min(1,((suspension - hit.distance)* 0.5f)) * (cartGravity * 0.5f));
+				}
+			}
+
+			/*if(rigidbody.velocity.x >= this.topSpeed)
 			{
 				rigidbody.velocity = new Vector3(this.topSpeed, rigidbody.velocity.y, rigidbody.velocity.z);
-			}
+			}*/
 		
 			this.Speedometer = rigidbody.velocity.magnitude;
 		}
-
 	}
 }
