@@ -174,16 +174,11 @@ public class CartController : MonoBehaviour
 			{
 				if(hit.distance > suspension)
 				{
-					this.rigidbody.AddForce(Vector3.down * cartGravity);
+					this.rigidbody.AddForce(Vector3.down * cartGravity * (hit.distance - suspension));
 				}
 				else if(hit.distance < suspension)
 				{
-					this.rigidbody.AddForce(Vector3.up * cartGravity);
-				}
-
-				if(hit.distance <= suspension * 1.1f)
-				{
-					rigidbody.velocity = new Vector3(rigidbody.velocity.x, 0.0f, rigidbody.velocity.z);
+					this.rigidbody.AddForce(Vector3.up * cartGravity * (suspension - hit.distance));
 				}
 			}
 
