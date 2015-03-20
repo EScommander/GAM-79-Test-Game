@@ -9,6 +9,11 @@ public class CartController : MonoBehaviour
 	public float acceleration = 30.0f;
 	public float topSpeed = 100.0f;
 
+	public float cartStabilizationThreshold = 0.0f;
+	public float cartStabilizationDampener = 0.1f;
+	public float cartStabilizationUpThrust = 2.0f;
+	public float cartStabilizationSusp = 1.0f;
+
 	public float traction = 1.0f;
 	public float rotationalTraction = 2.0f;
 
@@ -174,7 +179,7 @@ public class CartController : MonoBehaviour
 			{
 				if(hit.distance > suspension)
 				{
-					this.rigidbody.AddForce(-transform.up * cartGravity * Mathf.Min(1,(hit.distance - suspension)));
+					this.rigidbody.AddForce(-transform.up * cartGravity * Mathf.Min(0.7f,(hit.distance - suspension)));
 				}
 				else if(hit.distance < suspension)
 				{
@@ -206,7 +211,19 @@ public class CartController : MonoBehaviour
 			{
 				if(hit.distance < suspension)
 				{
-					this.rigidbody.AddTorque(-transform.right * Mathf.Min(1,((suspension - hit.distance) * 0.5f)) * (cartGravity * 0.5f));
+					this.rigidbody.AddTorque(-transform.right * Mathf.Min(1,((suspension - hit.distance) * this.cartStabilizationSusp)) * (cartGravity * this.cartStabilizationSusp));
+				}
+
+				if(this.rigidbody.velocity.magnitude >= this.cartStabilizationThreshold)
+				{
+					Vector3 relativeForward = this.transform.forward + (hit.normal.normalized - this.transform.up);
+
+					this.transform.rotation = Quaternion.LookRotation(Vector3.Lerp(this.transform.forward.normalized, relativeForward.normalized, cartStabilizationDampener), Vector3.Lerp(this.transform.up.normalized, hit.normal.normalized, cartStabilizationDampener));
+					Debug.Log (Vector3.Angle(this.transform.forward, relativeForward));
+					if(Vector3.Angle(this.transform.forward, relativeForward) >= 2.0f && Vector3.Angle(this.transform.forward, relativeForward) <= 10.0f)
+					{
+						this.rigidbody.AddTorque(-transform.right * this.cartStabilizationUpThrust * (Vector3.Angle(this.transform.forward, relativeForward)));
+					}
 				}
 			}
 
@@ -214,7 +231,7 @@ public class CartController : MonoBehaviour
 			{
 				if(hit.distance < suspension)
 				{
-					this.rigidbody.AddTorque(transform.right * Mathf.Min(1,((suspension - hit.distance)* 0.5f)) * (cartGravity * 0.5f));
+					this.rigidbody.AddTorque(transform.right * Mathf.Min(1,((suspension - hit.distance)* this.cartStabilizationSusp)) * (cartGravity * this.cartStabilizationSusp));
 				}
 			}
 
