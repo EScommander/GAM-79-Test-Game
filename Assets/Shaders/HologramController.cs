@@ -22,7 +22,7 @@ public class HologramController : MonoBehaviour
 	{
 		if(!mainController)
 		{
-			hologramShader = this.renderer.material;
+			hologramShader = this.GetComponent<Renderer>().material;
 			if(hologramShader.HasProperty("_AnimTime"))
 			{
 				hologramShader.SetFloat ("_AnimTime", animTime);

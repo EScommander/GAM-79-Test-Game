@@ -59,11 +59,11 @@ public class CartController : MonoBehaviour
 		}
 
 
-		if((networkView.isMine && NetworkManager.gameStarted) || NetworkManager.GetInstance().isOnline == false)
+		if((GetComponent<NetworkView>().isMine && NetworkManager.gameStarted) || NetworkManager.GetInstance().isOnline == false)
 		{
 			Debug.DrawRay (transform.position, transform.forward * 10.0f);
 
-			if (this.rigidbody == null)
+			if (this.GetComponent<Rigidbody>() == null)
 				return;
 
 			if(Camera.main.transform.IsChildOf(transform))
@@ -101,7 +101,7 @@ public class CartController : MonoBehaviour
 
 			if (Input.GetButton("Drift") ) 
 			{
-				this.rigidbody.drag = this.traction / 1.5f;
+				this.GetComponent<Rigidbody>().drag = this.traction / 1.5f;
 				this.forwardAcceleration = acceleration / 2.0f;
 				this.steerHandling = this.handling * 2.0f;
 				drifting = true;
@@ -110,7 +110,7 @@ public class CartController : MonoBehaviour
 			}
 			else
 			{
-				this.rigidbody.drag = this.traction;
+				this.GetComponent<Rigidbody>().drag = this.traction;
 				this.forwardAcceleration = acceleration;
 				this.steerHandling = this.handling;
 				drifting = false;
@@ -118,7 +118,7 @@ public class CartController : MonoBehaviour
 
 			}
 
-			this.rigidbody.angularDrag = this.rotationalTraction;
+			this.GetComponent<Rigidbody>().angularDrag = this.rotationalTraction;
 
 			if (hasTraction) 
 			{
@@ -154,13 +154,13 @@ public class CartController : MonoBehaviour
 				}
 
 				//****Jer's Code**//
-				this.rigidbody.AddForce((transform.forward * accelInput * forwardAcceleration));
-				this.rigidbody.AddTorque(transform.up * steeringInput * steerHandling * Time.deltaTime);
+				this.GetComponent<Rigidbody>().AddForce((transform.forward * accelInput * forwardAcceleration));
+				this.GetComponent<Rigidbody>().AddTorque(transform.up * steeringInput * steerHandling * Time.deltaTime);
 
 				//Potential 4-wheel handling, WIP
 				if(!drifting)
 				{
-					this.rigidbody.velocity = Vector3.RotateTowards(this.rigidbody.velocity, transform.forward, this.traction * 0.3f * Time.deltaTime, 0.0f);
+					this.GetComponent<Rigidbody>().velocity = Vector3.RotateTowards(this.GetComponent<Rigidbody>().velocity, transform.forward, this.traction * 0.3f * Time.deltaTime, 0.0f);
 				}
  	
 				if(turnableWheels.Length > 0)
@@ -179,23 +179,23 @@ public class CartController : MonoBehaviour
 			{
 				if(hit.distance > suspension)
 				{
-					this.rigidbody.AddForce(-transform.up * cartGravity * Mathf.Min(0.7f,(hit.distance - suspension)));
+					this.GetComponent<Rigidbody>().AddForce(-transform.up * cartGravity * Mathf.Min(0.7f,(hit.distance - suspension)));
 				}
 				else if(hit.distance < suspension)
 				{
-					this.rigidbody.AddForce(transform.up * cartGravity * Mathf.Min(1,(suspension - hit.distance)));
+					this.GetComponent<Rigidbody>().AddForce(transform.up * cartGravity * Mathf.Min(1,(suspension - hit.distance)));
 				}
 			}
 			else
 			{
-				this.rigidbody.AddForce(Vector3.down * cartGravity);
+				this.GetComponent<Rigidbody>().AddForce(Vector3.down * cartGravity);
 			}
 
 			if(Physics.Raycast(new Ray(transform.position + transform.right, -transform.up), out hit))
 			{
 				if(hit.distance < suspension)
 				{
-					this.rigidbody.AddTorque(transform.forward * Mathf.Min(1,(suspension - hit.distance)));
+					this.GetComponent<Rigidbody>().AddTorque(transform.forward * Mathf.Min(1,(suspension - hit.distance)));
 				}
 			}
 
@@ -203,7 +203,7 @@ public class CartController : MonoBehaviour
 			{
 				if(hit.distance < suspension)
 				{
-					this.rigidbody.AddTorque(-transform.forward * Mathf.Min(1,(suspension - hit.distance)));
+					this.GetComponent<Rigidbody>().AddTorque(-transform.forward * Mathf.Min(1,(suspension - hit.distance)));
 				}
 			}
 
@@ -211,10 +211,10 @@ public class CartController : MonoBehaviour
 			{
 				if(hit.distance < suspension)
 				{
-					this.rigidbody.AddTorque(-transform.right * Mathf.Min(1,((suspension - hit.distance) * this.cartStabilizationSusp)) * (cartGravity * this.cartStabilizationSusp));
+					this.GetComponent<Rigidbody>().AddTorque(-transform.right * Mathf.Min(1,((suspension - hit.distance) * this.cartStabilizationSusp)) * (cartGravity * this.cartStabilizationSusp));
 				}
 
-				if(this.rigidbody.velocity.magnitude >= this.cartStabilizationThreshold)
+				if(this.GetComponent<Rigidbody>().velocity.magnitude >= this.cartStabilizationThreshold)
 				{
 					Vector3 relativeForward = this.transform.forward + (hit.normal.normalized - this.transform.up);
 
@@ -222,7 +222,7 @@ public class CartController : MonoBehaviour
 
 					if(Vector3.Angle(this.transform.forward, relativeForward) >= 2.0f && Vector3.Angle(this.transform.forward, relativeForward) <= 10.0f)
 					{
-						this.rigidbody.AddTorque(-transform.right * this.cartStabilizationUpThrust * (Vector3.Angle(this.transform.forward, relativeForward)));
+						this.GetComponent<Rigidbody>().AddTorque(-transform.right * this.cartStabilizationUpThrust * (Vector3.Angle(this.transform.forward, relativeForward)));
 					}
 				}
 			}
@@ -231,7 +231,7 @@ public class CartController : MonoBehaviour
 			{
 				if(hit.distance < suspension)
 				{
-					this.rigidbody.AddTorque(transform.right * Mathf.Min(1,((suspension - hit.distance)* this.cartStabilizationSusp)) * (cartGravity * this.cartStabilizationSusp));
+					this.GetComponent<Rigidbody>().AddTorque(transform.right * Mathf.Min(1,((suspension - hit.distance)* this.cartStabilizationSusp)) * (cartGravity * this.cartStabilizationSusp));
 				}
 			}
 
@@ -240,7 +240,7 @@ public class CartController : MonoBehaviour
 				rigidbody.velocity = new Vector3(this.topSpeed, rigidbody.velocity.y, rigidbody.velocity.z);
 			}*/
 		
-			this.Speedometer = rigidbody.velocity.magnitude;
+			this.Speedometer = GetComponent<Rigidbody>().velocity.magnitude;
 		}
 	}
 }
