@@ -219,7 +219,7 @@ public class CartController : MonoBehaviour
 					Vector3 relativeForward = this.transform.forward + (hit.normal.normalized - this.transform.up);
 
 					this.transform.rotation = Quaternion.LookRotation(Vector3.Lerp(this.transform.forward.normalized, relativeForward.normalized, cartStabilizationDampener), Vector3.Lerp(this.transform.up.normalized, hit.normal.normalized, cartStabilizationDampener));
-					Debug.Log (Vector3.Angle(this.transform.forward, relativeForward));
+
 					if(Vector3.Angle(this.transform.forward, relativeForward) >= 2.0f && Vector3.Angle(this.transform.forward, relativeForward) <= 10.0f)
 					{
 						this.rigidbody.AddTorque(-transform.right * this.cartStabilizationUpThrust * (Vector3.Angle(this.transform.forward, relativeForward)));
