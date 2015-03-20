@@ -76,7 +76,7 @@ public class NetworkSyncedCart : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if(!networkView.isMine)
+		if(!GetComponent<NetworkView>().isMine)
 		{
 			double currentTime = Network.time;
 			double interpolationTime = currentTime - interpolationBackTime;

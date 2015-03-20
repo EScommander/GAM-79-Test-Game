@@ -233,7 +233,7 @@ public class NetworkManager : MonoBehaviour
 
 	[RPC] void JoinClientListOnServer()
 	{
-		networkView.RPC ("AddClientToList", RPCMode.Server, Network.player);
+		GetComponent<NetworkView>().RPC ("AddClientToList", RPCMode.Server, Network.player);
 	}
 
 	[RPC] void AddClientToList(NetworkPlayer player)
@@ -246,7 +246,7 @@ public class NetworkManager : MonoBehaviour
 	{
 		float delay = 10.0f;
 		raceStart = Network.time + delay;
-		networkView.RPC ("ReceiveRaceStartTime", RPCMode.Others, delay);
+		GetComponent<NetworkView>().RPC ("ReceiveRaceStartTime", RPCMode.Others, delay);
 
 	}
 
