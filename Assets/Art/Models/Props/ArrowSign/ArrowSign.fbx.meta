@@ -1,13 +1,27 @@
 fileFormatVersion: 2
-guid: b4bd726028f965c4badaa6a8c25355dc
+guid: 005209d6e83713c40bc5ce2e7a613b94
+timeCreated: 1427772013
+licenseType: Free
 ModelImporter:
-  serializedVersion: 16
+  serializedVersion: 18
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: ArrowSign
+    100000: Arrow_Base
+    100002: Arrow_Sign
+    100004: Arrow_Stand
+    100006: //RootNode
+    400000: Arrow_Base
+    400002: Arrow_Sign
+    400004: Arrow_Stand
+    400006: //RootNode
+    2300000: Arrow_Base
+    2300002: Arrow_Sign
+    2300004: Arrow_Stand
+    3300000: Arrow_Base
+    3300002: Arrow_Sign
+    3300004: Arrow_Stand
+    4300000: Arrow_Base
+    4300002: Arrow_Stand
+    4300004: Arrow_Sign
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -36,11 +50,13 @@ ModelImporter:
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
+    keepQuads: 0
     weldVertices: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
+    useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
@@ -63,3 +79,5 @@ ModelImporter:
   animationType: 2
   additionalBone: 0
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 
