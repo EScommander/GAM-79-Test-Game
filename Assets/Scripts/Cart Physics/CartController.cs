@@ -46,18 +46,27 @@ public class CartController : MonoBehaviour
 	Vector3 cameraFlipPos = new Vector3(0,1.6f,3.4f);
 	Quaternion cameraFlipRot = Quaternion.Euler(15.0f,180.0f,0.0f);
 
+
+	Camera sceneCamera;
+
+	public GameObject cartChar = null;
+	Animator charAnim;
+
 	void Start()
 	{
-		Camera.main.transform.parent = transform;
-		Camera.main.transform.localPosition = cameraAttachPos;
-		Camera.main.transform.localRotation = cameraRot;
+		sceneCamera = Camera.main;
+		charAnim = cartChar.transform.GetComponent<Animator> ();
+
+		//sceneCamera.transform.parent = transform;
+		//sceneCamera.transform.localPosition = cameraAttachPos;
+		//sceneCamera.transform.localRotation = cameraRot;
 	}
 
 	// Update is called once per frame
-	void Update () 
+	void FixedUpdate () 
 	{
-//		Camera.main.transform.position = Vector3.Lerp (Camera.main.transform.position, transform.TransformPoint(cameraAttachPos), 0.25f);
-//		Camera.main.transform.rotation = Quaternion.Slerp(Camera.main.transform.rotation, transform.rotation * cameraRot, 0.25f);
+		sceneCamera.transform.position = Vector3.Lerp (sceneCamera.transform.position, transform.TransformPoint(cameraAttachPos), 0.25f);
+		sceneCamera.transform.rotation = Quaternion.Slerp(sceneCamera.transform.rotation, transform.rotation * cameraRot, 0.25f);
 
 		if(drifting)
 		{
@@ -82,18 +91,18 @@ public class CartController : MonoBehaviour
 			if (this.GetComponent<Rigidbody>() == null)
 				return;
 
-			if(Camera.main.transform.IsChildOf(transform))
+			if(sceneCamera.transform.IsChildOf(transform))
 			{
 				if(Input.GetButton ("CameraFlip"))
 				{
-					Camera.main.transform.localPosition = cameraFlipPos; //transform.TransformPoint(cameraFlipPos);
-					Camera.main.transform.localRotation = cameraFlipRot;
+					sceneCamera.transform.localPosition = transform.TransformPoint(cameraFlipPos);
+					sceneCamera.transform.localRotation = cameraFlipRot;
 				}
-				else
-				{
-					Camera.main.transform.localPosition = cameraAttachPos;
-					Camera.main.transform.localRotation = cameraRot;
-				}
+//				else
+//				{
+//					sceneCamera.transform.localPosition = cameraAttachPos;
+//					sceneCamera.transform.localRotation = cameraRot;
+//				}
 			}
 
 
@@ -258,5 +267,11 @@ public class CartController : MonoBehaviour
 		
 			this.Speedometer = GetComponent<Rigidbody>().velocity.magnitude;
 		}
+	}
+
+	void Update()
+	{
+		float turnInput = Input.GetAxis ("Horizontal");
+		charAnim.SetFloat ("TurnInput", turnInput);
 	}
 }
