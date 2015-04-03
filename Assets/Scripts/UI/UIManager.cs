@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
 	screenStage currentScreen = screenStage.CHAR_SEL;
 	screenStage prevScreen;
 
-	public string LevelToLoad = "";
+	//string LevelToLoad = "";
 
 
 	// Use this for initialization
@@ -44,12 +44,12 @@ public class UIManager : MonoBehaviour
 					selectedIndex = i;
 			}
 			GUI.EndScrollView ();
-			if(GUI.Button(new Rect(Screen.width - 300, Screen.height - 200, 200, 100), "Race!"))
-			{
-				DontDestroyOnLoad(gameObject);
-				Application.LoadLevel("_Debug_TrackTest1");
-				currentScreen = screenStage.PLAY;
-			}
+//			if(GUI.Button(new Rect(Screen.width - 300, Screen.height - 200, 200, 100), "Race!"))
+//			{
+//				DontDestroyOnLoad(gameObject);
+//				Application.LoadLevel("_Debug_TrackTest1");
+//				currentScreen = screenStage.PLAY;
+//			}
 
 			break;
 		}
@@ -72,11 +72,20 @@ public class UIManager : MonoBehaviour
 
 			if(prevIndex != selectedIndex)
 			{
-				Debug.Log (selectedIndex);
+				//Debug.Log (selectedIndex);
 				if(prevIndex != -1)
-					Destroy (cart);
-				cart = (GameObject)Instantiate(racers[selectedIndex], Vector3.zero + Vector3.up * offset, racers[selectedIndex].transform.rotation);
-				prevIndex = selectedIndex;
+				{
+					GameObject prevCart = cart;
+					cart = (GameObject)Instantiate(racers[selectedIndex], Vector3.zero + Vector3.up * offset, prevCart.transform.rotation);
+					Destroy (prevCart);
+					prevIndex = selectedIndex;
+				}
+				else
+				{
+					cart = (GameObject)Instantiate(racers[selectedIndex], Vector3.zero + Vector3.up * offset, racers[selectedIndex].transform.rotation);
+					prevIndex = selectedIndex;
+				}
+				
 			}
 			break;
 //		case screenStage.TRACK_SEL:
@@ -87,5 +96,12 @@ public class UIManager : MonoBehaviour
 //			{
 //				Application.LoadLevel("_Debug_TrackTes1");
 			}
+	}
+
+	public void StartRace()
+	{
+		DontDestroyOnLoad(gameObject);
+		Application.LoadLevel("_Debug_TrackTest1");
+		currentScreen = screenStage.PLAY;
 	}
 }

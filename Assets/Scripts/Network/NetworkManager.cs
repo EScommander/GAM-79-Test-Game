@@ -34,7 +34,7 @@ public class NetworkManager : MonoBehaviour
 	public bool countDownStarted = false;
 	public static bool gameStarted = false;
 
-	public int minPlayers = 2;
+	public int minPlayers = 1;
 
 	int row = 0;
 
@@ -46,6 +46,8 @@ public class NetworkManager : MonoBehaviour
 	bool connected = false;
 	int hostAttempt = 0;
 
+	public GameObject startPos = null;
+
 
 //	private CharacterUI charUI;
 
@@ -53,7 +55,7 @@ public class NetworkManager : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-
+		startPos = GameObject.FindGameObjectWithTag("StartPosition");
 
 		conversation.Add ("Connected.");
 		instance_ = this;
@@ -61,9 +63,6 @@ public class NetworkManager : MonoBehaviour
 		if(!isOnline)
 		{
 			GameObject myCar = (GameObject)Instantiate(carPrefab, carPrefab.transform.position, carPrefab.transform.rotation);
-			
-			Camera.main.transform.parent = myCar.transform;
-			Camera.main.transform.localPosition = new Vector3(0,1.4f,-2.15f);
 		}
 
 
@@ -91,6 +90,7 @@ public class NetworkManager : MonoBehaviour
 		{
 			if(clients.Count + 1 >= minPlayers)
 			{
+
 				SendRaceStartTime();
 				Debug.Log ("START!");
 				countDownStarted = true;
@@ -178,12 +178,11 @@ public class NetworkManager : MonoBehaviour
 		//CharacterUI.GetInstance ().EnableGUI();
 //		CharacterUI.GetInstance ().NetworkInstantiateCharacter ();
 //		GameStateManager.GetInstance ().ConnectedToNetwork ();
+		clients.Add (Network.player);
 		connected = true;
 		Debug.Log (Network.player);
-		GameObject myCar = (GameObject)Network.Instantiate(carPrefab, carPrefab.transform.position, carPrefab.transform.rotation, 0);
-
-		Camera.main.transform.parent = myCar.transform;
-		Camera.main.transform.localPosition = new Vector3(0,1.4f,-2.15f);
+		Debug.Log ("whut?");
+		GameObject myCar = (GameObject)Network.Instantiate(carPrefab, startPos.transform.position, carPrefab.transform.rotation, 0);
 
 		Debug.Log ("Server Initialized");
 	}
@@ -203,11 +202,8 @@ public class NetworkManager : MonoBehaviour
 		Debug.Log (playerPos);
 		int row = playerPos/4;
 
-		GameObject myCar = (GameObject)Network.Instantiate(carPrefab, carPrefab.transform.position + new Vector3(carPrefab.transform.localScale.x, 0, 0) * 1.5f * playerPos + 
-		                                                   new Vector3(0, 0, carPrefab.transform.localScale.z) * 1.5f * row , carPrefab.transform.rotation, 0);
+		GameObject myCar = (GameObject)Network.Instantiate(carPrefab, startPos.transform.position + new Vector3(carPrefab.transform.localScale.x * 1.5f, 0, carPrefab.transform.localScale.z * 1.5f * row), carPrefab.transform.rotation, 0);
 
-		Camera.main.transform.parent = myCar.transform;
-		Camera.main.transform.localPosition = new Vector3(0,1.4f,-2.15f);
 		//CharacterUI.GetInstance ().NetworkInstantiateCharacter ();
 		//GameStateManager.GetInstance ().ConnectedToNetwork ();
 		//SpawnPlayer();
@@ -244,7 +240,7 @@ public class NetworkManager : MonoBehaviour
 
 	[RPC] void SendRaceStartTime()
 	{
-		float delay = 10.0f;
+		float delay = 5.0f;
 		raceStart = Network.time + delay;
 		GetComponent<NetworkView>().RPC ("ReceiveRaceStartTime", RPCMode.Others, delay);
 
