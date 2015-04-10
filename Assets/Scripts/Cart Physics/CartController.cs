@@ -36,6 +36,9 @@ public class CartController : MonoBehaviour
 	private float accelInput = 0;
 	//Jer//
 
+	public bool respawning = false;
+	private Vector3 lastNode;
+
 	public bool drifting = false;
 	float prevShot = 0.0f;
 	float shotCoolDown = 0.2f;
@@ -60,6 +63,16 @@ public class CartController : MonoBehaviour
 		//sceneCamera.transform.parent = transform;
 		//sceneCamera.transform.localPosition = cameraAttachPos;
 		//sceneCamera.transform.localRotation = cameraRot;
+	}
+
+	public IEnumerator ResetCart(float delay)
+	{
+		this.respawning = true;
+
+		yield return new WaitForSeconds (delay);
+
+		this.respawning = false;
+		this.transform.position = this.lastNode;
 	}
 
 	// Update is called once per frame
@@ -210,6 +223,8 @@ public class CartController : MonoBehaviour
 				{
 					this.GetComponent<Rigidbody>().AddForce(transform.up * cartGravity * Mathf.Min(1,(suspension - hit.distance)));
 				}
+
+				lastNode = TrackManager.SceneInstance.nearestNode(transform.position);
 			}
 			else
 			{

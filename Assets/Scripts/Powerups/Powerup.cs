@@ -4,14 +4,12 @@ using System.Collections;
 public class Powerup : MonoBehaviour 
 {
 	public string name = "Powerup";
+	public float[] chancesPerPlace;
+	public GameObject prefab;
 
-	public void OnTriggerEnter(Collider collider)
-	{
-		CartController cart = collider.gameObject.GetComponent<CartController> ();
+	//this holds all damage, shields, power-esque values
+	public float power = 1.0f;
 
-		if(cart != null)
-		{
-
-		}
-	}
+	//this holds all health, time, ammo, energy, energy-esque values
+	public float energy = 1.0f;
 }
