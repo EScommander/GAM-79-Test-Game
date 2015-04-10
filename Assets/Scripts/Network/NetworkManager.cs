@@ -133,7 +133,7 @@ public class NetworkManager : MonoBehaviour
 			{
 				gameStarted = true;
 			}
-			else if(raceStart + 1 > Network.time)
+			else if(raceStart> Network.time)
 			{
 
 				GUI.Label (new Rect(Screen.width/2-100, 0, 200, 200),  "GO!", countDownStyle);
