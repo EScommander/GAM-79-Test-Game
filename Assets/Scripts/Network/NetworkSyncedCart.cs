@@ -12,6 +12,7 @@ public class NetworkSyncedCart : MonoBehaviour
 		internal Vector3 pos;
 		internal Quaternion rot;
 		internal bool drift;
+		internal float turnInput;
 	}
 
 	List<State> m_BufferedState = new List<State>();
@@ -32,28 +33,35 @@ public class NetworkSyncedCart : MonoBehaviour
 			Vector3 pos = transform.localPosition;
 			Quaternion rot = transform.localRotation;
 			bool drift;
+			float turnInput = cartCont.turnInput;
 			if(cartCont != null)
 				drift = cartCont.drifting;
 			else drift = false;
 			stream.Serialize(ref pos);
 			stream.Serialize(ref rot);
 			stream.Serialize(ref drift);
+			stream.Serialize(ref turnInput);
 		}
 		else
 		{
 			Vector3 pos = Vector3.zero;
 			Quaternion rot = Quaternion.identity;
 			bool drift = false;
+			float turnInput = 0.0f;
 			stream.Serialize(ref pos);
 			stream.Serialize(ref rot);
 			stream.Serialize(ref drift);
+			stream.Serialize(ref turnInput);
 
 			State state;
 			state.timestamp = info.timestamp;
 			state.pos = pos;
 			state.rot = rot;
 			state.drift = drift;
+			state.turnInput = turnInput;
 			m_BufferedState.Insert(0, state);
+
+			cartCont.UpdateTurnAnim(state.turnInput);
 
 			//Ensures length doesn't exceed 20 entries
 			while(m_BufferedState.Count > 20)
