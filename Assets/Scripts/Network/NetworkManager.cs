@@ -34,7 +34,7 @@ public class NetworkManager : MonoBehaviour
 	public bool countDownStarted = false;
 	public static bool gameStarted = false;
 
-	public int minPlayers = 2;
+	public int minPlayers = 12;
 
 	int row = 0;
 
