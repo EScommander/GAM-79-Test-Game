@@ -26,6 +26,11 @@ public class TrackManager : MonoBehaviour
 
 	private static TrackManager _instance;
 
+	private void Start()
+	{
+		TrackManager.SceneInstance = this;
+	}
+
 	public GameObject[] trackNodes;
 
 	public Vector3 nearestNode(Vector3 fromPos)
