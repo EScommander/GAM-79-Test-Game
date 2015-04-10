@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class UIManager : MonoBehaviour 
@@ -16,6 +17,9 @@ public class UIManager : MonoBehaviour
 	screenStage currentScreen = screenStage.CHAR_SEL;
 	screenStage prevScreen;
 
+	public GameObject panel = null;
+	public TestUI buttonPrefab = null;
+
 	//string LevelToLoad = "";
 
 
@@ -31,6 +35,10 @@ public class UIManager : MonoBehaviour
 			racers[i].GetComponent<CartController>().enabled = false;
 		}
 		prevScreen = screenStage.START;
+
+		TestUI testButton = (TestUI)Instantiate(buttonPrefab);
+		testButton.transform.SetParent (panel.transform);
+		testButton.GetComponent<RectTransform> ().anchoredPosition = Vector2.zero;
 	}
 
 	void OnGUI()
@@ -43,6 +51,7 @@ public class UIManager : MonoBehaviour
 				if (GUILayout.Button (racers [i].name, GUILayout.MinWidth (150), GUILayout.MinHeight (100)))
 					selectedIndex = i;
 			}
+
 			GUI.EndScrollView ();
 //			if(GUI.Button(new Rect(Screen.width - 300, Screen.height - 200, 200, 100), "Race!"))
 //			{
