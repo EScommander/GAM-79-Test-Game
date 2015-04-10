@@ -57,6 +57,8 @@ public class CartController : MonoBehaviour
 
 	NetworkView myView;
 
+	public float turnInput = 0.0f;
+
 	void Start()
 	{
 		sceneCamera = Camera.main;
@@ -256,7 +258,15 @@ public class CartController : MonoBehaviour
 
 	void Update()
 	{
-		float turnInput = Input.GetAxis ("Horizontal");
+		turnInput = Input.GetAxis ("Horizontal");
+		if(myView.isMine)
+		{
+			UpdateTurnAnim(turnInput);
+		}
+	}
+
+	public void UpdateTurnAnim( float turnInput)
+	{
 		charAnim.SetFloat ("TurnInput", turnInput);
 	}
 }
