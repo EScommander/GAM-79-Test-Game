@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CartController : MonoBehaviour 
 {
-	public static float cartGravity = 100.0f;
+	public static float cartGravity = 200.0f;
 
 	public float handling = 10.0f;
 	public float acceleration = 30.0f;
