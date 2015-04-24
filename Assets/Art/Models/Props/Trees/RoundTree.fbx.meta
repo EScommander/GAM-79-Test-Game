@@ -1,15 +1,22 @@
 fileFormatVersion: 2
-guid: b1739b11564e21b49868092b87f4efc2
-timeCreated: 1428097204
+guid: 8c69d3807e655d34e946ca5b14935c43
+timeCreated: 1429908007
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
     100000: //RootNode
+    100002: RoundTree_Base
+    100004: RoundTree_Leaves
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: RoundTree
+    400002: RoundTree_Base
+    400004: RoundTree_Leaves
+    2300000: RoundTree_Base
+    2300002: RoundTree_Leaves
+    3300000: RoundTree_Base
+    3300002: RoundTree_Leaves
+    4300000: RoundTree_Leaves
+    4300002: RoundTree_Base
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -30,7 +37,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 5
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
