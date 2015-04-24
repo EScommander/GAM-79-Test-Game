@@ -37,7 +37,7 @@ public class CartController : MonoBehaviour
 	//Jer//
 
 	public bool respawning = false;
-	private Vector3 lastNode;
+	private GameObject lastNode;
 
 	public bool drifting = false;
 	float prevShot = 0.0f;
@@ -78,7 +78,10 @@ public class CartController : MonoBehaviour
 		yield return new WaitForSeconds (delay);
 
 		this.respawning = false;
-		this.transform.position = this.lastNode;
+		GetComponent<Rigidbody>().velocity = Vector3.zero;
+		this.transform.position = this.lastNode.transform.position;
+		this.transform.rotation = this.lastNode.transform.rotation;
+		GetComponent<Rigidbody>().velocity = Vector3.zero;
 	}
 
 	// Update is called once per frame

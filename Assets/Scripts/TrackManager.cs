@@ -33,20 +33,20 @@ public class TrackManager : MonoBehaviour
 
 	public GameObject[] trackNodes;
 
-	public Vector3 nearestNode(Vector3 fromPos)
+	public GameObject nearestNode(Vector3 fromPos)
 	{
-		Vector3 chosenNode = fromPos;
+		GameObject chosenNode = null;// = fromPos;
 
 		if(trackNodes.Length > 0)
 		{
-			chosenNode = trackNodes[0].transform.position;
+			chosenNode = trackNodes[0];
 		}
 
 		for(int i = 0 ; i < trackNodes.Length; i++)
 		{
-			if(Vector3.Distance(fromPos, chosenNode) >= Vector3.Distance(fromPos, trackNodes[i].transform.position))
+			if(Vector3.Distance(fromPos, chosenNode.transform.position) >= Vector3.Distance(fromPos, trackNodes[i].transform.position))
 			{
-				chosenNode = trackNodes[i].transform.position;
+				chosenNode = trackNodes[i];
 			}
 		}
 

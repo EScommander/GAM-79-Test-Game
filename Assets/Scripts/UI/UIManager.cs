@@ -36,9 +36,9 @@ public class UIManager : MonoBehaviour
 		}
 		prevScreen = screenStage.START;
 
-		TestUI testButton = (TestUI)Instantiate(buttonPrefab);
-		testButton.transform.SetParent (panel.transform);
-		testButton.GetComponent<RectTransform> ().anchoredPosition = Vector2.zero;
+//		TestUI testButton = (TestUI)Instantiate(buttonPrefab);
+//		testButton.transform.SetParent (panel.transform);
+//		testButton.GetComponent<RectTransform> ().anchoredPosition = Vector2.zero;
 	}
 
 	void OnGUI()
