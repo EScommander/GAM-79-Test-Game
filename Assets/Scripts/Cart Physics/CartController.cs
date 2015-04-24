@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CartController : MonoBehaviour 
 {
-	public static float cartGravity = 100.0f;
+	public static float cartGravity = 200.0f;
 
 	public float handling = 10.0f;
 	public float acceleration = 30.0f;
@@ -24,6 +24,8 @@ public class CartController : MonoBehaviour
 	public ParticleSystem driftFX;
 
 	public GameObject Glaive;
+
+	public ParticleSystem[] thrustFX;
 
 	private bool hasTraction = true;
 	private float forwardAcceleration = 30.0f;
@@ -69,6 +71,12 @@ public class CartController : MonoBehaviour
 		//sceneCamera.transform.parent = transform;
 		//sceneCamera.transform.localPosition = cameraAttachPos;
 		//sceneCamera.transform.localRotation = cameraRot;
+
+		foreach(ParticleSystem system in this.thrustFX)
+		{
+			if(system != null)
+				system.enableEmission = false;
+		}
 	}
 
 	public IEnumerator ResetCart(float delay)
@@ -182,6 +190,23 @@ public class CartController : MonoBehaviour
 					if (Input.GetKey (KeyCode.D)) {
 						steeringInput = 1;
 						//this.rigidbody.AddTorque(transform.up * handling);
+					}
+
+					if(accelInput > 0)
+					{
+						foreach(ParticleSystem system in this.thrustFX)
+						{
+							if(system != null)
+								system.enableEmission = true;
+						}
+					}
+					else
+					{
+						foreach(ParticleSystem system in this.thrustFX)
+						{
+							if(system != null)
+								system.enableEmission = false;
+						}
 					}
 
 					//****Jer's Code**//
