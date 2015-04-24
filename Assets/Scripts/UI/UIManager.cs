@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour 
 {
@@ -17,15 +18,38 @@ public class UIManager : MonoBehaviour
 	screenStage currentScreen = screenStage.CHAR_SEL;
 	screenStage prevScreen;
 
-	public GameObject panel = null;
-	public TestUI buttonPrefab = null;
+	public RectTransform panel = null;
+	public GameObject cartButtonParent = null;
+	private Button cartButton = null;
 
-	//string LevelToLoad = "";
+	private RectTransform buttonRT;
+	private float buttonHeight = 0f;
+	private float buttonWidth  = 0f;
 
+	private int iconsPerColumn = 3;
+	private float pixelSpacing = 20.0f;
+
+	private bool haveButtons = false;
+
+	public static UIManager _instance = null;
+	public static UIManager GetInstance()
+	{
+		if (_instance == null) 
+		{
+			GameObject go = new GameObject("_UIManager");
+			_instance = (UIManager)go.AddComponent<UIManager>();
+		}
+
+		return _instance;
+	}
 
 	// Use this for initialization
 	void Start () 
 	{
+		_instance = this;
+
+		cartButton = cartButtonParent.transform.GetChild(0).GetComponent<Button>();
+
 		Object[] objects = Resources.LoadAll("Carts");
 		racers = new GameObject[objects.Length];
 		for(int i = 0; i<objects.Length; i++)
@@ -36,81 +60,75 @@ public class UIManager : MonoBehaviour
 		}
 		prevScreen = screenStage.START;
 
-//		TestUI testButton = (TestUI)Instantiate(buttonPrefab);
-//		testButton.transform.SetParent (panel.transform);
-//		testButton.GetComponent<RectTransform> ().anchoredPosition = Vector2.zero;
+		buttonRT = cartButton.GetComponent<RectTransform> ();
+
+		buttonHeight = buttonRT.rect.height;
+		buttonWidth = buttonRT.rect.width;
 	}
 
-	void OnGUI()
+	public void SwitchKart(string name)
 	{
-		switch (currentScreen) 
+		Debug.Log (racers.Length);
+		for(int i = 0; i < racers.Length; i++)
 		{
-		case screenStage.CHAR_SEL:
-			GUI.BeginScrollView (new Rect (100, 100, 200, 400), Vector2.zero, new Rect (0, 0, 200, 400));
-			for (int i = 0; i < racers.Length; i++) {
-				if (GUILayout.Button (racers [i].name, GUILayout.MinWidth (150), GUILayout.MinHeight (100)))
-					selectedIndex = i;
+			if(racers[i].name == name)
+			{
+				Debug.Log (prevIndex);
+				if(prevIndex != -1)
+				{
+					GameObject prevCart = cart;
+					cart = (GameObject)Instantiate(racers[i], Vector3.zero + Vector3.up * offset, prevCart.transform.rotation);
+					Destroy (prevCart);
+					prevIndex = i;
+				}
+				else
+				{
+					cart = (GameObject)Instantiate(racers[i], Vector3.zero + Vector3.up * offset, racers[i].transform.rotation);
+					prevIndex = i;
+				}
 			}
 
-			GUI.EndScrollView ();
-//			if(GUI.Button(new Rect(Screen.width - 300, Screen.height - 200, 200, 100), "Race!"))
-//			{
-//				DontDestroyOnLoad(gameObject);
-//				Application.LoadLevel("_Debug_TrackTest1");
-//				currentScreen = screenStage.PLAY;
-//			}
-
-			break;
 		}
-
-
 	}
 
 	// Update is called once per frame
 	void Update () 
-	{
-		switch(currentScreen)
+	{		
+		if (!haveButtons) 
 		{
-//
-//		case screenStage.START:
-//			currentScreen = screenStage.CHAR_SEL;
-//			break;
-		case screenStage.CHAR_SEL:
-			if(cart != null)
-				cart.transform.Rotate (Vector3.up, Time.deltaTime * spinSpeed);
-
-			if(prevIndex != selectedIndex)
-			{
-				//Debug.Log (selectedIndex);
-				if(prevIndex != -1)
-				{
-					GameObject prevCart = cart;
-					cart = (GameObject)Instantiate(racers[selectedIndex], Vector3.zero + Vector3.up * offset, prevCart.transform.rotation);
-					Destroy (prevCart);
-					prevIndex = selectedIndex;
-				}
-				else
-				{
-					cart = (GameObject)Instantiate(racers[selectedIndex], Vector3.zero + Vector3.up * offset, racers[selectedIndex].transform.rotation);
-					prevIndex = selectedIndex;
-				}
+			haveButtons = true;
+			Debug.Log (racers.Length);
+			Debug.Log ("buttons");
+			for (int i = 0; i < racers.Length; i++) {
+				int row = (int)i / iconsPerColumn;
+				int column = i % iconsPerColumn;
+				GameObject temp = (GameObject)Instantiate (cartButtonParent);//, panel.anchorMax, Quaternion.identity);
+				temp.transform.parent = panel.transform;
+				temp.transform.GetChild(0).name = racers [i].name;
 				
+				PlayerData racerTempData = racers [i].GetComponent<PlayerData> ();
+				
+				if (racerTempData != null)
+					temp.transform.GetChild(0).GetComponent<Image>().sprite = racers [i].GetComponent<PlayerData> ().characterSprite;
+				
+				temp.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (panel.anchorMin.x + (buttonWidth * 0.8f * column) + pixelSpacing, 
+				                                                                   panel.anchorMin.y - (buttonHeight * (row * 0.8f + 0.5f)));
 			}
-			break;
-//		case screenStage.TRACK_SEL:
-//			currentScreen = screenStage.PLAY;
-//			break;
-//		case screenStage.PLAY:
-//			if(prevScreen != screenStage.PLAY)
-//			{
-//				Application.LoadLevel("_Debug_TrackTes1");
-			}
+		}
+
+		if(cart != null)
+			cart.transform.Rotate (Vector3.up * spinSpeed * Time.deltaTime);
+		else 
+		{
+			cart = (GameObject)Instantiate(racers[0], Vector3.zero + Vector3.up * offset, racers[0].transform.rotation);
+			prevIndex = 0;
+		}
 	}
 
 	public void StartRace()
 	{
 		DontDestroyOnLoad(gameObject);
-		Application.LoadLevel("_Debug_TrackTest1");
+		Application.LoadLevel("city_scaled");
 		currentScreen = screenStage.PLAY;
 	}
 }
