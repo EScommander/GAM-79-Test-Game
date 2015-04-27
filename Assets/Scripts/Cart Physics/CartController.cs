@@ -177,10 +177,7 @@ public class CartController : MonoBehaviour
 						accelInput = 1;
 						//this.rigidbody.AddForce (transform.forward * forwardAcceleration);
 					}
-					if (Input.GetKey (KeyCode.S)) {
-						accelInput = -1;
-						//this.rigidbody.AddForce (-transform.forward * forwardAcceleration);
-					}
+	
 
 					if (Input.GetKey (KeyCode.A)) {
 						steeringInput = -1;
@@ -190,6 +187,12 @@ public class CartController : MonoBehaviour
 					if (Input.GetKey (KeyCode.D)) {
 						steeringInput = 1;
 						//this.rigidbody.AddTorque(transform.up * handling);
+					}
+
+					if (Input.GetKey (KeyCode.S)) {
+						accelInput = -1;
+						steeringInput = -steeringInput;
+						//this.rigidbody.AddForce (-transform.forward * forwardAcceleration);
 					}
 
 					if(accelInput > 0)
