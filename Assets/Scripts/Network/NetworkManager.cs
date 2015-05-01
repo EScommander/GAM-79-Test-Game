@@ -25,6 +25,8 @@ public class NetworkManager : MonoBehaviour
 
 	public bool isOnline = false;
 
+	public bool randomizeTypeName = false;
+
 	public bool countDownStarted = false;
 	public static bool gameStarted = false;
 
@@ -145,7 +147,7 @@ public class NetworkManager : MonoBehaviour
 	{
 							  //(int connections, int listenPort, bool useNat) -- 20 used in FTP, 80 used for Internet traffic
 		Network.InitializeServer (minPlayers, 25000, !Network.HavePublicAddress ());
-		MasterServer.RegisterHost (typeName, gameName);
+		MasterServer.RegisterHost (typeName + (Mathf.FloorToInt(Random.value * 100) + ""), gameName);
 	}
 
 	// LOWER METHODS ONLY USED FOR CLIENT ONLY!!
