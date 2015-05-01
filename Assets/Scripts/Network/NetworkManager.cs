@@ -1,20 +1,14 @@
-﻿/* NetworkManager.cs
- * Coded by: Jeramy Zapotosky
- * GAM 52 
- * 
- * 
- */
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 // Make a web build to test out on a single machine
 // Web build should be the opposite of what you are working on.
 
 public class NetworkManager : MonoBehaviour 
 {
-	private const string typeName = "Norco-Studio-Class2";
+	private const string typeName = "Norco-Studio-Class";
 	private string gameName = "KartRacer";
 
 	private HostData[] hostList; // USED FOR CLIENT ONLY
@@ -52,6 +46,8 @@ public class NetworkManager : MonoBehaviour
 	public AudioClip clip;
 //	private CharacterUI charUI;
 
+	public Text countDownText = null;
+
 
 	// Use this for initialization
 	void Start () 
@@ -65,6 +61,8 @@ public class NetworkManager : MonoBehaviour
 		{
 			GameObject myCar = (GameObject)Instantiate(carPrefab, carPrefab.transform.position, carPrefab.transform.rotation);
 		}
+
+
 
 
 		//MasterServer.ipAddress = YOUR OWN SERVER IP
@@ -97,6 +95,33 @@ public class NetworkManager : MonoBehaviour
 				countDownStarted = true;
 			}
 		}
+
+		if(isOnline)
+		{
+			if (!searchingForGame && !Network.isClient && !Network.isServer) 
+			{
+				searchingForGame = true;
+			}
+			
+			
+			
+			if(!gameStarted && raceStart > Network.time)
+			{
+				int countDown = (int)(raceStart - Network.time) + 1;
+
+				countDownText.text = countDown.ToString();
+			}
+			else if(!gameStarted && raceStart != -1)
+			{
+				gameStarted = true;
+			}
+			else if(raceStart< Network.time)
+			{
+				countDownText.text = "GO!";
+			}
+			else 
+				countDownText.gameObject.SetActive(false);
+		}
 	}
 
 	public static NetworkManager GetInstance()
@@ -113,33 +138,7 @@ public class NetworkManager : MonoBehaviour
 
 	void OnGUI()
 	{
-		if(isOnline)
-		{
-			if (!searchingForGame && !Network.isClient && !Network.isServer) 
-			{
-				if(GUI.Button (new Rect(100, 100, 250, 100), "Find Game"))
-				{
-					searchingForGame = true;
-				}
-			}
 
-
-
-			if(!gameStarted && raceStart > Network.time)
-			{
-				int countDown = (int)(raceStart - Network.time) + 1;
-				GUI.Label (new Rect(Screen.width/2-100, 0, 200, 200),  ""+countDown, countDownStyle);
-			}
-			else if(!gameStarted && raceStart != -1)
-			{
-				gameStarted = true;
-			}
-			else if(raceStart> Network.time)
-			{
-
-				GUI.Label (new Rect(Screen.width/2-100, 0, 200, 200),  "GO!", countDownStyle);
-			}
-		}
 	}
 
 	private void StartServer()

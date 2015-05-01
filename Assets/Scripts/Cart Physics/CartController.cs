@@ -27,6 +27,9 @@ public class CartController : MonoBehaviour
 
 	public ParticleSystem[] thrustFX;
 
+	public PitchShiftTest speedSource;
+	public PitchShiftTest accelSource;
+
 	private bool hasTraction = true;
 	private float forwardAcceleration = 30.0f;
 	private float steerHandling = 10.0f;
@@ -60,6 +63,13 @@ public class CartController : MonoBehaviour
 	NetworkView myView;
 
 	public float turnInput = 0.0f;
+
+	public Powerup activePowerup;
+
+	public Transform topConnectionPoint;
+	public Transform leftConnectionPoint;
+	public Transform rightConnectionPoint;
+	public Transform backConnectionPoint;
 
 	void Start()
 	{
@@ -220,6 +230,23 @@ public class CartController : MonoBehaviour
 						steeringInput = 0;
 					}
 
+					if(speedSource != null)
+					{
+						speedSource.pitch = Mathf.Max(0.0f,Mathf.Min((this.GetComponent<Rigidbody>().velocity.magnitude)/this.topSpeed,1.0f));
+					}
+
+					if(accelSource != null)
+					{
+						if(accelInput > 0)
+						{
+							accelSource.stepUp = 0.5f;
+						}
+						else
+						{
+							accelSource.stepUp = -0.5f;
+						}
+					}
+
 					//****Jer's Code**//
 					this.GetComponent<Rigidbody> ().AddForce ((transform.forward * accelInput * forwardAcceleration));
 					this.GetComponent<Rigidbody> ().AddTorque (transform.up * steeringInput * steerHandling * Time.deltaTime);
@@ -312,5 +339,46 @@ public class CartController : MonoBehaviour
 	public void Damage()
 	{
 		this.StartCoroutine (ResetCart(1.0f));
+	}
+
+	public void PowerupInit()
+	{
+		if(this.activePowerup != null)
+		{
+			GameObject go = (GameObject)Instantiate(this.activePowerup.gameObject, this.GetConnectionPoint(this.activePowerup.connectionType).position, this.activePowerup.gameObject.transform.rotation);
+
+			Powerup powerup = go.GetComponent<Powerup>();
+
+			if(powerup != null)
+			{
+				this.activePowerup = powerup;
+			}
+
+			go.transform.parent = this.GetConnectionPoint(this.activePowerup.connectionType);
+			go.transform.localPosition = Vector3.zero;
+			go.transform.localRotation = Quaternion.identity;
+			go.transform.localScale = Vector3.one;
+		}
+	}
+
+	private Transform GetConnectionPoint(Powerup.e_connectionTypes connectionType)
+	{
+		switch(connectionType)
+		{
+			case Powerup.e_connectionTypes.TOP:
+				return this.topConnectionPoint;
+
+			case Powerup.e_connectionTypes.LEFT:
+				return this.leftConnectionPoint;
+
+			case Powerup.e_connectionTypes.RIGHT:
+				return this.rightConnectionPoint;
+
+			case Powerup.e_connectionTypes.BACK:
+				return this.backConnectionPoint;
+
+			default:
+				return this.transform;
+		}
 	}
 }
