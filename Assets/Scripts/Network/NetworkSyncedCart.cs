@@ -83,6 +83,8 @@ public class NetworkSyncedCart : MonoBehaviour
 			state.rot = rot;
 			state.drift = drift;
 			state.turnInput = turnInput;
+			state.velocity = velocity;
+			state.angularVelocity = angularVelocity;
 			m_BufferedState.Insert(0, state);
 
 			cartCont.UpdateTurnAnim(state.turnInput);
@@ -142,6 +144,8 @@ public class NetworkSyncedCart : MonoBehaviour
 						// if t=0 => lhs is used directly
 						transform.localPosition = Vector3.Lerp(lhs.pos, rhs.pos, t);
 						transform.localRotation = Quaternion.Slerp(lhs.rot, rhs.rot, t);
+						m_rigidbody.velocity = lhs.velocity;
+						m_rigidbody.angularVelocity = lhs.angularVelocity;
 						cartCont.drifting = lhs.drift;
 						return;
 					}
