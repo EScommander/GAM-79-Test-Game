@@ -7,8 +7,6 @@ public class PowerupSpawner : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		Debug.LogError("Enter");
-
 		if(other != null && other.gameObject != null)
 		{
 			CartController cart = other.gameObject.GetComponent<CartController>();

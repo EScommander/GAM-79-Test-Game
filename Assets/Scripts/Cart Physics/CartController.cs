@@ -207,6 +207,10 @@ public class CartController : MonoBehaviour
 						//this.rigidbody.AddForce (-transform.forward * forwardAcceleration);
 					}
 
+					if (Input.GetKey (KeyCode.R)) {
+						this.StartCoroutine(ResetCart(0.5f));
+					}
+
 					if(accelInput > 0)
 					{
 						foreach(ParticleSystem system in this.thrustFX)
