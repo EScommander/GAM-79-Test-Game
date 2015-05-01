@@ -48,7 +48,8 @@ public class NetworkManager : MonoBehaviour
 
 	public GameObject startPos = null;
 
-
+	public AudioSource countdownSource;
+	public AudioClip clip;
 //	private CharacterUI charUI;
 
 
@@ -240,6 +241,7 @@ public class NetworkManager : MonoBehaviour
 
 	[RPC] void SendRaceStartTime()
 	{
+		this.StartCountdownAudio ();
 		float delay = 5.0f;
 		raceStart = Network.time + delay;
 		GetComponent<NetworkView>().RPC ("ReceiveRaceStartTime", RPCMode.Others, delay);
@@ -248,9 +250,17 @@ public class NetworkManager : MonoBehaviour
 
 	[RPC] void ReceiveRaceStartTime(float delay)
 	{
+		this.StartCountdownAudio ();
 		raceStart = Network.time + delay;
 	}
 	
+	private void StartCountdownAudio()
+	{
+		if(this.countdownSource != null)
+		{
+			this.countdownSource.Play();
+		}
+	}
 
 //	// [RPC] = Remote Procedure Call needed for sending across network
 //	[RPC] public void SendCharacterXMLToServer(string s, NetworkViewID networkViewID)
