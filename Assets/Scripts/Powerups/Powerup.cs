@@ -12,4 +12,9 @@ public class Powerup : MonoBehaviour
 
 	//this holds all health, time, ammo, energy, energy-esque values
 	public float energy = 1.0f;
+
+	public virtual void Use()
+	{
+
+	}
 }
