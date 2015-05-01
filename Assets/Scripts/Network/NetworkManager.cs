@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 public class NetworkManager : MonoBehaviour 
 {
-	private const string typeName = "Norco-Studio-Class2";
+	private const string typeName = "Norco-Studio-Class";
 	private string gameName = "KartRacer";
 
 	private HostData[] hostList; // USED FOR CLIENT ONLY

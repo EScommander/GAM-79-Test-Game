@@ -5,7 +5,7 @@ public class PowerupGatlingGun : Powerup
 {
 	public float range = 30.0f;
 	public GameObject bulletOriginationPoint;
-	public ParticleSystem gatlingGun;
+	public GameObject FX;
 
 	private void Update () 
 	{
