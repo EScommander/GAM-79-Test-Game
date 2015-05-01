@@ -89,6 +89,7 @@ public class CartController : MonoBehaviour
 		}
 
 		GameManager.SceneInstance.activeCarts.Add (this);
+		lastNode = TrackManager.SceneInstance.nearestNode (transform.position);
 	}
 
 	public IEnumerator ResetCart(float delay)
