@@ -3,7 +3,7 @@ using System.Collections;
 
 public class StartScreenInput : MonoBehaviour 
 {
-	public Object jukebox = null;
+	//public Object jukebox = null;
 
 	// Use this for initialization
 	void Start () 
@@ -16,7 +16,7 @@ public class StartScreenInput : MonoBehaviour
 	{
 		if(Input.anyKey)
 		{
-			DontDestroyOnLoad(jukebox);
+			//DontDestroyOnLoad(jukebox);
 			Application.LoadLevel("Menu_CharacterSelect");
 		}
 	}
