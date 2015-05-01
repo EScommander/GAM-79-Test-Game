@@ -150,7 +150,14 @@ public class NetworkManager : MonoBehaviour
 	{
 							  //(int connections, int listenPort, bool useNat) -- 20 used in FTP, 80 used for Internet traffic
 		Network.InitializeServer (minPlayers, 25000, !Network.HavePublicAddress ());
-		MasterServer.RegisterHost (typeName + (Mathf.FloorToInt(Random.value * 100) + ""), gameName);
+		if(this.randomizeTypeName)
+		{
+			MasterServer.RegisterHost (typeName + (Mathf.FloorToInt(Random.value * 100) + ""), gameName);
+		}
+		else
+		{
+			MasterServer.RegisterHost (typeName + (Mathf.FloorToInt(Random.value * 100) + ""), gameName);
+		}
 	}
 
 	// LOWER METHODS ONLY USED FOR CLIENT ONLY!!
