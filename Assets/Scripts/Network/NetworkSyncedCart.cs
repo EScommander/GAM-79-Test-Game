@@ -19,7 +19,7 @@ public class NetworkSyncedCart : MonoBehaviour
 	}
 
 	private List<State> m_BufferedState = new List<State>();
-	private CartController cartCont = null;
+	public CartController cartCont = null;
 	private Rigidbody m_rigidbody;
 	private NetworkView m_networkView;
 	private int m_TimestampCount;
@@ -33,10 +33,6 @@ public class NetworkSyncedCart : MonoBehaviour
 		{
 			enabled = false;
 		}
-	}
-
-	void Start()
-	{
 		cartCont = transform.GetComponent<CartController>();
 	}
 
