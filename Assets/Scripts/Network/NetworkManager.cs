@@ -156,7 +156,7 @@ public class NetworkManager : MonoBehaviour
 		}
 		else
 		{
-			MasterServer.RegisterHost (typeName + (Mathf.FloorToInt(Random.value * 100) + ""), gameName);
+			MasterServer.RegisterHost (typeName, gameName);
 		}
 	}
 
