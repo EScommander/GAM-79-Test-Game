@@ -40,7 +40,7 @@ public class CartController : MonoBehaviour
 
 	public bool respawning = false;
 	private GameObject lastNode;
-
+	
 	public bool drifting = false;
 	float prevShot = 0.0f;
 	float shotCoolDown = 0.2f;
@@ -77,6 +77,8 @@ public class CartController : MonoBehaviour
 			if(system != null)
 				system.enableEmission = false;
 		}
+
+		GameManager.SceneInstance.activeCarts.Add (this);
 	}
 
 	public IEnumerator ResetCart(float delay)
@@ -212,6 +214,12 @@ public class CartController : MonoBehaviour
 						}
 					}
 
+					if(this.respawning)
+					{
+						accelInput = 0;
+						steeringInput = 0;
+					}
+
 					//****Jer's Code**//
 					this.GetComponent<Rigidbody> ().AddForce ((transform.forward * accelInput * forwardAcceleration));
 					this.GetComponent<Rigidbody> ().AddTorque (transform.up * steeringInput * steerHandling * Time.deltaTime);
@@ -299,5 +307,10 @@ public class CartController : MonoBehaviour
 	public void UpdateTurnAnim( float turnInput)
 	{
 		charAnim.SetFloat ("TurnInput", turnInput);
+	}
+
+	public void Damage()
+	{
+		this.StartCoroutine (ResetCart(1.0f));
 	}
 }
