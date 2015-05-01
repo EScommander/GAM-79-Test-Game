@@ -117,12 +117,15 @@ public class NetworkManager : MonoBehaviour
 			{
 				gameStarted = true;
 			}
-			else if(raceStart< Network.time)
+			else if(gameStarted && raceStart + 2 > Network.time)
 			{
+				Debug.Log (raceStart + " --- " + Network.time);
 				countDownText.text = "GO!";
 			}
-			else 
+			else if(gameStarted && raceStart + 2 < Network.time)
+			{
 				countDownText.gameObject.SetActive(false);
+			}
 		}
 	}
 

@@ -331,7 +331,8 @@ public class CartController : MonoBehaviour
 		turnInput = Input.GetAxis ("Horizontal");
 		if(myView.isMine)
 		{
-			UpdateTurnAnim(turnInput);
+			UpdateTurnAnim(turnInput); 
+			UpdateSpeedAnim(Mathf.Max(0.0f,Mathf.Min((this.GetComponent<Rigidbody>().velocity.magnitude)/this.topSpeed,1.0f)));
 		}
 	}
 
@@ -339,6 +340,12 @@ public class CartController : MonoBehaviour
 	{
 		charAnim.SetFloat ("TurnInput", turnInput);
 	}
+
+	public void UpdateSpeedAnim( float speedInput)
+	{
+		charAnim.SetFloat ("SpeedInput", speedInput);
+	}
+
 
 	public void Damage()
 	{
