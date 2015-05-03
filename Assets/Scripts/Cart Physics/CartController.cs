@@ -218,7 +218,8 @@ public class CartController : MonoBehaviour
 						steeringInput = -steeringInput;
 					}
 
-					if (Input.GetKey (KeyCode.R)) {
+					//if (Input.GetKey (KeyCode.R)) {ResetPlayer
+					if (Input.GetButton ("ResetPlayer")) {
 						this.StartCoroutine(ResetCart(0.5f));
 					}
 
