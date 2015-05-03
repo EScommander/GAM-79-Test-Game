@@ -71,6 +71,11 @@ public class CartController : MonoBehaviour
 	public Transform rightConnectionPoint;
 	public Transform backConnectionPoint;
 
+	
+	public float animInputBlendSpeed = 0.2f;
+	private float animTurnInput = 0.0f;
+	private float animSpeedInput = 0.0f;
+
 	void Start()
 	{
 		sceneCamera = Camera.main;
@@ -145,7 +150,7 @@ public class CartController : MonoBehaviour
 
 				if (this.Glaive != null) {
 					prevShot += Time.deltaTime;
-					if (prevShot > shotCoolDown && Input.GetKey (KeyCode.LeftShift)) {
+					if (prevShot > shotCoolDown && (Input.GetKey (KeyCode.LeftShift) || Input.GetButton("Fire2"))) {
 						GameObject glaiveObj = (GameObject)Network.Instantiate (this.Glaive, transform.position + (this.transform.forward * 5.5f), this.transform.rotation, 0);
 
 						prevShot = 0.0f;
@@ -204,8 +209,13 @@ public class CartController : MonoBehaviour
 
 					if (Input.GetKey (KeyCode.S)) {
 						accelInput = -1;
-						steeringInput = -steeringInput;
+						//steeringInput = -steeringInput;
 						//this.rigidbody.AddForce (-transform.forward * forwardAcceleration);
+					}
+
+					//move here to suport controller too
+					if (accelInput < -0.05f) {
+						steeringInput = -steeringInput;
 					}
 
 					if (Input.GetKey (KeyCode.R)) {
@@ -327,13 +337,15 @@ public class CartController : MonoBehaviour
 		}
 	}
 
+
 	void Update()
 	{
-		turnInput = Input.GetAxis ("Horizontal");
+		animTurnInput = Mathf.Lerp(animTurnInput, Input.GetAxis ("Horizontal"), animInputBlendSpeed);
+		animSpeedInput = Mathf.Lerp(animSpeedInput, Input.GetAxis ("Vertical"), animInputBlendSpeed); //Mathf.Max(0.0f,Mathf.Min((this.GetComponent<Rigidbody>().velocity.magnitude)/this.topSpeed,1.0f));
 		if(myView.isMine)
 		{
-			UpdateTurnAnim(turnInput); 
-			UpdateSpeedAnim(Mathf.Max(0.0f,Mathf.Min((this.GetComponent<Rigidbody>().velocity.magnitude)/this.topSpeed,1.0f)));
+			UpdateTurnAnim(animTurnInput); 
+			UpdateSpeedAnim(animSpeedInput);
 		}
 	}
 
@@ -344,6 +356,7 @@ public class CartController : MonoBehaviour
 
 	public void UpdateSpeedAnim( float speedInput)
 	{
+		print (speedInput);
 		charAnim.SetFloat ("SpeedInput", speedInput);
 	}
 
