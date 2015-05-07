@@ -39,7 +39,7 @@ public class UIManager : MonoBehaviour
 			GameObject go = new GameObject("_UIManager");
 			_instance = (UIManager)go.AddComponent<UIManager>();
 		}
-
+	
 		return _instance;
 	}
 
@@ -56,7 +56,7 @@ public class UIManager : MonoBehaviour
 		{
 			racers[i] = (GameObject)objects[i];
 			racers[i].GetComponent<NetworkSyncedCart>().enabled = false;
-			racers[i].GetComponent<CartController>().enabled = false;
+			//racers[i].GetComponent<CartController>().enabled = false;
 		}
 		prevScreen = screenStage.START;
 

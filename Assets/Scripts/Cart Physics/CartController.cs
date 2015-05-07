@@ -78,21 +78,22 @@ public class CartController : MonoBehaviour
 
 	void Start()
 	{
+
+	}
+
+	public void ActivateCart()
+	{
 		sceneCamera = Camera.main;
 		charAnim = cartChar.transform.GetComponent<Animator> ();
-
+		
 		myView = GetComponent<NetworkView> ();
-
-		//sceneCamera.transform.parent = transform;
-		//sceneCamera.transform.localPosition = cameraAttachPos;
-		//sceneCamera.transform.localRotation = cameraRot;
-
+		
 		foreach(ParticleSystem system in this.thrustFX)
 		{
 			if(system != null)
 				system.enableEmission = false;
 		}
-
+		
 		GameManager.SceneInstance.activeCarts.Add (this);
 		lastNode = TrackManager.SceneInstance.nearestNode (transform.position);
 	}
@@ -113,7 +114,7 @@ public class CartController : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		if (myView.isMine && NetworkManager.gameStarted)
+		if (NetworkManager.gameStarted && myView.isMine)
 		{
 			sceneCamera.transform.position = Vector3.Lerp (sceneCamera.transform.position, transform.TransformPoint (cameraAttachPos), 0.25f);
 			sceneCamera.transform.rotation = Quaternion.Slerp (sceneCamera.transform.rotation, transform.rotation * cameraRot, 0.25f);
@@ -341,12 +342,15 @@ public class CartController : MonoBehaviour
 
 	void Update()
 	{
-		animTurnInput = Mathf.Lerp(animTurnInput, Input.GetAxis ("Horizontal"), animInputBlendSpeed);
-		animSpeedInput = Mathf.Lerp(animSpeedInput, Input.GetAxis ("Vertical"), animInputBlendSpeed); //Mathf.Max(0.0f,Mathf.Min((this.GetComponent<Rigidbody>().velocity.magnitude)/this.topSpeed,1.0f));
-		if(myView.isMine)
+		if(NetworkManager.gameStarted)
 		{
-			UpdateTurnAnim(animTurnInput); 
-			UpdateSpeedAnim(animSpeedInput);
+			animTurnInput = Mathf.Lerp(animTurnInput, Input.GetAxis ("Horizontal"), animInputBlendSpeed);
+			animSpeedInput = Mathf.Lerp(animSpeedInput, Input.GetAxis ("Vertical"), animInputBlendSpeed); //Mathf.Max(0.0f,Mathf.Min((this.GetComponent<Rigidbody>().velocity.magnitude)/this.topSpeed,1.0f));
+			if(myView.isMine)
+			{
+				UpdateTurnAnim(animTurnInput); 
+				UpdateSpeedAnim(animSpeedInput);
+			}
 		}
 	}
 

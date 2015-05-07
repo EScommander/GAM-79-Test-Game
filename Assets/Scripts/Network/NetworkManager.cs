@@ -30,6 +30,8 @@ public class NetworkManager : MonoBehaviour
 	public bool countDownStarted = false;
 	public static bool gameStarted = false;
 
+	public CartController myCart = null;
+
 	public int minPlayers = 12;
 
 	int row = 0;
@@ -50,82 +52,91 @@ public class NetworkManager : MonoBehaviour
 
 	public Text countDownText = null;
 
+	public enum e_NetworkMode {CHARACTER_SELECT, MAP_SELECT, RACE};
+	public e_NetworkMode current = e_NetworkMode.CHARACTER_SELECT;
+
 
 	// Use this for initialization
 	void Start () 
 	{
-		startPos = GameObject.FindGameObjectWithTag("StartPosition");
 
-		conversation.Add ("Connected.");
+
 		instance_ = this;
 
 		if(!isOnline)
 		{
 			GameObject myCar = (GameObject)Instantiate(carPrefab, carPrefab.transform.position, carPrefab.transform.rotation);
 		}
-
-
-
-
-		//MasterServer.ipAddress = YOUR OWN SERVER IP
 	}
 
 	// Update is called once per frame
 	void Update () 
 	{
-		if (!connected && searchingForGame) 
+
+		switch(current)
 		{
-			RefreshHostList();
-			if(hostList != null)
+		case e_NetworkMode.CHARACTER_SELECT:
+			break;
+		case e_NetworkMode.MAP_SELECT:
+			break;
+		case e_NetworkMode.RACE:
+			startPos = GameObject.FindGameObjectWithTag("StartPosition");
+			if (!connected && searchingForGame) 
 			{
-				if(hostAttempt < hostList.Length)
+				RefreshHostList();
+				if(hostList != null)
 				{
-					Network.Connect(hostList[hostAttempt]);
-					connected = true;
+					if(hostAttempt < hostList.Length)
+					{
+						Network.Connect(hostList[hostAttempt]);
+						connected = true;
+					}
+					else StartServer();
 				}
-				else StartServer();
 			}
-		}
 
-		if(!countDownStarted && Network.isServer)
-		{
-			if(clients.Count >= minPlayers)
+			if(!countDownStarted && Network.isServer)
 			{
+				if(clients.Count >= minPlayers)
+				{
 
-				SendRaceStartTime();
-				Debug.Log ("START!");
-				countDownStarted = true;
+					SendRaceStartTime();
+					Debug.Log ("START!");
+					countDownStarted = true;
+				}
 			}
-		}
 
-		if(isOnline)
-		{
-			if (!searchingForGame && !Network.isClient && !Network.isServer) 
+			if(isOnline)
 			{
-				searchingForGame = true;
-			}
-			
-			
-			
-			if(!gameStarted && raceStart > Network.time)
-			{
-				int countDown = (int)(raceStart - Network.time) + 1;
+				if (!searchingForGame && !Network.isClient && !Network.isServer) 
+				{
+					searchingForGame = true;
+				}
+				
+				
+				
+				if(!gameStarted && raceStart > Network.time)
+				{
+					int countDown = (int)(raceStart - Network.time) + 1;
+					countDownText.text = countDown.ToString();
+					myCart.ActivateCart();
+				}
+				else if(!gameStarted && raceStart != -1)
+				{
+					gameStarted = true;
 
-				countDownText.text = countDown.ToString();
+				}
+				else if(gameStarted && raceStart + 2 > Network.time)
+				{
+					Debug.Log (raceStart + " --- " + Network.time);
+					countDownText.text = "GO!";
+				}
+				else if(gameStarted && raceStart + 2 < Network.time)
+				{
+					countDownText.gameObject.SetActive(false);
+				}
 			}
-			else if(!gameStarted && raceStart != -1)
-			{
-				gameStarted = true;
-			}
-			else if(gameStarted && raceStart + 2 > Network.time)
-			{
-				Debug.Log (raceStart + " --- " + Network.time);
-				countDownText.text = "GO!";
-			}
-			else if(gameStarted && raceStart + 2 < Network.time)
-			{
-				countDownText.gameObject.SetActive(false);
-			}
+			break;
 		}
 	}
 
@@ -139,11 +150,6 @@ public class NetworkManager : MonoBehaviour
 		}
 
 		return instance_;
-	}
-
-	void OnGUI()
-	{
-
 	}
 
 	private void StartServer()
@@ -186,15 +192,12 @@ public class NetworkManager : MonoBehaviour
 
 	void OnServerInitialized()
 	{
-		//SpawnPlayer ();
-		//CharacterUI.GetInstance ().EnableGUI();
-//		CharacterUI.GetInstance ().NetworkInstantiateCharacter ();
-//		GameStateManager.GetInstance ().ConnectedToNetwork ();
 		clients.Add (Network.player);
 		connected = true;
 		Debug.Log (Network.player);
 		Debug.Log ("whut?");
-		GameObject myCar = (GameObject)Network.Instantiate(carPrefab, startPos.transform.position, carPrefab.transform.rotation, 0);
+		GameObject cartObject = (GameObject)Network.Instantiate(carPrefab, startPos.transform.position, carPrefab.transform.rotation, 0);
+		myCart = cartObject.GetComponent<CartController>();
 
 		Debug.Log ("Server Initialized");
 	}
@@ -214,11 +217,10 @@ public class NetworkManager : MonoBehaviour
 		Debug.Log (playerPos);
 		int row = playerPos/4;
 
-		GameObject myCar = (GameObject)Network.Instantiate(carPrefab, startPos.transform.position + new Vector3(carPrefab.transform.localScale.x * 1.5f, 0, carPrefab.transform.localScale.z * 1.5f * row), carPrefab.transform.rotation, 0);
-
-		//CharacterUI.GetInstance ().NetworkInstantiateCharacter ();
-		//GameStateManager.GetInstance ().ConnectedToNetwork ();
-		//SpawnPlayer();
+		GameObject cartObject= (GameObject)Network.Instantiate(carPrefab, startPos.transform.position + 
+		                                                   new Vector3(carPrefab.transform.localScale.x * 1.5f, 0, carPrefab.transform.localScale.z * 1.5f * row), 
+		                                                   carPrefab.transform.rotation, 0);
+		myCart = cartObject.GetComponent<CartController>();
 	}
 
 	void GetHostList()
