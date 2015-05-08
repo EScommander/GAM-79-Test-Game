@@ -9,11 +9,9 @@ public class PowerupGatlingGun : Powerup
 
 	public AudioSource gatlingGunAudio;
 
-	private bool firing = false;
-
 	private void Update () 
 	{
-		if (this.firing) 
+		if (this.active) 
 		{
 			if(this.FX != null)
 			{
@@ -54,11 +52,11 @@ public class PowerupGatlingGun : Powerup
 	{
 		base.Fire (on);
 
-		this.firing = on;
+		this.active = on;
 
 		if(this.gatlingGunAudio != null)
 		{
-			if(this.firing)
+			if(this.active)
 			{
 				this.gatlingGunAudio.Play();
 			}

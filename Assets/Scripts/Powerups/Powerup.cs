@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Powerup : MonoBehaviour 
 {
-	public string name = "Powerup";
+	public string Name = "Powerup";
 	public float[] chancesPerPlace;
 	public GameObject prefab;
 
@@ -15,6 +15,8 @@ public class Powerup : MonoBehaviour
 
 	//this holds all health, time, ammo, energy, energy-esque values
 	public float energy = 1.0f;
+
+	public bool active = false;
 
 	public virtual void Use()
 	{

@@ -369,7 +369,14 @@ public class CartController : MonoBehaviour
 	
 	public void Damage()
 	{
-		this.StartCoroutine (ResetCart(1.0f));
+		if(this.activePowerup != null && this.activePowerup.Name == "Shield" && this.activePowerup.active)
+		{
+			//Deflected
+		}
+		else
+		{
+			this.StartCoroutine (ResetCart(1.0f));
+		}
 	}
 	
 	public void PowerupInit()
