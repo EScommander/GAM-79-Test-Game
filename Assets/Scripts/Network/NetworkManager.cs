@@ -174,6 +174,12 @@ public class NetworkManager : MonoBehaviour
 						cartSync.enabled = true;
 					}
 
+					NetworkView cartview = myCart.gameObject.GetComponent<NetworkView>();
+					if(cartview != null)
+					{
+						cartview.enabled = true;
+					}
+
 					myCart.ActivateCart();
 				}
 				else if(!gameStarted && raceStart != -1)

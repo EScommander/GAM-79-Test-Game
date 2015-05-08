@@ -348,7 +348,7 @@ public class CartController : MonoBehaviour
 		{
 			animTurnInput = Mathf.Lerp(animTurnInput, Input.GetAxis ("Horizontal"), animInputBlendSpeed);
 			animSpeedInput = Mathf.Lerp(animSpeedInput, Input.GetAxis ("Vertical"), animInputBlendSpeed); //Mathf.Max(0.0f,Mathf.Min((this.GetComponent<Rigidbody>().velocity.magnitude)/this.topSpeed,1.0f));
-			if(myView.isMine)
+			if(myView != null && myView.isMine)
 			{
 				UpdateTurnAnim(animTurnInput); 
 				UpdateSpeedAnim(animSpeedInput);
@@ -358,11 +358,13 @@ public class CartController : MonoBehaviour
 	
 	public void UpdateTurnAnim( float turnInput)
 	{
+		if(charAnim != null)
 		charAnim.SetFloat ("TurnInput", turnInput);
 	}
 	
 	public void UpdateSpeedAnim( float speedInput)
 	{
+		if(charAnim != null)
 		charAnim.SetFloat ("SpeedInput", speedInput);
 	}
 	
