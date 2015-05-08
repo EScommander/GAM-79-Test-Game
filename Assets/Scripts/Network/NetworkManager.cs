@@ -143,7 +143,7 @@ public class NetworkManager : MonoBehaviour
 
 			if(!countDownStarted && Network.isServer)
 			{
-				if(clients.Count >= minPlayers)
+				if(true/*clients.Count >= minPlayers*/)
 				{
 
 					SendRaceStartTime();
