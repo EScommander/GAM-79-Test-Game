@@ -17,7 +17,7 @@ public class MissileController : MonoBehaviour
 	[ContextMenu("Randomize Node")]
 	public void RandomizeNode()
 	{
-		this.mainTarget = TrackManager.SceneInstance.trackNodes[Mathf.FloorToInt( TrackManager.SceneInstance.trackNodes.Length * Random.value)];
+		this.mainTarget = CartRacer.TrackManager.SceneInstance.trackNodes[Mathf.FloorToInt( CartRacer.TrackManager.SceneInstance.trackNodes.Length * Random.value)];
 	}
 
 	public void Update()

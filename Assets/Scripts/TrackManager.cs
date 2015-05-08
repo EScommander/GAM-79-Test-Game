@@ -1,55 +1,58 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TrackManager : MonoBehaviour 
+namespace CartRacer
 {
-	public static TrackManager SceneInstance
+	public class TrackManager : MonoBehaviour 
 	{
-		get
+		public static TrackManager SceneInstance
 		{
-			if(TrackManager._instance == null)
+			get
 			{
-				GameObject go = new GameObject("TrackManager");
-				TrackManager._instance = go.AddComponent<TrackManager>();
+				if(TrackManager._instance == null)
+				{
+					GameObject go = new GameObject("TrackManager");
+					TrackManager._instance = go.AddComponent<TrackManager>();
+				}
+
+				return TrackManager._instance;
 			}
-
-			return TrackManager._instance;
-		}
-		set
-		{
-			if(TrackManager._instance == null)
+			set
 			{
-				TrackManager._instance = value;
-			}
-		}
-	}
-
-	private static TrackManager _instance;
-
-	private void Start()
-	{
-		TrackManager.SceneInstance = this;
-	}
-
-	public GameObject[] trackNodes;
-
-	public GameObject nearestNode(Vector3 fromPos)
-	{
-		GameObject chosenNode = null;// = fromPos;
-
-		if(trackNodes.Length > 0)
-		{
-			chosenNode = trackNodes[0];
-		}
-
-		for(int i = 0 ; i < trackNodes.Length; i++)
-		{
-			if(Vector3.Distance(fromPos, chosenNode.transform.position) >= Vector3.Distance(fromPos, trackNodes[i].transform.position))
-			{
-				chosenNode = trackNodes[i];
+				if(TrackManager._instance == null)
+				{
+					TrackManager._instance = value;
+				}
 			}
 		}
 
-		return chosenNode;
+		private static TrackManager _instance;
+
+		private void Start()
+		{
+			TrackManager.SceneInstance = this;
+		}
+
+		public GameObject[] trackNodes;
+
+		public GameObject nearestNode(Vector3 fromPos)
+		{
+			GameObject chosenNode = null;// = fromPos;
+
+			if(trackNodes.Length > 0)
+			{
+				chosenNode = trackNodes[0];
+			}
+
+			for(int i = 0 ; i < trackNodes.Length; i++)
+			{
+				if(Vector3.Distance(fromPos, chosenNode.transform.position) >= Vector3.Distance(fromPos, trackNodes[i].transform.position))
+				{
+					chosenNode = trackNodes[i];
+				}
+			}
+
+			return chosenNode;
+		}
 	}
 }
