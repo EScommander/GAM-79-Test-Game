@@ -56,8 +56,9 @@ namespace UnityStandardAssets.Vehicles.Car
         public float MaxSpeed{get { return m_Topspeed; }}
         public float Revs { get; private set; }
         public float AccelInput { get; private set; }
-		public float carGravity;
-		public float connectionDist;
+		public float carGravity = 3000;
+		public float connectionDist = 2;
+		public float fallDist = 100;
 		private GameObject lastNode;
         // Use this for initialization
         private void Start()
@@ -276,9 +277,20 @@ namespace UnityStandardAssets.Vehicles.Car
 			else 
 			{
 				if(lastNode!=null)
-					m_Rigidbody.AddForce (-transform.up * carGravity);
+				{
+					if(Vector3.Distance(transform.position, lastNode.transform.position) > fallDist)
+					{
+						m_Rigidbody.AddForce (Vector3.down* carGravity);
+					}
+					else
+					{
+						m_Rigidbody.AddForce (-lastNode.transform.up * carGravity);
+					}
+				}
 				else
+				{
 					m_Rigidbody.AddForce (-transform.up * carGravity );
+				}
 			}
 		}
 		
