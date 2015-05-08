@@ -119,7 +119,13 @@ public class NetworkManager : MonoBehaviour
 		case e_NetworkMode.MAP_SELECT:
 			break;
 		case e_NetworkMode.RACE:
-			countDownText = GameObject.FindGameObjectWithTag("countdown").GetComponent<Text>();
+			GameObject countdownObj = GameObject.FindGameObjectWithTag("countdown");
+
+			if(countdownObj != null)
+			{
+				countDownText = countdownObj.GetComponent<Text>();
+			}
+
 			startPos = GameObject.FindGameObjectWithTag("StartPosition");
 			if (!connected && searchingForGame) 
 			{
@@ -158,8 +164,16 @@ public class NetworkManager : MonoBehaviour
 				if(!gameStarted && raceStart > Network.time)
 				{
 					int countDown = (int)(raceStart - Network.time) + 1;
-					countDownText.text = countDown.ToString();
+					if(countDownText != null)
+					{
+						countDownText.text = countDown.ToString();
+					}
 					myCart.ActivateCart();
+					NetworkSyncedCart cartSync = myCart.gameObject.GetComponent<NetworkSyncedCart>();
+					if(cartSync != null)
+					{
+						cartSync.enabled = true;
+					}
 				}
 				else if(!gameStarted && raceStart != -1)
 				{
@@ -169,11 +183,17 @@ public class NetworkManager : MonoBehaviour
 				else if(gameStarted && raceStart + 2 > Network.time)
 				{
 					Debug.Log (raceStart + " --- " + Network.time);
-					countDownText.text = "GO!";
+					if(countDownText != null)
+					{
+						countDownText.text = "GO!";
+					}
 				}
 				else if(gameStarted && raceStart + 2 < Network.time)
 				{
-					countDownText.gameObject.SetActive(false);
+					if(countDownText != null)
+					{
+						countDownText.gameObject.SetActive(false);
+					}
 				}
 			}
 			break;
