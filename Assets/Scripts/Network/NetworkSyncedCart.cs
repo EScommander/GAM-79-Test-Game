@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class NetworkSyncedCart : MonoBehaviour 
 {
 	public double interpolationBackTime = 0.1;
+	public double m_ExtrapolationLimit = 0.5;
 
 	internal struct State
 	{
@@ -13,16 +14,25 @@ public class NetworkSyncedCart : MonoBehaviour
 		internal Quaternion rot;
 		internal bool drift;
 		internal float turnInput;
+		internal Vector3 velocity;
+		internal Vector3 angularVelocity;
 	}
 
-	List<State> m_BufferedState = new List<State>();
+	private List<State> m_BufferedState = new List<State>();
+	public CartController cartCont = null;
+	private Rigidbody m_rigidbody;
+	private NetworkView m_networkView;
+	private int m_TimestampCount;
 
-	CartController cartCont = null;
 
-	int m_TimestampCount;
-
-	void Start()
+	void Awake()
 	{
+		m_rigidbody = GetComponent<Rigidbody> ();
+		m_networkView = GetComponent<NetworkView> ();
+		if (m_networkView.isMine) 
+		{
+			enabled = false;
+		}
 		cartCont = transform.GetComponent<CartController>();
 	}
 
@@ -34,6 +44,9 @@ public class NetworkSyncedCart : MonoBehaviour
 			Quaternion rot = transform.localRotation;
 			bool drift;
 			float turnInput = cartCont.turnInput;
+			Vector3 velocity = m_rigidbody.velocity;
+			Vector3 angularVelocity = m_rigidbody.angularVelocity;
+
 			if(cartCont != null)
 				drift = cartCont.drifting;
 			else drift = false;
@@ -41,6 +54,8 @@ public class NetworkSyncedCart : MonoBehaviour
 			stream.Serialize(ref rot);
 			stream.Serialize(ref drift);
 			stream.Serialize(ref turnInput);
+			stream.Serialize(ref velocity);
+			stream.Serialize(ref angularVelocity);
 		}
 		else
 		{
@@ -48,17 +63,24 @@ public class NetworkSyncedCart : MonoBehaviour
 			Quaternion rot = Quaternion.identity;
 			bool drift = false;
 			float turnInput = 0.0f;
+			Vector3 velocity = Vector3.zero;
+			Vector3 angularVelocity = Vector3.zero;
+
 			stream.Serialize(ref pos);
 			stream.Serialize(ref rot);
 			stream.Serialize(ref drift);
 			stream.Serialize(ref turnInput);
+			stream.Serialize(ref velocity);
+			stream.Serialize(ref angularVelocity);
 
-			State state;
+			State state = new State();
 			state.timestamp = info.timestamp;
 			state.pos = pos;
 			state.rot = rot;
 			state.drift = drift;
 			state.turnInput = turnInput;
+			state.velocity = velocity;
+			state.angularVelocity = angularVelocity;
 			m_BufferedState.Insert(0, state);
 
 			cartCont.UpdateTurnAnim(state.turnInput);
@@ -118,6 +140,8 @@ public class NetworkSyncedCart : MonoBehaviour
 						// if t=0 => lhs is used directly
 						transform.localPosition = Vector3.Lerp(lhs.pos, rhs.pos, t);
 						transform.localRotation = Quaternion.Slerp(lhs.rot, rhs.rot, t);
+						m_rigidbody.velocity = lhs.velocity;
+						m_rigidbody.angularVelocity = lhs.angularVelocity;
 						cartCont.drifting = lhs.drift;
 						return;
 					}
@@ -129,9 +153,18 @@ public class NetworkSyncedCart : MonoBehaviour
 			{
 				State latest = m_BufferedState[0];
 				
-				transform.localPosition = latest.pos;
-				transform.localRotation = latest.rot;
-				cartCont.drifting = latest.drift;
+				float extrapolationLength = (float)(interpolationTime - latest.timestamp);
+				// Don't extrapolation for more than 500 ms, you would need to do that carefully
+				if (extrapolationLength < m_ExtrapolationLimit)
+				{
+					float axisLength = extrapolationLength * latest.angularVelocity.magnitude * Mathf.Rad2Deg;
+					Quaternion angularRotation = Quaternion.AngleAxis(axisLength, latest.angularVelocity);
+					
+					m_rigidbody.position = latest.pos + latest.velocity * extrapolationLength;
+					m_rigidbody.rotation = angularRotation * latest.rot;
+					m_rigidbody.velocity = latest.velocity;
+					m_rigidbody.angularVelocity = latest.angularVelocity;
+				}
 
 			}
 		}
