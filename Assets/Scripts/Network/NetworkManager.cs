@@ -168,12 +168,13 @@ public class NetworkManager : MonoBehaviour
 					{
 						countDownText.text = countDown.ToString();
 					}
-					myCart.ActivateCart();
 					NetworkSyncedCart cartSync = myCart.gameObject.GetComponent<NetworkSyncedCart>();
 					if(cartSync != null)
 					{
 						cartSync.enabled = true;
 					}
+
+					myCart.ActivateCart();
 				}
 				else if(!gameStarted && raceStart != -1)
 				{
