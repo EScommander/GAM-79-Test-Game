@@ -90,7 +90,7 @@ public class CartController : MonoBehaviour
 		}
 		
 		GameManager.SceneInstance.activeCarts.Add (this);
-		lastNode = TrackManager.SceneInstance.nearestNode (transform.position);
+		lastNode = CartRacer.TrackManager.SceneInstance.nearestNode (transform.position);
 		
 		sceneCamera.transform.position = Vector3.Lerp (sceneCamera.transform.position, transform.TransformPoint (cameraAttachPos), 0.25f);
 		sceneCamera.transform.rotation = Quaternion.Slerp (sceneCamera.transform.rotation, transform.rotation * cameraRot, 0.25f);
@@ -293,7 +293,7 @@ public class CartController : MonoBehaviour
 						this.GetComponent<Rigidbody> ().AddForce (transform.up * cartGravity * Mathf.Min (1, (suspension - hit.distance)));
 					}
 					
-					lastNode = TrackManager.SceneInstance.nearestNode (transform.position);
+					lastNode = CartRacer.TrackManager.SceneInstance.nearestNode (transform.position);
 				} else {
 					this.GetComponent<Rigidbody> ().AddForce (Vector3.down * cartGravity);
 				}
