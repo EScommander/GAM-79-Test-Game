@@ -7,30 +7,65 @@ public class PowerupGatlingGun : Powerup
 	public GameObject bulletOriginationPoint;
 	public GameObject FX;
 
+	public AudioSource gatlingGunAudio;
+
+	private bool firing = false;
+
 	private void Update () 
 	{
-		RaycastHit hit;
-
-		Debug.DrawRay (this.bulletOriginationPoint.transform.position, this.transform.forward * this.range, Color.white);
-
-		if(Physics.Raycast(this.bulletOriginationPoint.transform.position, this.transform.forward, out hit, this.range))
+		if (this.firing) 
 		{
-			if(hit.collider != null && hit.collider.gameObject != null)
+			if(this.FX != null)
 			{
-				CartController controller = hit.collider.gameObject.GetComponent<CartController>();
+				this.FX.SetActive(true);
+			}
 
-				if(controller != null)
-				{
-					controller.Damage();
+			RaycastHit hit;
+
+			Debug.DrawRay (this.bulletOriginationPoint.transform.position, this.transform.forward * this.range, Color.white);
+
+			if (Physics.Raycast (this.bulletOriginationPoint.transform.position, this.transform.forward, out hit, this.range)) {
+				if (hit.collider != null && hit.collider.gameObject != null) {
+					CartController controller = hit.collider.gameObject.GetComponent<CartController> ();
+
+					if (controller != null) {
+						controller.Damage ();
+					}
 				}
 			}
-		}
 
-		this.energy -= Time.deltaTime;
+			this.energy -= Time.deltaTime;
+		}
+		else
+		{
+			if(this.FX != null)
+			{
+				this.FX.SetActive(false);
+			}
+		}
 
 		if(this.energy <= 0.0f)
 		{
 			Destroy(gameObject);
+		}
+	}
+
+	public override void Fire (bool on)
+	{
+		base.Fire (on);
+
+		this.firing = on;
+
+		if(this.gatlingGunAudio != null)
+		{
+			if(this.firing)
+			{
+				this.gatlingGunAudio.Play();
+			}
+			else
+			{
+				this.gatlingGunAudio.Stop();
+			}
 		}
 	}
 }

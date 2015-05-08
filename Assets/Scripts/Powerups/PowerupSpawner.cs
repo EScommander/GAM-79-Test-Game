@@ -13,6 +13,11 @@ public class PowerupSpawner : MonoBehaviour
 
 			if(cart != null)
 			{
+				if(cart.activePowerup != null)
+				{
+					Destroy (cart.activePowerup.gameObject);
+				}
+
 				cart.activePowerup = powerupPrefab;
 				cart.PowerupInit();
 			}

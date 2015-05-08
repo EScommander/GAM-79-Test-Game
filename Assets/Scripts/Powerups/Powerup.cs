@@ -20,4 +20,9 @@ public class Powerup : MonoBehaviour
 	{
 
 	}
+
+	public virtual void Fire(bool on)
+	{
+
+	}
 }

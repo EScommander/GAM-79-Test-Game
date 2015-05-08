@@ -98,7 +98,6 @@ public class CartController : MonoBehaviour
 		yield return new WaitForSeconds (delay);
 
 		this.respawning = false;
-		GetComponent<Rigidbody>().velocity = Vector3.zero;
 		this.transform.position = this.lastNode.transform.position;
 		this.transform.rotation = this.lastNode.transform.rotation;
 		GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -142,20 +141,27 @@ public class CartController : MonoBehaviour
 				}
 
 
-				if (this.Glaive != null) {
-					prevShot += Time.deltaTime;
-					if (prevShot > shotCoolDown && Input.GetKey (KeyCode.LeftShift)) {
-						GameObject glaiveObj = (GameObject)Network.Instantiate (this.Glaive, transform.position + (this.transform.forward * 5.5f), this.transform.rotation, 0);
 
-						prevShot = 0.0f;
-
-						/*SimpleMovement moveScript = glaiveObj.GetComponent<SimpleMovement>();
-
-						if(moveScript != null)
-						{
-							moveScript.movementVector = this.transform.forward;
-						}*/
+				if (this.activePowerup != null) 
+				{
+					if(Input.GetKeyDown (KeyCode.LeftShift))
+					{
+						this.activePowerup.Fire(true);
 					}
+					else if(Input.GetKeyUp (KeyCode.LeftShift))
+					{
+						this.activePowerup.Fire(false);
+					}
+					/*GameObject glaiveObj = (GameObject)Network.Instantiate (this.Glaive, transform.position + (this.transform.forward * 5.5f), this.transform.rotation, 0);
+
+					prevShot = 0.0f;
+
+					SimpleMovement moveScript = glaiveObj.GetComponent<SimpleMovement>();
+
+					if(moveScript != null)
+					{
+						moveScript.movementVector = this.transform.forward;
+					}*/
 				}
 
 				if (Input.GetButton ("Drift")) {
@@ -208,7 +214,7 @@ public class CartController : MonoBehaviour
 					}
 
 					if (Input.GetKey (KeyCode.R)) {
-						this.StartCoroutine(ResetCart(0.5f));
+						this.StartCoroutine(ResetCart(0.0f));
 					}
 
 					if(accelInput > 0)
