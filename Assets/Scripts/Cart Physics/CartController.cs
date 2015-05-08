@@ -111,7 +111,7 @@ public class CartController : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		if (NetworkManager.gameStarted && myView.isMine) 
+		if (NetworkManager.gameStarted && myView != null && myView.isMine) 
 		{
 			sceneCamera.transform.position = Vector3.Lerp (sceneCamera.transform.position, transform.TransformPoint (cameraAttachPos), 0.25f);
 			sceneCamera.transform.rotation = Quaternion.Slerp (sceneCamera.transform.rotation, transform.rotation * cameraRot, 0.25f);
