@@ -138,6 +138,11 @@ public class UIManager : MonoBehaviour
 
 	public void StartRace()
 	{
+		for(int i = 0; i< racers.Length; i++)
+		{
+			racers[i].GetComponent<NetworkSyncedCart>().enabled = true;
+			//racers[i].GetComponent<CartController>().enabled = false;
+		}
 		SelectCharacter ();
 //		//DontDestroyOnLoad(gameObject);
 
