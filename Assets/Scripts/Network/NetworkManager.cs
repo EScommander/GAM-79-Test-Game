@@ -89,10 +89,6 @@ public class NetworkManager : MonoBehaviour
 			if(racer.name == name)
 			{
 				selectedPrefab = racer;
-
-				if(selectedPrefab == null)
-					Debug.Log ("this should be null?");
-				Debug.Log ("hahahaha :(");
 				break;
 			}
 		}
@@ -102,7 +98,7 @@ public class NetworkManager : MonoBehaviour
 		DontDestroyOnLoad (gameObject);
 		Application.LoadLevel("city_scaled");
 
-		StartCoroutine(WaitForScene(2f));
+		StartCoroutine(WaitForScene(0.1f));
 	}
 
 	public IEnumerator WaitForScene(float delay)
@@ -236,8 +232,8 @@ public class NetworkManager : MonoBehaviour
 
 	void OnServerInitialized()
 	{
-//		if (selectedPrefab == null)
-//			selectedPrefab = carPrefab;
+		if (selectedPrefab == null)
+			selectedPrefab = carPrefab;
 
 		clients.Add (Network.player);
 		connected = true;
@@ -257,8 +253,8 @@ public class NetworkManager : MonoBehaviour
 
 	void OnConnectedToServer()
 	{
-//		if (selectedPrefab == null)
-//			selectedPrefab = carPrefab;
+		if (selectedPrefab == null)
+			selectedPrefab = carPrefab;
 
 		Debug.Log ("Joined Server!");
 		connected = true;

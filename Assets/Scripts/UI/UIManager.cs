@@ -97,8 +97,8 @@ public class UIManager : MonoBehaviour
 			{
 				haveButtons = true;
 				for (int i = 0; i < racers.Length; i++) {
-					int row = (int)i / iconsPerColumn;
-					int column = i % iconsPerColumn;
+//					int row = (int)i / iconsPerColumn;
+//					int column = i % iconsPerColumn;
 					GameObject temp = (GameObject)Instantiate (cartButtonParent);//, panel.anchorMax, Quaternion.identity);
 					temp.transform.parent = panel.transform;
 					temp.transform.GetChild(0).name = racers [i].name;
@@ -108,8 +108,8 @@ public class UIManager : MonoBehaviour
 					if (racerTempData != null)
 						temp.transform.GetChild(0).GetComponent<Image>().sprite = racers [i].GetComponent<PlayerData> ().characterSprite;
 					
-					temp.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (panel.anchorMin.x + (buttonWidth * 0.8f * column) + pixelSpacing, 
-					                                                                   panel.anchorMin.y - (buttonHeight * (row * 0.8f + 0.5f)));
+					temp.GetComponent<RectTransform> ().anchoredPosition = Vector2.zero;//new Vector2 (panel.anchorMin.x + (buttonWidth * 0.8f * column) + pixelSpacing, 
+					                                                                   //panel.anchorMin.y - (buttonHeight * (row * 0.8f + 0.5f)));
 				}
 			}
 
