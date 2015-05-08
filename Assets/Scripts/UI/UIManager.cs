@@ -14,10 +14,6 @@ public class UIManager : MonoBehaviour
 	float offset = 0.374f;
 	float spinSpeed = 30.0f;
 
-	public enum screenStage {START, CHAR_SEL, TRACK_SEL, PLAY};
-	screenStage currentScreen = screenStage.CHAR_SEL;
-	screenStage prevScreen;
-
 	public RectTransform panel = null;
 	public GameObject cartButtonParent = null;
 	private Button cartButton = null;
@@ -32,8 +28,11 @@ public class UIManager : MonoBehaviour
 	private bool haveButtons = false;
 
 	public static UIManager _instance = null;
+
 	public static UIManager GetInstance()
 	{
+		//netManagerRef = NetworkManager.GetInstance ();
+
 		if (_instance == null) 
 		{
 			GameObject go = new GameObject("_UIManager");
@@ -58,77 +57,90 @@ public class UIManager : MonoBehaviour
 			racers[i].GetComponent<NetworkSyncedCart>().enabled = false;
 			//racers[i].GetComponent<CartController>().enabled = false;
 		}
-		prevScreen = screenStage.START;
 
 		buttonRT = cartButton.GetComponent<RectTransform> ();
-
 		buttonHeight = buttonRT.rect.height;
 		buttonWidth = buttonRT.rect.width;
 	}
 
 	public void SwitchKart(string name)
 	{
-		Debug.Log (racers.Length);
 		for(int i = 0; i < racers.Length; i++)
 		{
 			if(racers[i].name == name)
 			{
-				Debug.Log (prevIndex);
 				if(prevIndex != -1)
 				{
 					GameObject prevCart = cart;
 					cart = (GameObject)Instantiate(racers[i], Vector3.zero + Vector3.up * offset, prevCart.transform.rotation);
+					cart.name = racers[i].name;
 					Destroy (prevCart);
 					prevIndex = i;
 				}
 				else
 				{
 					cart = (GameObject)Instantiate(racers[i], Vector3.zero + Vector3.up * offset, racers[i].transform.rotation);
+					cart.name = racers[i].name;
 					prevIndex = i;
 				}
 			}
-
 		}
 	}
 
 	// Update is called once per frame
 	void Update () 
-	{		
-		if (!haveButtons) 
+	{
+		switch(NetworkManager.GetInstance().current)
 		{
-			haveButtons = true;
-			Debug.Log (racers.Length);
-			Debug.Log ("buttons");
-			for (int i = 0; i < racers.Length; i++) {
-				int row = (int)i / iconsPerColumn;
-				int column = i % iconsPerColumn;
-				GameObject temp = (GameObject)Instantiate (cartButtonParent);//, panel.anchorMax, Quaternion.identity);
-				temp.transform.parent = panel.transform;
-				temp.transform.GetChild(0).name = racers [i].name;
-				
-				PlayerData racerTempData = racers [i].GetComponent<PlayerData> ();
-				
-				if (racerTempData != null)
-					temp.transform.GetChild(0).GetComponent<Image>().sprite = racers [i].GetComponent<PlayerData> ().characterSprite;
-				
-				temp.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (panel.anchorMin.x + (buttonWidth * 0.8f * column) + pixelSpacing, 
-				                                                                   panel.anchorMin.y - (buttonHeight * (row * 0.8f + 0.5f)));
+		case NetworkManager.e_NetworkMode.CHARACTER_SELECT:
+			if (!haveButtons) 
+			{
+				haveButtons = true;
+				for (int i = 0; i < racers.Length; i++) {
+					int row = (int)i / iconsPerColumn;
+					int column = i % iconsPerColumn;
+					GameObject temp = (GameObject)Instantiate (cartButtonParent);//, panel.anchorMax, Quaternion.identity);
+					temp.transform.parent = panel.transform;
+					temp.transform.GetChild(0).name = racers [i].name;
+					
+					PlayerData racerTempData = racers [i].GetComponent<PlayerData> ();
+					
+					if (racerTempData != null)
+						temp.transform.GetChild(0).GetComponent<Image>().sprite = racers [i].GetComponent<PlayerData> ().characterSprite;
+					
+					temp.GetComponent<RectTransform> ().anchoredPosition = new Vector2 (panel.anchorMin.x + (buttonWidth * 0.8f * column) + pixelSpacing, 
+					                                                                   panel.anchorMin.y - (buttonHeight * (row * 0.8f + 0.5f)));
+				}
 			}
-		}
 
-		if(cart != null)
-			cart.transform.Rotate (Vector3.up * spinSpeed * Time.deltaTime);
-		else 
-		{
-			cart = (GameObject)Instantiate(racers[0], Vector3.zero + Vector3.up * offset, racers[0].transform.rotation);
-			prevIndex = 0;
+			if(cart != null)
+				cart.transform.Rotate (Vector3.up * spinSpeed * Time.deltaTime);
+			else 
+			{
+				cart = (GameObject)Instantiate(racers[0], Vector3.zero + Vector3.up * offset, racers[0].transform.rotation);
+				cart.name = racers[0].name;
+				prevIndex = 0;
+			}
+			break;
+
+			case NetworkManager.e_NetworkMode.MAP_SELECT:
+				break;
+
+			case NetworkManager.e_NetworkMode.RACE:
+				break;
 		}
+	}
+
+	public void SelectCharacter()
+	{
+		NetworkManager.GetInstance().setRacerByName (cart.name);
 	}
 
 	public void StartRace()
 	{
-		DontDestroyOnLoad(gameObject);
-		Application.LoadLevel("city_scaled");
-		currentScreen = screenStage.PLAY;
+		SelectCharacter ();
+//		//DontDestroyOnLoad(gameObject);
+
+
 	}
 }

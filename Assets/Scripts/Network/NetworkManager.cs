@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
@@ -53,13 +53,24 @@ public class NetworkManager : MonoBehaviour
 	public Text countDownText = null;
 
 	public enum e_NetworkMode {CHARACTER_SELECT, MAP_SELECT, RACE};
-	public e_NetworkMode current = e_NetworkMode.CHARACTER_SELECT;
+	public e_NetworkMode current = e_NetworkMode.CHARACTER_SELECT;	
 
+	public GameObject[] racers;
+	private GameObject selectedPrefab = null;
 
 	// Use this for initialization
-	void Start () 
+	void Awake () 
 	{
 
+
+		Object[] objects = Resources.LoadAll("Carts");
+		racers = new GameObject[objects.Length];
+		for(int i = 0; i<objects.Length; i++)
+		{
+			racers[i] = (GameObject)objects[i];
+			racers[i].GetComponent<NetworkSyncedCart>().enabled = true;
+			Debug.Log (racers[i].name);
+		}
 
 		instance_ = this;
 
@@ -67,6 +78,38 @@ public class NetworkManager : MonoBehaviour
 		{
 			GameObject myCar = (GameObject)Instantiate(carPrefab, carPrefab.transform.position, carPrefab.transform.rotation);
 		}
+	}
+
+	public void setRacerByName(string name)
+	{
+		foreach (GameObject racer in racers) 
+		{
+			Debug.Log ("racer name: " + racer.name + racer.name.Length);
+			Debug.Log ("name: " + name + name.Length);
+			if(racer.name == name)
+			{
+				selectedPrefab = racer;
+
+				if(selectedPrefab == null)
+					Debug.Log ("this should be null?");
+				Debug.Log ("hahahaha :(");
+				break;
+			}
+		}
+
+//		if(selectedPrefab == null)
+//			Debug.LogError("Selected cart: " + name + " was not found in the Carts folder of resources");
+		DontDestroyOnLoad (gameObject);
+		Application.LoadLevel("city_scaled");
+
+		StartCoroutine(WaitForScene(2f));
+	}
+
+	public IEnumerator WaitForScene(float delay)
+	{
+		yield return new WaitForSeconds (delay);
+
+		current = e_NetworkMode.RACE;
 	}
 
 	// Update is called once per frame
@@ -80,6 +123,7 @@ public class NetworkManager : MonoBehaviour
 		case e_NetworkMode.MAP_SELECT:
 			break;
 		case e_NetworkMode.RACE:
+			countDownText = GameObject.FindGameObjectWithTag("countdown").GetComponent<Text>();
 			startPos = GameObject.FindGameObjectWithTag("StartPosition");
 			if (!connected && searchingForGame) 
 			{
@@ -192,11 +236,14 @@ public class NetworkManager : MonoBehaviour
 
 	void OnServerInitialized()
 	{
+//		if (selectedPrefab == null)
+//			selectedPrefab = carPrefab;
+
 		clients.Add (Network.player);
 		connected = true;
 		Debug.Log (Network.player);
 		Debug.Log ("whut?");
-		GameObject cartObject = (GameObject)Network.Instantiate(carPrefab, startPos.transform.position, carPrefab.transform.rotation, 0);
+		GameObject cartObject = (GameObject)Network.Instantiate(selectedPrefab, startPos.transform.position, selectedPrefab.transform.rotation, 0);
 		myCart = cartObject.GetComponent<CartController>();
 
 		Debug.Log ("Server Initialized");
@@ -210,6 +257,9 @@ public class NetworkManager : MonoBehaviour
 
 	void OnConnectedToServer()
 	{
+//		if (selectedPrefab == null)
+//			selectedPrefab = carPrefab;
+
 		Debug.Log ("Joined Server!");
 		connected = true;
 		JoinClientListOnServer ();
@@ -217,9 +267,9 @@ public class NetworkManager : MonoBehaviour
 		Debug.Log (playerPos);
 		int row = playerPos/4;
 
-		GameObject cartObject= (GameObject)Network.Instantiate(carPrefab, startPos.transform.position + 
-		                                                   new Vector3(carPrefab.transform.localScale.x * 1.5f, 0, carPrefab.transform.localScale.z * 1.5f * row), 
-		                                                   carPrefab.transform.rotation, 0);
+		GameObject cartObject= (GameObject)Network.Instantiate(selectedPrefab, startPos.transform.position + 
+		                                                       new Vector3(selectedPrefab.transform.localScale.x * 1.5f, 0, selectedPrefab.transform.localScale.z * 1.5f * row), 
+		                                                       selectedPrefab.transform.rotation, 0);
 		myCart = cartObject.GetComponent<CartController>();
 	}
 
