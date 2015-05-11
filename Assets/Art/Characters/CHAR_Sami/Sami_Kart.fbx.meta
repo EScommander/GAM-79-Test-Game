@@ -1,0 +1,123 @@
+fileFormatVersion: 2
+guid: 8b823352a002fe44d83107d64ec9544d
+timeCreated: 1431382785
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: Body
+    100002: //RootNode
+    100004: Steering_Wheel
+    100006: Turbine_Fan_Left
+    100008: Turbine_Fan_Right
+    100010: Turbines
+    100012: Wheel_Back_Left
+    100014: Wheel_Back_Right
+    100016: Wheel_Front_Left
+    100018: Wheel_Front_Right
+    100020: Window_Inner
+    100022: Window_Outer
+    400000: Body
+    400002: //RootNode
+    400004: Steering_Wheel
+    400006: Turbine_Fan_Left
+    400008: Turbine_Fan_Right
+    400010: Turbines
+    400012: Wheel_Back_Left
+    400014: Wheel_Back_Right
+    400016: Wheel_Front_Left
+    400018: Wheel_Front_Right
+    400020: Window_Inner
+    400022: Window_Outer
+    2300000: Body
+    2300002: Steering_Wheel
+    2300004: Turbine_Fan_Left
+    2300006: Turbine_Fan_Right
+    2300008: Turbines
+    2300010: Wheel_Back_Left
+    2300012: Wheel_Back_Right
+    2300014: Wheel_Front_Left
+    2300016: Wheel_Front_Right
+    2300018: Window_Inner
+    2300020: Window_Outer
+    3300000: Body
+    3300002: Steering_Wheel
+    3300004: Turbine_Fan_Left
+    3300006: Turbine_Fan_Right
+    3300008: Turbines
+    3300010: Wheel_Back_Left
+    3300012: Wheel_Back_Right
+    3300014: Wheel_Front_Left
+    3300016: Wheel_Front_Right
+    3300018: Window_Inner
+    3300020: Window_Outer
+    4300000: Body
+    4300002: Steering_Wheel
+    4300004: Turbines
+    4300006: Turbine_Fan_Left
+    4300008: Turbine_Fan_Right
+    4300010: Window_Outer
+    4300012: Window_Inner
+    4300014: Wheel_Front_Left
+    4300016: Wheel_Back_Left
+    4300018: Wheel_Front_Right
+    4300020: Wheel_Back_Right
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 100
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
