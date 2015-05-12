@@ -48,8 +48,8 @@ public class CartController : MonoBehaviour
 	float prevShot = 0.0f;
 	float shotCoolDown = 0.2f;
 	
-	Vector3 cameraAttachPos = new Vector3(0,1.6f,-3.4f);
-	Quaternion cameraRot = Quaternion.Euler(15.0f,0.0f,0.0f);
+	public Vector3 cameraAttachPos = new Vector3(0,1.6f,-3.4f);
+	public Quaternion cameraRot = Quaternion.Euler(15.0f,0.0f,0.0f);
 	
 	Vector3 cameraFlipPos = new Vector3(0,1.6f,3.4f);
 	Quaternion cameraFlipRot = Quaternion.Euler(15.0f,180.0f,0.0f);
