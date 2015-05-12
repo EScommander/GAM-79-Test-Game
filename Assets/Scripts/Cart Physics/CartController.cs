@@ -214,7 +214,7 @@ public class CartController : MonoBehaviour
 					
 					if (Input.GetKey (KeyCode.S)) {
 						accelInput = -1;
-						steeringInput = -steeringInput;
+						//steeringInput = -steeringInput;
 						//this.rigidbody.AddForce (-transform.forward * forwardAcceleration);
 					}
 					

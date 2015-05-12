@@ -1,0 +1,543 @@
+fileFormatVersion: 2
+guid: d0493390fdd8ee94692ce139e04c7f8b
+timeCreated: 1431403707
+licenseType: Free
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: cap
+    100002: //RootNode
+    100004: GEO
+    100006: head
+    100008: hips
+    100010: L_ankle
+    100012: L_arm
+    100014: L_ball
+    100016: L_elbow
+    100018: L_finger2
+    100020: L_finger2_00
+    100022: L_finger2_01
+    100024: L_finger2_02
+    100026: L_finger2_03
+    100028: L_finger3
+    100030: L_finger3_00
+    100032: L_finger3_01
+    100034: L_finger3_02
+    100036: L_finger3_03
+    100038: L_finger4
+    100040: L_finger4_00
+    100042: L_finger4_01
+    100044: L_finger4_02
+    100046: L_finger4_03
+    100048: L_finger5
+    100050: L_finger5_00
+    100052: L_finger5_01
+    100054: L_finger5_02
+    100056: L_fingers_GRP
+    100058: L_hand
+    100060: L_knee
+    100062: L_leg
+    100064: L_shoulder
+    100066: L_toe
+    100068: neck
+    100070: polySurface18
+    100072: R_ankle
+    100074: R_arm
+    100076: R_ball
+    100078: R_elbow
+    100080: R_finger2
+    100082: R_finger2_00
+    100084: R_finger2_01
+    100086: R_finger2_02
+    100088: R_finger2_03
+    100090: R_finger3
+    100092: R_finger3_00
+    100094: R_finger3_01
+    100096: R_finger3_02
+    100098: R_finger3_03
+    100100: R_finger4
+    100102: R_finger4_00
+    100104: R_finger4_01
+    100106: R_finger4_02
+    100108: R_finger4_03
+    100110: R_finger5
+    100112: R_finger5_00
+    100114: R_finger5_01
+    100116: R_finger5_02
+    100118: R_fingers_GRP
+    100120: R_hand
+    100122: R_knee
+    100124: R_leg
+    100126: R_shoulder
+    100128: R_toe
+    100130: root
+    100132: spine_01
+    100134: spine_02
+    100136: spine_03
+    100138: spine_04
+    400000: cap
+    400002: //RootNode
+    400004: GEO
+    400006: head
+    400008: hips
+    400010: L_ankle
+    400012: L_arm
+    400014: L_ball
+    400016: L_elbow
+    400018: L_finger2
+    400020: L_finger2_00
+    400022: L_finger2_01
+    400024: L_finger2_02
+    400026: L_finger2_03
+    400028: L_finger3
+    400030: L_finger3_00
+    400032: L_finger3_01
+    400034: L_finger3_02
+    400036: L_finger3_03
+    400038: L_finger4
+    400040: L_finger4_00
+    400042: L_finger4_01
+    400044: L_finger4_02
+    400046: L_finger4_03
+    400048: L_finger5
+    400050: L_finger5_00
+    400052: L_finger5_01
+    400054: L_finger5_02
+    400056: L_fingers_GRP
+    400058: L_hand
+    400060: L_knee
+    400062: L_leg
+    400064: L_shoulder
+    400066: L_toe
+    400068: neck
+    400070: polySurface18
+    400072: R_ankle
+    400074: R_arm
+    400076: R_ball
+    400078: R_elbow
+    400080: R_finger2
+    400082: R_finger2_00
+    400084: R_finger2_01
+    400086: R_finger2_02
+    400088: R_finger2_03
+    400090: R_finger3
+    400092: R_finger3_00
+    400094: R_finger3_01
+    400096: R_finger3_02
+    400098: R_finger3_03
+    400100: R_finger4
+    400102: R_finger4_00
+    400104: R_finger4_01
+    400106: R_finger4_02
+    400108: R_finger4_03
+    400110: R_finger5
+    400112: R_finger5_00
+    400114: R_finger5_01
+    400116: R_finger5_02
+    400118: R_fingers_GRP
+    400120: R_hand
+    400122: R_knee
+    400124: R_leg
+    400126: R_shoulder
+    400128: R_toe
+    400130: root
+    400132: spine_01
+    400134: spine_02
+    400136: spine_03
+    400138: spine_04
+    4300000: polySurface18
+    7400000: turnLeft
+    7400002: turnLeft0
+    9500000: //RootNode
+    13700000: polySurface18
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 0
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: turnLeft
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 12
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: GEO
+        weight: 1
+      - path: GEO/polySurface18
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/spine_01
+        weight: 1
+      - path: root/spine_01/hips
+        weight: 1
+      - path: root/spine_01/hips/L_leg
+        weight: 1
+      - path: root/spine_01/hips/L_leg/L_knee
+        weight: 1
+      - path: root/spine_01/hips/L_leg/L_knee/L_ankle
+        weight: 1
+      - path: root/spine_01/hips/L_leg/L_knee/L_ankle/L_ball
+        weight: 1
+      - path: root/spine_01/hips/L_leg/L_knee/L_ankle/L_ball/L_toe
+        weight: 1
+      - path: root/spine_01/hips/R_leg
+        weight: 1
+      - path: root/spine_01/hips/R_leg/R_knee
+        weight: 1
+      - path: root/spine_01/hips/R_leg/R_knee/R_ankle
+        weight: 1
+      - path: root/spine_01/hips/R_leg/R_knee/R_ankle/R_ball
+        weight: 1
+      - path: root/spine_01/hips/R_leg/R_knee/R_ankle/R_ball/R_toe
+        weight: 1
+      - path: root/spine_01/spine_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger2
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger2/L_finger2_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger2/L_finger2_00/L_finger2_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger2/L_finger2_00/L_finger2_01/L_finger2_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger2/L_finger2_00/L_finger2_01/L_finger2_02/L_finger2_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger3
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger3/L_finger3_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger3/L_finger3_00/L_finger3_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger3/L_finger3_00/L_finger3_01/L_finger3_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger3/L_finger3_00/L_finger3_01/L_finger3_02/L_finger3_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger4
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger4/L_finger4_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger4/L_finger4_00/L_finger4_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger4/L_finger4_00/L_finger4_01/L_finger4_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger4/L_finger4_00/L_finger4_01/L_finger4_02/L_finger4_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger5
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger5/L_finger5_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger5/L_finger5_00/L_finger5_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger5/L_finger5_00/L_finger5_01/L_finger5_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/neck
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/neck/head
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/neck/head/cap
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger2
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger2/R_finger2_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger2/R_finger2_00/R_finger2_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger2/R_finger2_00/R_finger2_01/R_finger2_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger2/R_finger2_00/R_finger2_01/R_finger2_02/R_finger2_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger3
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger3/R_finger3_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger3/R_finger3_00/R_finger3_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger3/R_finger3_00/R_finger3_01/R_finger3_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger3/R_finger3_00/R_finger3_01/R_finger3_02/R_finger3_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger4
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger4/R_finger4_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger4/R_finger4_00/R_finger4_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger4/R_finger4_00/R_finger4_01/R_finger4_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger4/R_finger4_00/R_finger4_01/R_finger4_02/R_finger4_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger5
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger5/R_finger5_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger5/R_finger5_00/R_finger5_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger5/R_finger5_00/R_finger5_01/R_finger5_02
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: turnLeft0
+      takeName: Take 001
+      firstFrame: 12
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: GEO
+        weight: 1
+      - path: GEO/polySurface18
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/spine_01
+        weight: 1
+      - path: root/spine_01/hips
+        weight: 1
+      - path: root/spine_01/hips/L_leg
+        weight: 1
+      - path: root/spine_01/hips/L_leg/L_knee
+        weight: 1
+      - path: root/spine_01/hips/L_leg/L_knee/L_ankle
+        weight: 1
+      - path: root/spine_01/hips/L_leg/L_knee/L_ankle/L_ball
+        weight: 1
+      - path: root/spine_01/hips/L_leg/L_knee/L_ankle/L_ball/L_toe
+        weight: 1
+      - path: root/spine_01/hips/R_leg
+        weight: 1
+      - path: root/spine_01/hips/R_leg/R_knee
+        weight: 1
+      - path: root/spine_01/hips/R_leg/R_knee/R_ankle
+        weight: 1
+      - path: root/spine_01/hips/R_leg/R_knee/R_ankle/R_ball
+        weight: 1
+      - path: root/spine_01/hips/R_leg/R_knee/R_ankle/R_ball/R_toe
+        weight: 1
+      - path: root/spine_01/spine_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger2
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger2/L_finger2_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger2/L_finger2_00/L_finger2_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger2/L_finger2_00/L_finger2_01/L_finger2_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger2/L_finger2_00/L_finger2_01/L_finger2_02/L_finger2_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger3
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger3/L_finger3_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger3/L_finger3_00/L_finger3_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger3/L_finger3_00/L_finger3_01/L_finger3_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger3/L_finger3_00/L_finger3_01/L_finger3_02/L_finger3_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger4
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger4/L_finger4_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger4/L_finger4_00/L_finger4_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger4/L_finger4_00/L_finger4_01/L_finger4_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger4/L_finger4_00/L_finger4_01/L_finger4_02/L_finger4_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger5
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger5/L_finger5_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger5/L_finger5_00/L_finger5_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/L_shoulder/L_arm/L_elbow/L_hand/L_fingers_GRP/L_finger5/L_finger5_00/L_finger5_01/L_finger5_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/neck
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/neck/head
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/neck/head/cap
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger2
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger2/R_finger2_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger2/R_finger2_00/R_finger2_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger2/R_finger2_00/R_finger2_01/R_finger2_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger2/R_finger2_00/R_finger2_01/R_finger2_02/R_finger2_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger3
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger3/R_finger3_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger3/R_finger3_00/R_finger3_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger3/R_finger3_00/R_finger3_01/R_finger3_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger3/R_finger3_00/R_finger3_01/R_finger3_02/R_finger3_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger4
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger4/R_finger4_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger4/R_finger4_00/R_finger4_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger4/R_finger4_00/R_finger4_01/R_finger4_02
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger4/R_finger4_00/R_finger4_01/R_finger4_02/R_finger4_03
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger5
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger5/R_finger5_00
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger5/R_finger5_00/R_finger5_01
+        weight: 1
+      - path: root/spine_01/spine_02/spine_03/spine_04/R_shoulder/R_arm/R_elbow/R_hand/R_fingers_GRP/R_finger5/R_finger5_00/R_finger5_01/R_finger5_02
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 100
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 1
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 3b40b4c41f1b69e418cea70238954368,
+    type: 3}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
