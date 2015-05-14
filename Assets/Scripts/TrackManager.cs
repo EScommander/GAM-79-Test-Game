@@ -31,9 +31,15 @@ namespace CartRacer
 		private void Start()
 		{
 			TrackManager.SceneInstance = this;
+
+			for(int i = 0 ; i < checkpoints.Length; i++)
+			{
+				checkpoints[i].checkpointOrderIndex = i;
+			}
 		}
 
 		public GameObject[] trackNodes;
+		public Checkpoint[] checkpoints;
 
 		public GameObject nearestNode(Vector3 fromPos)
 		{
