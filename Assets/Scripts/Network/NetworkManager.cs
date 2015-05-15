@@ -118,7 +118,7 @@ public class NetworkManager : MonoBehaviour
 				if(hostList != null)
 				{
 					Debug.Log (hostList.Length);
-					if(hostAttempt < hostList.Length-1)
+					if(hostAttempt < hostList.Length)
 					{	
 						Network.Connect(hostList[hostAttempt]);
 						connected = true;
