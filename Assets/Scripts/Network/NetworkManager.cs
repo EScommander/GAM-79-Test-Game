@@ -17,8 +17,6 @@ public class NetworkManager : MonoBehaviour
 
 	private List<NetworkPlayer> clients = new List<NetworkPlayer>();
 
-	private List<string> conversation = new List<string>();
-
 	private static NetworkManager instance_;
 
 	public GameObject carPrefab;
@@ -33,8 +31,6 @@ public class NetworkManager : MonoBehaviour
 	public CartController myCart = null;
 
 	public int minPlayers = 12;
-
-	int row = 0;
 
 	double raceStart = -1;
 
@@ -68,7 +64,6 @@ public class NetworkManager : MonoBehaviour
 		for(int i = 0; i<objects.Length; i++)
 		{
 			racers[i] = (GameObject)objects[i];
-			racers[i].GetComponent<NetworkSyncedCart>().enabled = true;
 			Debug.Log (racers[i].name);
 		}
 
@@ -80,21 +75,10 @@ public class NetworkManager : MonoBehaviour
 		}
 	}
 
-	public void setRacerByName(string name)
+	public void setRacer(GameObject cart)
 	{
-		foreach (GameObject racer in racers) 
-		{
-			Debug.Log ("racer name: " + racer.name + racer.name.Length);
-			Debug.Log ("name: " + name + name.Length);
-			if(racer.name == name)
-			{
-				selectedPrefab = racer;
-				break;
-			}
-		}
+		selectedPrefab = cart;
 
-//		if(selectedPrefab == null)
-//			Debug.LogError("Selected cart: " + name + " was not found in the Carts folder of resources");
 		DontDestroyOnLoad (gameObject);
 		Application.LoadLevel("city_scaled");
 
@@ -143,9 +127,8 @@ public class NetworkManager : MonoBehaviour
 
 			if(!countDownStarted && Network.isServer)
 			{
-				if(true/*clients.Count >= minPlayers*/)
+				if(clients.Count >= minPlayers)
 				{
-
 					SendRaceStartTime();
 					Debug.Log ("START!");
 					countDownStarted = true;
@@ -168,17 +151,17 @@ public class NetworkManager : MonoBehaviour
 					{
 						countDownText.text = countDown.ToString();
 					}
-					NetworkSyncedCart cartSync = myCart.gameObject.GetComponent<NetworkSyncedCart>();
-					if(cartSync != null)
-					{
-						cartSync.enabled = true;
-					}
-
-					NetworkView cartview = myCart.gameObject.GetComponent<NetworkView>();
-					if(cartview != null)
-					{
-						cartview.enabled = true;
-					}
+//					NetworkSyncedCart cartSync = myCart.gameObject.GetComponent<NetworkSyncedCart>();
+//					if(cartSync != null)
+//					{
+//						cartSync.enabled = true;
+//					}
+//
+//					NetworkView cartview = myCart.gameObject.GetComponent<NetworkView>();
+//					if(cartview != null)
+//					{
+//						cartview.enabled = true;
+//					}
 
 					myCart.ActivateCart();
 				}
@@ -189,9 +172,9 @@ public class NetworkManager : MonoBehaviour
 				}
 				else if(gameStarted && raceStart + 2 > Network.time)
 				{
-					Debug.Log (raceStart + " --- " + Network.time);
 					if(countDownText != null)
 					{
+						Debug.Log ("race!");
 						countDownText.text = "GO!";
 					}
 				}
@@ -213,7 +196,6 @@ public class NetworkManager : MonoBehaviour
 		{
 			GameObject go = new GameObject("_NetworkManager");
 			instance_ = (NetworkManager)go.AddComponent<NetworkManager>();
-			go.AddComponent<NetworkView>();
 		}
 
 		return instance_;
@@ -286,19 +268,36 @@ public class NetworkManager : MonoBehaviour
 		Debug.Log ("Joined Server!");
 		connected = true;
 		JoinClientListOnServer ();
-		int playerPos = int.Parse(Network.player.ToString());
-		Debug.Log (playerPos);
-		int row = playerPos/4;
+		RequestCartInstantiate();
 
-		GameObject cartObject= (GameObject)Network.Instantiate(selectedPrefab, startPos.transform.position + 
-		                                                       new Vector3(selectedPrefab.transform.localScale.x * 1.5f, 0, selectedPrefab.transform.localScale.z * 1.5f * row), 
-		                                                       selectedPrefab.transform.rotation, 0);
-		myCart = cartObject.GetComponent<CartController>();
 	}
 
-	void GetHostList()
+	[RPC]
+	void RequestCartInstantiate()
 	{
+		GetComponent<NetworkView>().RPC ("ReceiveInstantiateRequest", RPCMode.Server);
+	}
 
+	[RPC]
+	void ReceiveInstantiateRequest(NetworkMessageInfo info)
+	{
+		int racePos = clients.Count;
+		GetComponent<NetworkView>().RPC ("InstantiateBasedOnClientPos", RPCMode.AllBuffered, info.sender, racePos);
+	}
+
+	[RPC]
+	void InstantiateBasedOnClientPos(NetworkPlayer player , int pos)
+	{
+		if(player != Network.player)
+			return;
+
+		Debug.Log ("my pos is:" + pos);
+		int row = pos/4;
+		
+		GameObject cartObject= (GameObject)Network.Instantiate(selectedPrefab, startPos.transform.position + 
+		                                                       new Vector3(selectedPrefab.transform.lossyScale.x * 2f * pos%4, 0, selectedPrefab.transform.lossyScale.z * 1.5f * row), 
+		                                                       selectedPrefab.transform.rotation, 0);
+		myCart = cartObject.GetComponent<CartController>();
 	}
 
 	void RefreshHostList()
@@ -330,7 +329,7 @@ public class NetworkManager : MonoBehaviour
 		this.StartCountdownAudio ();
 		float delay = 5.0f;
 		raceStart = Network.time + delay;
-		GetComponent<NetworkView>().RPC ("ReceiveRaceStartTime", RPCMode.Others, delay);
+		GetComponent<NetworkView>().RPC ("ReceiveRaceStartTime", RPCMode.OthersBuffered, delay);
 
 	}
 
