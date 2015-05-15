@@ -268,7 +268,7 @@ public class NetworkManager : MonoBehaviour
 		Debug.Log ("Joined Server!");
 		connected = true;
 		JoinClientListOnServer ();
-		RequestCartInstantiate();
+
 
 	}
 
@@ -316,6 +316,7 @@ public class NetworkManager : MonoBehaviour
 	[RPC] void JoinClientListOnServer()
 	{
 		GetComponent<NetworkView>().RPC ("AddClientToList", RPCMode.Server, Network.player);
+		RequestCartInstantiate();
 	}
 
 	[RPC] void AddClientToList(NetworkPlayer player)
