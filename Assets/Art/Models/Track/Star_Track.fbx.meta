@@ -1,22 +1,29 @@
 fileFormatVersion: 2
-guid: 3ec7661a7cd5318449cddd534bb8b97f
-timeCreated: 1431560879
+guid: a5a804f771b9e004bb28b1bda4e79b8e
+timeCreated: 1431644623
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
-    100000: Guard_Rail
-    100002: Track
-    100004: //RootNode
-    400000: Guard_Rail
-    400002: Track
-    400004: //RootNode
-    2300000: Guard_Rail
-    2300002: Track
-    3300000: Guard_Rail
-    3300002: Track
+    100000: Guard
+    100002: Guard_MeshPart0
+    100004: Guard_MeshPart1
+    100006: //RootNode
+    100008: Track
+    400000: Guard
+    400002: Guard_MeshPart0
+    400004: Guard_MeshPart1
+    400006: //RootNode
+    400008: Track
+    2300000: Guard_MeshPart0
+    2300002: Guard_MeshPart1
+    2300004: Track
+    3300000: Guard_MeshPart0
+    3300002: Guard_MeshPart1
+    3300004: Track
     4300000: Track
-    4300002: Guard_Rail
+    4300002: Guard_MeshPart0
+    4300004: Guard_MeshPart1
     9500000: //RootNode
   materials:
     importMaterials: 1
