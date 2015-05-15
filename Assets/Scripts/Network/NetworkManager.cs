@@ -292,10 +292,10 @@ public class NetworkManager : MonoBehaviour
 			return;
 
 		Debug.Log ("my pos is:" + pos);
-		int row = pos/4;
+		int row = (pos-1)/4;
 		
 		GameObject cartObject= (GameObject)Network.Instantiate(selectedPrefab, startPos.transform.position + 
-		                                                       new Vector3(10f * pos%4, 0, selectedPrefab.transform.lossyScale.z * 8f * row), 
+		                                                       new Vector3(20f * pos%4, 0, selectedPrefab.transform.lossyScale.z * 16f * row), 
 		                                                       selectedPrefab.transform.rotation, 0);
 		myCart = cartObject.GetComponent<CartController>();
 	}
