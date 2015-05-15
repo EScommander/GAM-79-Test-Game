@@ -103,6 +103,7 @@ public class NetworkManager : MonoBehaviour
 		case e_NetworkMode.MAP_SELECT:
 			break;
 		case e_NetworkMode.RACE:
+
 			GameObject countdownObj = GameObject.FindGameObjectWithTag("countdown");
 
 			if(countdownObj != null)
@@ -116,8 +117,9 @@ public class NetworkManager : MonoBehaviour
 				RefreshHostList();
 				if(hostList != null)
 				{
-					if(hostAttempt < hostList.Length)
-					{
+					Debug.Log (hostList.Length);
+					if(hostAttempt < hostList.Length-1)
+					{	
 						Network.Connect(hostList[hostAttempt]);
 						connected = true;
 					}
@@ -262,6 +264,7 @@ public class NetworkManager : MonoBehaviour
 
 	void OnConnectedToServer()
 	{
+		Debug.Log ("connected?");
 		if (selectedPrefab == null)
 			selectedPrefab = carPrefab;
 
