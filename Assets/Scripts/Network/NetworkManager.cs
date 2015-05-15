@@ -295,7 +295,7 @@ public class NetworkManager : MonoBehaviour
 		int row = pos/4;
 		
 		GameObject cartObject= (GameObject)Network.Instantiate(selectedPrefab, startPos.transform.position + 
-		                                                       new Vector3(selectedPrefab.transform.lossyScale.x * 2f * pos%4, 0, selectedPrefab.transform.lossyScale.z * 1.5f * row), 
+		                                                       new Vector3(10f * pos%4, 0, selectedPrefab.transform.lossyScale.z * 8f * row), 
 		                                                       selectedPrefab.transform.rotation, 0);
 		myCart = cartObject.GetComponent<CartController>();
 	}
