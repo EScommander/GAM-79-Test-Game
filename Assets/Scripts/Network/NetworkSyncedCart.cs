@@ -149,7 +149,7 @@ public class NetworkSyncedCart : MonoBehaviour
 			}
 			// Use extrapolation. Here we do something really simple and just repeat the last
 			// received state. You can do clever stuff with predicting what should happen.
-			else
+			else if(m_BufferedState.Count > 0)
 			{
 				State latest = m_BufferedState[0];
 				

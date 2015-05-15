@@ -32,10 +32,10 @@ namespace CartRacer
 		{
 			TrackManager.SceneInstance = this;
 
-			for(int i = 0 ; i < checkpoints.Length; i++)
-			{
-				checkpoints[i].checkpointOrderIndex = i;
-			}
+//			for(int i = 0 ; i < checkpoints.Length; i++)
+//			{
+//				checkpoints[i].checkpointOrderIndex = i;
+//			}
 		}
 
 		public GameObject[] trackNodes;
