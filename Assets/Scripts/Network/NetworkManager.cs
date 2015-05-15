@@ -114,16 +114,23 @@ public class NetworkManager : MonoBehaviour
 			startPos = GameObject.FindGameObjectWithTag("StartPosition");
 			if (!connected && searchingForGame) 
 			{
-				RefreshHostList();
-				if(hostList != null)
+				if(this.randomizeTypeName)
 				{
-					Debug.Log (hostList.Length);
-					if(hostAttempt < hostList.Length)
-					{	
-						Network.Connect(hostList[hostAttempt]);
-						connected = true;
+					StartServer();
+				}
+				else
+				{
+					RefreshHostList();
+					if(hostList != null)
+					{
+						Debug.Log (hostList.Length);
+						if(hostAttempt < hostList.Length)
+						{	
+							Network.Connect(hostList[hostAttempt]);
+							connected = true;
+						}
+						else StartServer();
 					}
-					else StartServer();
 				}
 			}
 
