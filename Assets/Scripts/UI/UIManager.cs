@@ -32,6 +32,8 @@ public class UIManager : MonoBehaviour
 
 	public GameObject tagObj = null;
 
+	private bool dPadEnabled = true;
+
 	EventSystem eventSystem;
 
 	public static UIManager GetInstance()
@@ -101,37 +103,41 @@ public class UIManager : MonoBehaviour
 		switch(NetworkManager.GetInstance().current)
 		{
 		case NetworkManager.e_NetworkMode.CHARACTER_SELECT:
+			// keyboard and joystick inputs
+			if(Input.GetAxis("D-PadLR") == 1 && dPadEnabled)         //move right
+			{
+				dPadEnabled = false;
+				StartCoroutine(DPadInput(1, false));
 
-			// Adding  characterButtons.Count because modulus of a negative gives negative numbers
-			if(Input.GetKeyUp(KeyCode.D))  // go right in button list
-			{
-				buttonSelected = (buttonSelected + characterButtons.Count + 1) % (characterButtons.Count);
-				SwitchKart(characterButtons[buttonSelected].name);
 			}
-			else if(Input.GetKeyUp(KeyCode.A)) // go left in button list
+			else if(Input.GetAxis("D-PadLR") == -1 && dPadEnabled)   //move left
 			{
-				buttonSelected = (buttonSelected + characterButtons.Count -1) % (characterButtons.Count);
-				SwitchKart(characterButtons[buttonSelected].name);
-			}
-			else if(Input.GetKeyUp(KeyCode.S))
-			{
-				buttonSelected = (buttonSelected + characterButtons.Count + 3) % (characterButtons.Count);
-				SwitchKart(characterButtons[buttonSelected].name);
-			}
-			else if(Input.GetKeyUp(KeyCode.W))
-			{
-				buttonSelected = (buttonSelected + characterButtons.Count - 3) % (characterButtons.Count);
-				SwitchKart(characterButtons[buttonSelected].name);
+				dPadEnabled = false;
+				StartCoroutine(DPadInput(-1, false));
 			}
 
-			if(Input.GetKeyUp(KeyCode.Z))
+			if(Input.GetAxis("D-PadUD") == 1 && dPadEnabled)         //move up
+			{
+				dPadEnabled = false;
+				StartCoroutine(DPadInput(1, true));
+
+			}
+			else if(Input.GetAxis("D-PadUD") == -1 && dPadEnabled)   //move down
+			{
+				dPadEnabled = false;
+				StartCoroutine(DPadInput(-1, true));
+
+			}
+
+			//zoom
+			if(Input.GetKeyUp(KeyCode.Z) || Input.GetButtonDown ("Zoom"))
 			{
 				zoomed = !zoomed;
 			}
 			
-			if(Input.GetKeyUp(KeyCode.Space))
+			if(Input.GetButtonDown("Submit"))
 			{
-				// advance to race or track select
+				StartRace();
 			}
 
 			eventSystem.SetSelectedGameObject(characterButtons[buttonSelected]);
@@ -159,6 +165,39 @@ public class UIManager : MonoBehaviour
 		}
 	
 
+	}
+
+	public IEnumerator DPadInput(int value, bool isVertical)
+	{
+		if(!isVertical)
+		{
+			if(value == 1)  // go right in button list
+			{
+				buttonSelected = (buttonSelected + characterButtons.Count + 1) % (characterButtons.Count);
+				SwitchKart(characterButtons[buttonSelected].name);
+			}
+			else // go left in button list
+			{
+				buttonSelected = (buttonSelected + characterButtons.Count -1) % (characterButtons.Count);
+				SwitchKart(characterButtons[buttonSelected].name);
+			}
+		}
+		else
+		{
+			if(value == -1)
+			{
+				buttonSelected = (buttonSelected + characterButtons.Count + 3) % (characterButtons.Count);
+				SwitchKart(characterButtons[buttonSelected].name);
+			}
+			else
+			{
+				buttonSelected = (buttonSelected + characterButtons.Count - 3) % (characterButtons.Count);
+				SwitchKart(characterButtons[buttonSelected].name);
+			}
+		}
+
+		yield return new WaitForSeconds(0.4f);
+		dPadEnabled = true;
 	}
 
 	void OnGUI()
