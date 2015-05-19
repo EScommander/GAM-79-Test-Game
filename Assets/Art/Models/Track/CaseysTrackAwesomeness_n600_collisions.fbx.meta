@@ -1,15 +1,19 @@
 fileFormatVersion: 2
-guid: 6096a5b4766e5a0459a41fbd063d080a
-timeCreated: 1431710182
+guid: 12d1b78efedd24846b8cd11002eb2cff
+timeCreated: 1431995410
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
     100000: //RootNode
+    100002: polySurface8
+    100004: transform1
     400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Track_2_Collider
+    400002: polySurface8
+    400004: transform1
+    2300000: polySurface8
+    3300000: polySurface8
+    4300000: polySurface8
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -30,7 +34,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 100
+    globalScale: 200
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
