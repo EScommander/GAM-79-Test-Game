@@ -32,6 +32,9 @@ public class UIManager : MonoBehaviour
 
 	public GameObject tagObj = null;
 
+	private int currentRow = 1;
+	private int maxRow = 4;
+	private int charsPerRow = 3;
 	private bool dPadEnabled = true;
 
 	EventSystem eventSystem;
@@ -77,6 +80,10 @@ public class UIManager : MonoBehaviour
 				temp.transform.GetComponent<Image>().sprite = racers [i].GetComponent<PlayerData> ().characterSprite;
 		}
 
+		tagObj.transform.GetComponent<Tag>().charSprite.sprite = racers[0].GetComponent<PlayerData>().characterSprite;
+		tagObj.transform.GetComponent<Tag>().characterName.text = racers[0].GetComponent<PlayerData>().name;
+		tagObj.transform.GetComponent<Tag>().status.text = "Choosing...";
+
 		//disables auto navigation on UI elements
 		eventSystem.sendNavigationEvents = false;
 	}
@@ -92,7 +99,9 @@ public class UIManager : MonoBehaviour
 				cart.name = racers[i].name;
 				Destroy (prevCart);
 				buttonSelected = i;
-				tagObj.transform.GetChild(0).GetComponent<Image>().sprite = racers[i].GetComponent<PlayerData>().characterSprite;
+				tagObj.transform.GetComponent<Tag>().charSprite.sprite = racers[i].GetComponent<PlayerData>().characterSprite;
+				tagObj.transform.GetComponent<Tag>().characterName.text = racers[i].GetComponent<PlayerData>().name;
+				tagObj.transform.GetComponent<Tag>().status.text = "Choosing...";
 			}
 		}
 	}
@@ -130,7 +139,7 @@ public class UIManager : MonoBehaviour
 			}
 
 			//zoom
-			if(Input.GetKeyUp(KeyCode.Z) || Input.GetButtonDown ("Zoom"))
+			if(Input.GetButtonDown ("Zoom"))
 			{
 				zoomed = !zoomed;
 			}
@@ -173,30 +182,68 @@ public class UIManager : MonoBehaviour
 		{
 			if(value == 1)  // go right in button list
 			{
-				buttonSelected = (buttonSelected + characterButtons.Count + 1) % (characterButtons.Count);
-				SwitchKart(characterButtons[buttonSelected].name);
+				if(buttonSelected + 1 < racers.Length-1)
+				{
+					buttonSelected = (buttonSelected + 1) % 3 + charsPerRow*(currentRow-1);//(buttonSelected + (charsPerRow * currentRow) + 1) % (charsPerRow * currentRow);
+					SwitchKart(characterButtons[buttonSelected].name);
+				}
+				else
+				{
+					buttonSelected = charsPerRow * (currentRow-1);
+					SwitchKart(characterButtons[buttonSelected].name);
+				}
 			}
 			else // go left in button list
 			{
-				buttonSelected = (buttonSelected + characterButtons.Count -1) % (characterButtons.Count);
-				SwitchKart(characterButtons[buttonSelected].name);
+				if((buttonSelected + 2) % 3 + charsPerRow*(currentRow-1) < racers.Length-1)
+				{
+					buttonSelected = (buttonSelected + 2) % 3 + charsPerRow*(currentRow-1); //(buttonSelected + (charsPerRow * currentRow) -1) % (charsPerRow * currentRow);
+					SwitchKart(characterButtons[buttonSelected].name);
+				}
+				else
+				{
+					buttonSelected = racers.Length -1;
+					SwitchKart(characterButtons[buttonSelected].name);
+				}
 			}
 		}
 		else
 		{
 			if(value == -1)
 			{
-				buttonSelected = (buttonSelected + characterButtons.Count + 3) % (characterButtons.Count);
-				SwitchKart(characterButtons[buttonSelected].name);
+				if(buttonSelected + 3 > racers.Length-1)
+				{
+					buttonSelected = (buttonSelected + 3) % 3;
+					SwitchKart(characterButtons[buttonSelected].name);
+					currentRow = 1;
+				}
+				else
+				{
+					buttonSelected = (buttonSelected + 3) % (charsPerRow * maxRow);//(buttonSelected + characterButtons.Count + 3) % (characterButtons.Count);
+					SwitchKart(characterButtons[buttonSelected].name);
+					currentRow++;
+				}
 			}
 			else
 			{
-				buttonSelected = (buttonSelected + characterButtons.Count - 3) % (characterButtons.Count);
-				SwitchKart(characterButtons[buttonSelected].name);
+				if((buttonSelected + (charsPerRow * maxRow) - 3) % (charsPerRow * maxRow)  > racers.Length -1)
+				{
+					buttonSelected = (buttonSelected + (charsPerRow * maxRow) - 6) % (charsPerRow * maxRow);
+					SwitchKart(characterButtons[buttonSelected].name);
+					currentRow = maxRow -1;
+				}
+				else
+				{
+					buttonSelected = (buttonSelected + (charsPerRow * maxRow) - 3) % (charsPerRow * maxRow);
+					SwitchKart(characterButtons[buttonSelected].name);
+					if(currentRow - 1 < 1)
+						currentRow = maxRow;
+					else currentRow--;
+				}
 			}
 		}
 
-		yield return new WaitForSeconds(0.4f);
+		yield return new WaitForSeconds(0.3f);
 		dPadEnabled = true;
 	}
 

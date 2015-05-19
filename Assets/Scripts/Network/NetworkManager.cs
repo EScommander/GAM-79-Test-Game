@@ -48,7 +48,7 @@ public class NetworkManager : MonoBehaviour
 
 	public Text countDownText = null;
 
-	public enum e_NetworkMode {CHARACTER_SELECT, MAP_SELECT, RACE};
+	public enum e_NetworkMode {SERVER_SELECT, CHARACTER_SELECT, MAP_SELECT, RACE};
 	public e_NetworkMode current = e_NetworkMode.CHARACTER_SELECT;	
 
 	public GameObject[] racers;
@@ -98,6 +98,9 @@ public class NetworkManager : MonoBehaviour
 
 		switch(current)
 		{
+		case e_NetworkMode.SERVER_SELECT:
+
+			break;
 		case e_NetworkMode.CHARACTER_SELECT:
 			break;
 		case e_NetworkMode.MAP_SELECT:
