@@ -170,7 +170,7 @@ public class UIManager : MonoBehaviour
 
 				if(Input.GetButtonDown("Submit"))
 				{
-					NetworkManager.GetInstance().JoinServer(buttonSelected, "city_scaled");
+					NetworkManager.GetInstance().JoinServer(buttonSelected, serverButtons[buttonSelected].GetComponent<GameServer>().mapName.text);
 					buttonSelected = 0;
 					SwapUI("Select");
 				}
@@ -201,6 +201,7 @@ public class UIManager : MonoBehaviour
 				}
 				else if(trackButtons.Count > 0 )
 				{
+					Debug.Log ("selecting maps");
 					if(Input.GetAxis("D-PadUD") == 1 && dPadEnabled)         //move up
 					{
 						dPadEnabled = false;
@@ -230,7 +231,7 @@ public class UIManager : MonoBehaviour
 				}
 				else if(Input.GetButtonDown("Submit"))
 				{					
-					NetworkManager.GetInstance().CreateServer("city_scaled", minPlayers);
+					NetworkManager.GetInstance().CreateServer(trackButtons[buttonSelected].GetComponent<MapSelectUI>().actualSceneName, minPlayers);
 					buttonSelected = 0;
 					SwapUI("Select");
 				}
@@ -271,6 +272,7 @@ public class UIManager : MonoBehaviour
 			
 			if(Input.GetButtonDown("Submit"))
 			{
+				charSelectMenu.SetActive(false);
 				StartRace();
 			}
 
@@ -368,7 +370,7 @@ public class UIManager : MonoBehaviour
 
 	public IEnumerator DPadInputMaps(int value)
 	{
-		
+		Debug.Log ("Changing buttons" + value);
 		if(value == 1)  // go up
 		{
 			if(buttonSelected-1 < 0)
@@ -382,8 +384,10 @@ public class UIManager : MonoBehaviour
 				buttonSelected = 0;
 			else buttonSelected += 1;
 		}
-		
-		
+
+		Debug.Log (trackButtons[buttonSelected].GetComponentInChildren<Text>().text);
+
+		eventSystem.SetSelectedGameObject(trackButtons[buttonSelected]);
 		yield return new WaitForSeconds(0.3f);
 		dPadEnabled = true;
 	}
