@@ -69,7 +69,9 @@ public class CartController : MonoBehaviour
 	public float turnInput = 0.0f;
 	
 	public Powerup activePowerup;
-	
+
+	public bool firing = false;
+
 	public Transform topConnectionPoint;
 	public Transform leftConnectionPoint;
 	public Transform rightConnectionPoint;
@@ -82,7 +84,15 @@ public class CartController : MonoBehaviour
 
 	private float animTurnInput = 0.0f;
 	private float animSpeedInput = 0.0f;	
-	
+
+	private void Start()
+	{	
+		if(this.lapController == null)
+		{
+			this.lapController = this.gameObject.AddComponent<CartLapController>();
+		}
+	}
+
 	public void ActivateCart()
 	{
 		sceneCamera = Camera.main;
@@ -101,11 +111,6 @@ public class CartController : MonoBehaviour
 		
 		sceneCamera.transform.position = Vector3.Lerp (sceneCamera.transform.position, transform.TransformPoint (cameraAttachPos), 0.25f);
 		sceneCamera.transform.rotation = Quaternion.Slerp (sceneCamera.transform.rotation, transform.rotation * cameraRot, 0.25f);
-
-		if(this.lapController == null)
-		{
-			this.lapController = this.gameObject.AddComponent<CartLapController>();
-		}
 
 	}
 	
@@ -172,12 +177,20 @@ public class CartController : MonoBehaviour
 				
 				if (this.activePowerup != null) 
 				{
-					if(Input.GetButtonDown ("Fire1"))
+					if(Input.GetButtonDown ("Fire1") || (!this.myView.isMine && this.firing))
 					{
+						if(this.myView.isMine)
+						{
+							this.firing = true;
+						}
 						this.activePowerup.Fire(true);
 					}
-					else if(Input.GetButtonUp("Fire1"))
+					else if(Input.GetButtonUp("Fire1") || (!this.myView.isMine && !this.firing))
 					{
+						if(this.myView.isMine)
+						{
+							this.firing = false;
+						}
 						this.activePowerup.Fire(false);
 					}
 					/*GameObject glaiveObj = (GameObject)Network.Instantiate (this.Glaive, transform.position + (this.transform.forward * 5.5f), this.transform.rotation, 0);

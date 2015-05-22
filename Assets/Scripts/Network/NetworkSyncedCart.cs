@@ -16,6 +16,7 @@ public class NetworkSyncedCart : MonoBehaviour
 		internal float turnInput;
 		internal Vector3 velocity;
 		internal Vector3 angularVelocity;
+		internal bool firing;
 	}
 
 	private List<State> m_BufferedState = new List<State>();
@@ -46,6 +47,7 @@ public class NetworkSyncedCart : MonoBehaviour
 			float turnInput = cartCont.turnInput;
 			Vector3 velocity = m_rigidbody.velocity;
 			Vector3 angularVelocity = m_rigidbody.angularVelocity;
+			bool firing = cartCont.firing;
 
 			if(cartCont != null)
 				drift = cartCont.drifting;
@@ -56,6 +58,7 @@ public class NetworkSyncedCart : MonoBehaviour
 			stream.Serialize(ref turnInput);
 			stream.Serialize(ref velocity);
 			stream.Serialize(ref angularVelocity);
+			stream.Serialize(ref firing);
 		}
 		else
 		{
@@ -65,6 +68,7 @@ public class NetworkSyncedCart : MonoBehaviour
 			float turnInput = 0.0f;
 			Vector3 velocity = Vector3.zero;
 			Vector3 angularVelocity = Vector3.zero;
+			bool firing = false;
 
 			stream.Serialize(ref pos);
 			stream.Serialize(ref rot);
@@ -72,6 +76,7 @@ public class NetworkSyncedCart : MonoBehaviour
 			stream.Serialize(ref turnInput);
 			stream.Serialize(ref velocity);
 			stream.Serialize(ref angularVelocity);
+			stream.Serialize(ref firing);
 
 			State state = new State();
 			state.timestamp = info.timestamp;
@@ -81,6 +86,7 @@ public class NetworkSyncedCart : MonoBehaviour
 			state.turnInput = turnInput;
 			state.velocity = velocity;
 			state.angularVelocity = angularVelocity;
+			state.firing = firing;
 			m_BufferedState.Insert(0, state);
 
 			cartCont.UpdateTurnAnim(state.turnInput);
@@ -143,6 +149,7 @@ public class NetworkSyncedCart : MonoBehaviour
 						m_rigidbody.velocity = lhs.velocity;
 						m_rigidbody.angularVelocity = lhs.angularVelocity;
 						cartCont.drifting = lhs.drift;
+						cartCont.firing = lhs.firing;
 						return;
 					}
 				}
