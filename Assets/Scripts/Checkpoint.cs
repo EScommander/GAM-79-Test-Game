@@ -30,6 +30,8 @@ public class Checkpoint : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
+		Debug.LogError (other.name + " Entered Checkpoint Index " + this.checkpointOrderIndex);
+
 		if (!Application.isPlaying)
 			return;
 
