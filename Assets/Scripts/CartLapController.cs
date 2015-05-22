@@ -3,11 +3,11 @@ using System.Collections;
 
 public class CartLapController : MonoBehaviour 
 {
-	public static int numLaps = 2;
+	public static int numLaps = 1;
 
-	public int currentLap = 0;
+	public int currentLap = 1;
 	public bool wrongWay = false;
-	public int currentCheckpoint = 0;
+	public int currentCheckpoint = 1;
 	public bool finishedRace = false;
 
 	public void OnFinishRace()
@@ -15,6 +15,7 @@ public class CartLapController : MonoBehaviour
 		this.finishedRace = true;
 		Debug.LogError("FINISHED RACE AS #" + CartRacer.TrackManager.numCartsFinshed + " CART!");
 		CartRacer.TrackManager.numCartsFinshed++;
+		WInText.instance.text.text = "Place: " + CartRacer.TrackManager.numCartsFinshed;
 	}
 
 	public void EnteredCheckpoint(int position)
@@ -26,7 +27,7 @@ public class CartLapController : MonoBehaviour
 				currentCheckpoint = 0;
 				currentLap++;
 
-				if(currentLap > CartLapController.numLaps)
+				if(currentLap >= CartLapController.numLaps)
 				{
 					this.OnFinishRace();
 				}
