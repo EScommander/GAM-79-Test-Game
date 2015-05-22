@@ -237,7 +237,7 @@ public class CartController : MonoBehaviour
 						steeringInput = -steeringInput;
 					}
 					
-					if (Input.GetKey (KeyCode.R)) {
+					if (Input.GetButtonDown ("ResetCart")) {
 						this.StartCoroutine(ResetCart(0.0f));
 					}
 					
