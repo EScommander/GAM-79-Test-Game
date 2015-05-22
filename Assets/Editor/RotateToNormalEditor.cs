@@ -7,7 +7,7 @@ using UnityEngine;
 //[CustomEditor(typeof(MyScript))] 
 public class RotateToNormalEditor :  MonoBehaviour 
 {
-	[MenuItem ("ckTools/Snap to Normal %t")]
+	[MenuItem ("ckTools/Snap to Normal %u")]
 	public static void SnapToNormal()
 	{
 		GameObject[] List = Selection.gameObjects;
@@ -25,6 +25,8 @@ public class RotateToNormalEditor :  MonoBehaviour
 				Debug.Log ("Hit - " + hit.normal);
 				//mySelection.rotation = Quaternion.Euler(0,0,0)*hit.normal;
 				mySelection.rotation = Quaternion.FromToRotation (mySelection.up, hit.normal) * mySelection.rotation;
+				mySelection.position = (hit.point);
+
 				//mySelection.Rotate(mySelection.right, 90);// LookRotation(hit.normal)
 				Debug.DrawLine (hit.point, (hit.point + hit.normal), Color.red);
 
@@ -33,7 +35,7 @@ public class RotateToNormalEditor :  MonoBehaviour
 	}
 
 
-	[MenuItem ("ckTools/Move TM NodesToSnap %u")]
+	[MenuItem ("ckTools/Move TM NodesToSnap %t")]
 	public static void MoveTrackmanagerNodesToSnap()
 	{
 		GameObject[] List = Selection.gameObjects;
