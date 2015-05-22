@@ -5,8 +5,6 @@ namespace CartRacer
 {
 	public class TrackManager : MonoBehaviour 
 	{
-		public static int numCartsFinshed = 0;
-
 		public static TrackManager SceneInstance
 		{
 			get
@@ -33,7 +31,6 @@ namespace CartRacer
 		private void Start()
 		{
 			TrackManager.SceneInstance = this;
-			TrackManager.numCartsFinshed = 0;
 
 			if(checkpoints != null && checkpoints.Length > 0)
 			{
