@@ -77,6 +77,9 @@ public class CartController : MonoBehaviour
 	
 	
 	public float animInputBlendSpeed = 0.2f;
+
+	public CartLapController lapController = null;
+
 	private float animTurnInput = 0.0f;
 	private float animSpeedInput = 0.0f;	
 	
@@ -98,6 +101,12 @@ public class CartController : MonoBehaviour
 		
 		sceneCamera.transform.position = Vector3.Lerp (sceneCamera.transform.position, transform.TransformPoint (cameraAttachPos), 0.25f);
 		sceneCamera.transform.rotation = Quaternion.Slerp (sceneCamera.transform.rotation, transform.rotation * cameraRot, 0.25f);
+
+		if(this.lapController == null)
+		{
+			this.lapController = this.gameObject.AddComponent<CartLapController>();
+		}
+
 	}
 	
 	public IEnumerator ResetCart(float delay)

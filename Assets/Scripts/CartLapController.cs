@@ -13,11 +13,13 @@ public class CartLapController : MonoBehaviour
 	public void OnFinishRace()
 	{
 		this.finishedRace = true;
+		Debug.LogError("FINISHED RACE AS #" + CartRacer.TrackManager.numCartsFinshed + " CART!");
+		CartRacer.TrackManager.numCartsFinshed++;
 	}
 
 	public void EnteredCheckpoint(int position)
 	{
-		if(position == currentCheckpoint)
+		if(!this.finishedRace && position == currentCheckpoint)
 		{
 			if(currentCheckpoint + 1 >= CartRacer.TrackManager.SceneInstance.checkpoints.Length)
 			{
