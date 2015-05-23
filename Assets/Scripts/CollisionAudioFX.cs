@@ -20,7 +20,7 @@ public class CollisionAudioFX : MonoBehaviour
 			}
 		}
 
-		if(collision.gameObject != null && collision.gameObject.GetComponent<CartController> != null)
+		if(collision.gameObject != null && collision.gameObject.GetComponent<CartController>() != null)
 		{
 			foreach(AudioSource source in cartCollisionAudio)
 			{
@@ -52,7 +52,7 @@ public class CollisionAudioFX : MonoBehaviour
 			}
 		}
 
-		if(collision.gameObject != null && collision.gameObject.GetComponent<CartController> != null)
+		if(collision.gameObject != null && collision.gameObject.GetComponent<CartController>() != null)
 		{
 			foreach(AudioSource source in cartCollisionAudio)
 			{
