@@ -123,6 +123,7 @@ public class NetworkManager : MonoBehaviour
 	{
 		this.maxPlayers = maxPlayers - 1;
 		this.levelToLoad = levelToLoad;
+		this.mapInfo = levelToLoad;
 		StartServer();
 		current = e_NetworkMode.CHARACTER_SELECT;
 	}
@@ -147,7 +148,7 @@ public class NetworkManager : MonoBehaviour
 			{
 				for(int i = 0; i< hostList.Length; i++)
 				{
-					UIManager.GetInstance().CreateServerButton(hostList[i].gameName, mapInfo, hostList[i].connectedPlayers, hostList[i].playerLimit);
+					UIManager.GetInstance().CreateServerButton(hostList[i].gameName, hostList[i].comment, hostList[i].connectedPlayers, hostList[i].playerLimit);
 				}
 				serversAdded = true;
 			}
@@ -271,6 +272,7 @@ public class NetworkManager : MonoBehaviour
 	{
 							  //(int connections, int listenPort, bool useNat) -- 20 used in FTP, 80 used for Internet traffic
 		Network.InitializeServer (maxPlayers, 25000, !Network.HavePublicAddress ());
+
 		if(this.randomizeGameName)
 		{
 			MasterServer.RegisterHost(typeName, (gameName+ (Mathf.FloorToInt(Random.value * 100)) + ""), mapInfo);
