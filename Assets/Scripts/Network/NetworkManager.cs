@@ -3,13 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-// Make a web build to test out on a single machine
-// Web build should be the opposite of what you are working on.
-
 public class NetworkManager : MonoBehaviour 
 {
-	private const string typeName = "Norco-Studio-Class";
-	private string gameName = "KartRacer";
+	private const string typeName = "Norco-Studio2";
+	private string gameName = "Race";
 
 	private HostData[] hostList; // USED FOR CLIENT ONLY
 	private Vector2 scrollPosition;
@@ -23,14 +20,14 @@ public class NetworkManager : MonoBehaviour
 
 	public bool isOnline = false;
 
-	public bool randomizeTypeName = false;
+	public bool randomizeGameName = false;
 
 	public bool countDownStarted = false;
 	public static bool gameStarted = false;
 
 	public CartController myCart = null;
 
-	public int minPlayers = 12;
+	public int maxPlayers = 12;
 
 	double raceStart = -1;
 
@@ -48,17 +45,23 @@ public class NetworkManager : MonoBehaviour
 
 	public Text countDownText = null;
 
-	public enum e_NetworkMode {CHARACTER_SELECT, MAP_SELECT, RACE};
+	public enum e_NetworkMode {SERVER_SELECT, CHARACTER_SELECT, MAP_SELECT, RACE};
 	public e_NetworkMode current = e_NetworkMode.CHARACTER_SELECT;	
 
 	public GameObject[] racers;
 	private GameObject selectedPrefab = null;
 
+	private string mapInfo = "";
+
+	bool serversAdded = false;
+
+	string levelToLoad = "city_scaled";
+
+	int clientsReady = 0;
+
 	// Use this for initialization
 	void Awake () 
 	{
-
-
 		Object[] objects = Resources.LoadAll("Carts");
 		racers = new GameObject[objects.Length];
 		for(int i = 0; i<objects.Length; i++)
@@ -78,18 +81,59 @@ public class NetworkManager : MonoBehaviour
 	public void setRacer(GameObject cart)
 	{
 		selectedPrefab = cart;
+		AddToReadyCount();
 
-		DontDestroyOnLoad (gameObject);
-		Application.LoadLevel("city_scaled");
+		if(Network.isServer)
+			maxPlayers++;
 
-		StartCoroutine(WaitForScene(0.1f));
+		StartCoroutine(WaitForClients(0.1f));
+	}
+
+	public IEnumerator WaitForClients(float delay)
+	{
+		yield return new WaitForSeconds(delay);
+
+		Debug.Log ("Clients ready?:" + clientsReady + "/" + maxPlayers);
+
+		if(clientsReady == maxPlayers)
+		{
+			DontDestroyOnLoad (gameObject);
+			Application.LoadLevel(levelToLoad);
+			StartCoroutine(WaitForScene(1f));
+		}
+		else StartCoroutine(WaitForClients(0.1f));
 	}
 
 	public IEnumerator WaitForScene(float delay)
 	{
+
+
 		yield return new WaitForSeconds (delay);
 
-		current = e_NetworkMode.RACE;
+		if(!Network.isServer)
+			RequestCartInstantiate();
+		else
+		{
+			StartCoroutine(ServerCartInstantiate());
+		}
+
+	}
+
+	public void CreateServer(string levelToLoad, int maxPlayers)
+	{
+		this.maxPlayers = maxPlayers - 1;
+		this.levelToLoad = levelToLoad;
+		this.mapInfo = levelToLoad;
+		StartServer();
+		current = e_NetworkMode.CHARACTER_SELECT;
+	}
+	
+	public void JoinServer(int i, string levelToLoad)
+	{
+		this.levelToLoad = levelToLoad;
+		Network.Connect(hostList[i]);
+		maxPlayers = hostList[i].playerLimit;
+		current = e_NetworkMode.CHARACTER_SELECT;
 	}
 
 	// Update is called once per frame
@@ -98,45 +142,57 @@ public class NetworkManager : MonoBehaviour
 
 		switch(current)
 		{
+		case e_NetworkMode.SERVER_SELECT:
+			RefreshHostList();
+			if(hostList != null && !serversAdded)
+			{
+				for(int i = 0; i< hostList.Length; i++)
+				{
+					UIManager.GetInstance().CreateServerButton(hostList[i].gameName, hostList[i].comment, hostList[i].connectedPlayers, hostList[i].playerLimit);
+				}
+				serversAdded = true;
+			}
+			break;
 		case e_NetworkMode.CHARACTER_SELECT:
 			break;
 		case e_NetworkMode.MAP_SELECT:
 			break;
 		case e_NetworkMode.RACE:
-
 			GameObject countdownObj = GameObject.FindGameObjectWithTag("countdown");
-
 			if(countdownObj != null)
 			{
 				countDownText = countdownObj.GetComponent<Text>();
 			}
 
-			startPos = GameObject.FindGameObjectWithTag("StartPosition");
-			if (!connected && searchingForGame) 
-			{
-				if(this.randomizeTypeName)
-				{
-					StartServer();
-				}
-				else
-				{
-					RefreshHostList();
-					if(hostList != null)
-					{
-						Debug.Log (hostList.Length);
-						if(hostAttempt < hostList.Length)
-						{	
-							Network.Connect(hostList[hostAttempt]);
-							connected = true;
-						}
-						else StartServer();
-					}
-				}
-			}
+
+
+
+			//startPos = GameObject.FindGameObjectWithTag("StartPosition");
+//			if (!connected && searchingForGame) 
+//			{
+//				if(this.randomizeTypeName)
+//				{
+//					StartServer();
+//				}
+//				else
+//				{
+//					RefreshHostList();
+//					if(hostList != null)
+//					{
+//						Debug.Log (hostList.Length);
+//						if(hostAttempt < hostList.Length)
+//						{	
+//							Network.Connect(hostList[hostAttempt]);
+//							connected = true;
+//						}
+//						else StartServer();
+//					}
+//				}
+//			}
 
 			if(!countDownStarted && Network.isServer)
 			{
-				if(clients.Count >= minPlayers)
+				if(clients.Count >= maxPlayers)
 				{
 					SendRaceStartTime();
 					Debug.Log ("START!");
@@ -158,6 +214,7 @@ public class NetworkManager : MonoBehaviour
 					int countDown = (int)(raceStart - Network.time) + 1;
 					if(countDownText != null)
 					{
+						Debug.Log ("Countdownn?");
 						countDownText.text = countDown.ToString();
 					}
 //					NetworkSyncedCart cartSync = myCart.gameObject.GetComponent<NetworkSyncedCart>();
@@ -198,6 +255,7 @@ public class NetworkManager : MonoBehaviour
 			break;
 		}
 	}
+	
 
 	public static NetworkManager GetInstance()
 	{
@@ -213,14 +271,15 @@ public class NetworkManager : MonoBehaviour
 	private void StartServer()
 	{
 							  //(int connections, int listenPort, bool useNat) -- 20 used in FTP, 80 used for Internet traffic
-		Network.InitializeServer (minPlayers, 25000, !Network.HavePublicAddress ());
-		if(this.randomizeTypeName)
+		Network.InitializeServer (maxPlayers, 25000, !Network.HavePublicAddress ());
+
+		if(this.randomizeGameName)
 		{
-			MasterServer.RegisterHost (typeName + (Mathf.FloorToInt(Random.value * 100) + ""), gameName);
+			MasterServer.RegisterHost(typeName, (gameName+ (Mathf.FloorToInt(Random.value * 100)) + ""), mapInfo);
 		}
 		else
 		{
-			MasterServer.RegisterHost (typeName, gameName);
+			MasterServer.RegisterHost(typeName, gameName, mapInfo);
 		}
 	}
 
@@ -255,10 +314,10 @@ public class NetworkManager : MonoBehaviour
 
 		clients.Add (Network.player);
 		connected = true;
-		Debug.Log (Network.player);
-		Debug.Log ("whut?");
-		GameObject cartObject = (GameObject)Network.Instantiate(selectedPrefab, startPos.transform.position, selectedPrefab.transform.rotation, 0);
-		myCart = cartObject.GetComponent<CartController>();
+//		Debug.Log (Network.player);
+//		Debug.Log ("whut?");
+//		GameObject cartObject = (GameObject)Network.Instantiate(selectedPrefab, startPos.transform.position, selectedPrefab.transform.rotation, 0);
+//		myCart = cartObject.GetComponent<CartController>();
 
 		Debug.Log ("Server Initialized");
 	}
@@ -282,6 +341,19 @@ public class NetworkManager : MonoBehaviour
 
 	}
 
+	IEnumerator ServerCartInstantiate()
+	{
+		while(startPos == null)
+		{
+			startPos = GameObject.FindGameObjectWithTag("StartPosition");
+		}
+
+		yield return new WaitForSeconds(0f);
+		GameObject cartObject = (GameObject)Network.Instantiate(selectedPrefab, startPos.transform.position, selectedPrefab.transform.rotation, 0);
+		myCart = cartObject.GetComponent<CartController>();
+		current = e_NetworkMode.RACE;
+	}
+
 	[RPC]
 	void RequestCartInstantiate()
 	{
@@ -293,6 +365,7 @@ public class NetworkManager : MonoBehaviour
 	{
 		int racePos = clients.Count;
 		GetComponent<NetworkView>().RPC ("InstantiateBasedOnClientPos", RPCMode.AllBuffered, info.sender, racePos);
+		current = e_NetworkMode.RACE;
 	}
 
 	[RPC]
@@ -301,6 +374,11 @@ public class NetworkManager : MonoBehaviour
 		if(player != Network.player)
 			return;
 
+		while(startPos == null)
+		{
+			startPos = GameObject.FindGameObjectWithTag("StartPosition");
+		}
+		
 		Debug.Log ("my pos is:" + pos);
 		int row = (pos-1)/4;
 		
@@ -308,6 +386,7 @@ public class NetworkManager : MonoBehaviour
 		                                                       new Vector3(3f * (pos%4), 0, selectedPrefab.transform.lossyScale.z * 5f * row), 
 		                                                       selectedPrefab.transform.rotation, 0);
 		myCart = cartObject.GetComponent<CartController>();
+		current = e_NetworkMode.RACE;
 	}
 
 	void RefreshHostList()
@@ -323,10 +402,20 @@ public class NetworkManager : MonoBehaviour
 		}
 	}
 
+	[RPC] void AddToReadyCount()
+	{
+		GetComponent<NetworkView>().RPC ("ClientReady", RPCMode.AllBuffered);
+	}
+
+	[RPC] void ClientReady()
+	{
+		clientsReady ++;
+	}
+
 	[RPC] void JoinClientListOnServer()
 	{
 		GetComponent<NetworkView>().RPC ("AddClientToList", RPCMode.Server, Network.player);
-		RequestCartInstantiate();
+		//RequestCartInstantiate();
 	}
 
 	[RPC] void AddClientToList(NetworkPlayer player)
