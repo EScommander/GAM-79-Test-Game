@@ -47,7 +47,11 @@ public class CartController : MonoBehaviour
 	public bool drifting = false;
 	float prevShot = 0.0f;
 	float shotCoolDown = 0.2f;
-	
+
+	bool camFlipped = false;
+	Vector3 cameraSavedPos = Vector3.zero;
+	Quaternion cameraSavedRot = Quaternion.identity;
+
 	public Vector3 cameraAttachPos = new Vector3(0,1.6f,-3.4f);
 	public Quaternion cameraRot = Quaternion.Euler(15.0f,0.0f,0.0f);
 	
@@ -65,7 +69,9 @@ public class CartController : MonoBehaviour
 	public float turnInput = 0.0f;
 	
 	public Powerup activePowerup;
-	
+
+	public bool firing = false;
+
 	public Transform topConnectionPoint;
 	public Transform leftConnectionPoint;
 	public Transform rightConnectionPoint;
@@ -73,9 +79,20 @@ public class CartController : MonoBehaviour
 	
 	
 	public float animInputBlendSpeed = 0.2f;
+
+	public CartLapController lapController = null;
+
 	private float animTurnInput = 0.0f;
 	private float animSpeedInput = 0.0f;	
-	
+
+	private void Start()
+	{	
+		if(this.lapController == null)
+		{
+			this.lapController = this.gameObject.AddComponent<CartLapController>();
+		}
+	}
+
 	public void ActivateCart()
 	{
 		sceneCamera = Camera.main;
@@ -94,6 +111,7 @@ public class CartController : MonoBehaviour
 		
 		sceneCamera.transform.position = Vector3.Lerp (sceneCamera.transform.position, transform.TransformPoint (cameraAttachPos), 0.25f);
 		sceneCamera.transform.rotation = Quaternion.Slerp (sceneCamera.transform.rotation, transform.rotation * cameraRot, 0.25f);
+
 	}
 	
 	public IEnumerator ResetCart(float delay)
@@ -113,8 +131,7 @@ public class CartController : MonoBehaviour
 	{
 		if (NetworkManager.gameStarted && myView != null && myView.isMine) 
 		{
-			sceneCamera.transform.position = Vector3.Lerp (sceneCamera.transform.position, transform.TransformPoint (cameraAttachPos), 0.25f);
-			sceneCamera.transform.rotation = Quaternion.Slerp (sceneCamera.transform.rotation, transform.rotation * cameraRot, 0.25f);
+
 			
 			if (drifting) {
 				if (this.driftFX != null) {
@@ -127,34 +144,53 @@ public class CartController : MonoBehaviour
 			}
 			
 			
-			if ((GetComponent<NetworkView> ().isMine && NetworkManager.gameStarted) || NetworkManager.GetInstance ().isOnline == false) {
+			if ((GetComponent<NetworkView> ().isMine && NetworkManager.gameStarted) || NetworkManager.GetInstance ().isOnline == false) 
+			{
 				Debug.DrawRay (transform.position, transform.forward * 10.0f);
 				
 				if (this.GetComponent<Rigidbody> () == null)
 					return;
-				
-				if (sceneCamera.transform.IsChildOf (transform)) {
-					if (Input.GetButton ("CameraFlip")) {
-						sceneCamera.transform.localPosition = transform.TransformPoint (cameraFlipPos);
-						sceneCamera.transform.localRotation = cameraFlipRot;
-					}
-					//				else
-					//				{
-					//					sceneCamera.transform.localPosition = cameraAttachPos;
-					//					sceneCamera.transform.localRotation = cameraRot;
-					//				}
+
+				if (Input.GetButton("CameraFlip")) 
+				{
+					sceneCamera.transform.parent = transform;
+
+					cameraSavedPos = transform.localPosition;
+					cameraSavedRot = transform.localRotation;
+
+					sceneCamera.transform.localPosition = cameraFlipPos;						
+					sceneCamera.transform.localRotation = cameraFlipRot;
+					camFlipped = true;
 				}
-				
-				
+				else if(camFlipped)
+				{
+					sceneCamera.transform.parent = null;
+					sceneCamera.transform.position = transform.TransformPoint (cameraAttachPos);
+					sceneCamera.transform.rotation = transform.rotation * cameraRot;
+					camFlipped = false;
+				}
+				else
+				{
+					sceneCamera.transform.position = Vector3.Lerp (sceneCamera.transform.position, transform.TransformPoint (cameraAttachPos), 0.5f);
+					sceneCamera.transform.rotation = Quaternion.Slerp (sceneCamera.transform.rotation, transform.rotation * cameraRot, 0.5f);
+				}				
 				
 				if (this.activePowerup != null) 
 				{
-					if(Input.GetKeyDown (KeyCode.LeftShift))
+					if(Input.GetButtonDown ("Fire1") || (!this.myView.isMine && this.firing))
 					{
+						if(this.myView.isMine)
+						{
+							this.firing = true;
+						}
 						this.activePowerup.Fire(true);
 					}
-					else if(Input.GetKeyUp (KeyCode.LeftShift))
+					else if(Input.GetButtonUp("Fire1") || (!this.myView.isMine && !this.firing))
 					{
+						if(this.myView.isMine)
+						{
+							this.firing = false;
+						}
 						this.activePowerup.Fire(false);
 					}
 					/*GameObject glaiveObj = (GameObject)Network.Instantiate (this.Glaive, transform.position + (this.transform.forward * 5.5f), this.transform.rotation, 0);
@@ -169,20 +205,20 @@ public class CartController : MonoBehaviour
 					}*/
 				}
 				
-				if (Input.GetButton ("Drift")) {
+				if (Input.GetButton ("Drift")) 
+				{
+					Debug.Log ("drifting?");
 					this.GetComponent<Rigidbody> ().drag = this.traction / 1.5f;
 					this.forwardAcceleration = acceleration / 2.0f;
 					this.steerHandling = this.handling * 2.0f;
-					drifting = true;
-					
-					
-				} else {
+					drifting = true;					
+				} 
+				else 
+				{
 					this.GetComponent<Rigidbody> ().drag = this.traction;
 					this.forwardAcceleration = acceleration;
 					this.steerHandling = this.handling;
-					drifting = false;
-					
-					
+					drifting = false;					
 				}
 				
 				this.GetComponent<Rigidbody> ().angularDrag = this.rotationalTraction;
@@ -223,7 +259,7 @@ public class CartController : MonoBehaviour
 						steeringInput = -steeringInput;
 					}
 					
-					if (Input.GetKey (KeyCode.R)) {
+					if (Input.GetButtonDown ("ResetCart")) {
 						this.StartCoroutine(ResetCart(0.0f));
 					}
 					
