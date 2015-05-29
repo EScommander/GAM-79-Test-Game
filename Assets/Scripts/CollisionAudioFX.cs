@@ -10,8 +10,39 @@ public class CollisionAudioFX : MonoBehaviour
 
 	public bool isColliding = false;
 
-	private void OnCollisionEnter(Collision collision)
+	private void Awake()
 	{
+		BoxCollider collider = this.gameObject.GetComponent<BoxCollider> ();
+
+		if(collider != null)
+		{
+			collider.isTrigger = true;
+		}
+
+		foreach(AudioSource source in genericCollisionAudio)
+		{
+			if(source != null)
+			{
+				source.playOnAwake = false;
+			}
+		}
+
+		foreach(AudioSource source in cartCollisionAudio)
+		{
+			if(source != null)
+			{
+				source.playOnAwake = false;
+			}
+		}
+	}
+
+	private void OnTriggerEnter(Collider collision)
+	{
+		if(collision.tag == "Powerup")
+		{
+			return;
+		}
+
 		foreach(AudioSource source in genericCollisionAudio)
 		{
 			if(source != null)
@@ -42,8 +73,9 @@ public class CollisionAudioFX : MonoBehaviour
 		this.isColliding = true;
 	}
 
-	private void OnCollisionExit(Collision collision)
+	private void OnTriggerExit(Collider collision)
 	{
+		/*
 		foreach(AudioSource source in genericCollisionAudio)
 		{
 			if(source != null)
@@ -61,7 +93,7 @@ public class CollisionAudioFX : MonoBehaviour
 					source.Stop();
 				}
 			}
-		}
+		}*/
 
 		foreach(GameObject fxObj in FXObjs)
 		{
