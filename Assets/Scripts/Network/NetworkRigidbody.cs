@@ -1,8 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-public class NetworkRigidbody : MonoBehaviour
+public class NetworkRigidbody : MonoBehaviour 
 {
+	public double m_InterpolationBackTime = 0.1;
+	public double m_ExtrapolationLimit = 0.5;
+	
 	internal struct  State
 	{
 		internal double timestamp;
@@ -11,38 +14,31 @@ public class NetworkRigidbody : MonoBehaviour
 		internal Quaternion rot;
 		internal Vector3 angularVelocity;
 	}
-
-	public double m_InterpolationBackTime = 0.1;
-	public double m_ExtrapolationLimit = 0.5;
-	private Rigidbody m_rigidbody;
-	private NetworkView m_networkView;
 	
 	// We store twenty states with "playback" information
-	private State[] m_BufferedState = new State[20];
+	State[] m_BufferedState = new State[20];
 	// Keep track of what slots are used
-	private int m_TimestampCount;
-
-
-	void Awake()
+	int m_TimestampCount;
+	Rigidbody rigidbody;
+	
+	void Start()
 	{
-		m_rigidbody = GetComponent<Rigidbody> ();
-		m_networkView = GetComponent<NetworkView> ();
-		if (m_networkView.isMine) 
-		{
+		rigidbody = GetComponent<Rigidbody> ();
+		NetworkView networkView = GetComponent<NetworkView> ();
+		if (networkView.isMine)
 			enabled = false;
-		}
 	}
-
+	
 	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)
 	{
 		// Send data to server
 		if (stream.isWriting)
 		{
-			Vector3 pos = GetComponent<Rigidbody>().position;
-			Quaternion rot = GetComponent<Rigidbody>().rotation;
-			Vector3 velocity = GetComponent<Rigidbody>().velocity;
-			Vector3 angularVelocity = GetComponent<Rigidbody>().angularVelocity;
-
+			Vector3 pos = rigidbody.position;
+			Quaternion rot = rigidbody.rotation;
+			Vector3 velocity = rigidbody.velocity;
+			Vector3 angularVelocity = rigidbody.angularVelocity;
+			
 			stream.Serialize(ref pos);
 			stream.Serialize(ref velocity);
 			stream.Serialize(ref rot);
@@ -79,7 +75,7 @@ public class NetworkRigidbody : MonoBehaviour
 			// Slots aren't actually freed so this just makes sure the buffer is
 			// filled up and that uninitalized slots aren't used.
 			m_TimestampCount = Mathf.Min(m_TimestampCount + 1, m_BufferedState.Length);
-
+			
 			// Check if states are in order, if it is inconsistent you could reshuffel or 
 			// drop the out-of-order state. Nothing is done here
 			for (int i=0;i<m_TimestampCount-1;i++)
@@ -141,10 +137,10 @@ public class NetworkRigidbody : MonoBehaviour
 				float axisLength = extrapolationLength * latest.angularVelocity.magnitude * Mathf.Rad2Deg;
 				Quaternion angularRotation = Quaternion.AngleAxis(axisLength, latest.angularVelocity);
 				
-				m_rigidbody.position = latest.pos + latest.velocity * extrapolationLength;
-				m_rigidbody.rotation = angularRotation * latest.rot;
-				m_rigidbody.velocity = latest.velocity;
-				m_rigidbody.angularVelocity = latest.angularVelocity;
+				rigidbody.position = latest.pos + latest.velocity * extrapolationLength;
+				rigidbody.rotation = angularRotation * latest.rot;
+				rigidbody.velocity = latest.velocity;
+				rigidbody.angularVelocity = latest.angularVelocity;
 			}
 		}
 	}
