@@ -89,6 +89,7 @@ ModelImporter:
     100162: spine_02
     100164: spine_03
     100166: spine_04
+    100168: Astera_Low
     400000: body
     400002: cap
     400004: //RootNode
@@ -173,14 +174,18 @@ ModelImporter:
     400162: spine_02
     400164: spine_03
     400166: spine_04
+    400168: Astera_Low
     2300000: body
     3300000: body
     4300000: polySurface1_MeshPart0
     4300002: polySurface1_MeshPart1
     4300004: body
+    4300006: Astera_Low
+    7400000: Take 001
     9500000: //RootNode
     13700000: polySurface1_MeshPart0
     13700002: polySurface1_MeshPart1
+    13700004: Astera_Low
   materials:
     importMaterials: 1
     materialName: 0
