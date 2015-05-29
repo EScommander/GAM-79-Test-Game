@@ -9,4 +9,6 @@ public class PlayerData : MonoBehaviour
 	public Sprite characterSprite = null;
 	public CartController cartPrefab = null;
 	public string name = "";
+
+	public AudioClip[] charSelectSounds;
 }
