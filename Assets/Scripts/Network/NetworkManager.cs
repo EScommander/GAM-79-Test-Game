@@ -235,7 +235,7 @@ public class NetworkManager : MonoBehaviour
 				else if(!gameStarted && raceStart != -1)
 				{
 					gameStarted = true;
-
+					ToggleBigHeadMode.BigHeadMode(true);
 				}
 				else if(gameStarted && raceStart + 2 > Network.time)
 				{
