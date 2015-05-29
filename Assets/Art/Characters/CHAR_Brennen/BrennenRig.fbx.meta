@@ -87,6 +87,7 @@ ModelImporter:
     100158: spine_02
     100160: spine_03
     100162: spine_04
+    100164: Final_Low_3
     400000: body
     400002: //RootNode
     400004: cap
@@ -169,13 +170,16 @@ ModelImporter:
     400158: spine_02
     400160: spine_03
     400162: spine_04
+    400164: Final_Low_3
     2300000: body
     3300000: body
     4300000: Group37568
     4300002: body
+    4300004: Final_Low_3
     7400000: Take 001
     9500000: //RootNode
     13700000: Group37568
+    13700002: Final_Low_3
   materials:
     importMaterials: 1
     materialName: 0
