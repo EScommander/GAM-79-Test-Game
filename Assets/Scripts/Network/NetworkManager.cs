@@ -59,6 +59,8 @@ public class NetworkManager : MonoBehaviour
 
 	int clientsReady = 0;
 
+	bool bigHeadModeEnabled = false;
+
 	// Use this for initialization
 	void Awake () 
 	{
@@ -82,6 +84,7 @@ public class NetworkManager : MonoBehaviour
 
 	public void setRacer(GameObject cart)
 	{
+		bigHeadModeEnabled = UIManager.GetInstance ().bigHeadToggle.isOn;
 		selectedPrefab = cart;
 		AddToReadyCount();
 
@@ -212,6 +215,9 @@ public class NetworkManager : MonoBehaviour
 				
 				if(!gameStarted && raceStart > Network.time)
 				{
+					if(bigHeadModeEnabled)
+						ToggleBigHeadMode.BigHeadMode(true);
+
 					int countDown = (int)(raceStart - Network.time) + 1;
 					if(countDownText != null)
 					{
@@ -235,7 +241,6 @@ public class NetworkManager : MonoBehaviour
 				else if(!gameStarted && raceStart != -1)
 				{
 					gameStarted = true;
-					ToggleBigHeadMode.BigHeadMode(true);
 				}
 				else if(gameStarted && raceStart + 2 > Network.time)
 				{

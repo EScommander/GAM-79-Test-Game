@@ -77,6 +77,7 @@ public class UIManager : MonoBehaviour
 	public AudioSource confirmSound = null;
 
 	public Toggle bigHeadToggle = null;
+	bool prevHeadMode = false;
 
 
 	public static UIManager GetInstance()
@@ -267,6 +268,13 @@ public class UIManager : MonoBehaviour
 			}
 			break;
 		case NetworkManager.e_NetworkMode.CHARACTER_SELECT:
+			if(bigHeadToggle.isOn != prevHeadMode)
+			{
+				prevHeadMode = bigHeadToggle.isOn;
+
+				ToggleBigHeadMode.BigHeadMode(bigHeadToggle.isOn);
+			}
+
 			// keyboard and joystick inputs
 			if(Input.GetAxis("D-PadLR") == 1 && dPadEnabled)         //move right
 			{
@@ -421,18 +429,14 @@ public class UIManager : MonoBehaviour
 		clickSound.Play ();
 		for(int i = 0; i < racers.Length; i++)
 		{
+			ToggleBigHeadMode.BigHeadMode(bigHeadToggle.isOn);
+
 			if(racers[i].name == name)
 			{
 				GameObject prevCart = cart;
 				cart = (GameObject)Instantiate(racers[i], Vector3.zero + Vector3.up * offset, prevCart.transform.rotation);
 				cart.name = racers[i].name;
 				Destroy (prevCart);
-
-				if(bigHeadToggle.isOn)
-				{
-					Debug.Log ("big head mode on");
-					ToggleBigHeadMode.BigHeadMode(true);
-				}
 
 				buttonSelected = i;
 				tagObj.transform.GetComponent<Tag>().charSprite.sprite = racers[i].GetComponent<PlayerData>().characterSprite;
