@@ -72,6 +72,12 @@ public class UIManager : MonoBehaviour
 	private int scrolledToPos = 0;
 	public RectTransform levelScrollView;
 
+	public AudioSource clickSound = null;
+	public AudioSource incorrectClick = null;
+	public AudioSource confirmSound = null;
+
+	public Toggle bigHeadToggle = null;
+
 
 	public static UIManager GetInstance()
 	{
@@ -179,6 +185,7 @@ public class UIManager : MonoBehaviour
 				{
 					if(serverButtons.Count > 0)
 					{
+						confirmSound.Play();
 						JoinServer ();
 					}
 				}
@@ -210,12 +217,14 @@ public class UIManager : MonoBehaviour
 
 					if(Input.GetAxis("D-PadLR") == -1)
 					{
+						clickSound.Play();
 						trackButtons[buttonSelected].GetComponentInChildren<Button>().enabled = true;
 						selectPlayerNum = false;
 					}
 
 					if(Input.GetButtonDown("Submit"))
-					{					
+					{	
+						confirmSound.Play();
 						CreateServer();
 					}
 				}
@@ -236,6 +245,7 @@ public class UIManager : MonoBehaviour
 
 					if(Input.GetAxis("D-PadLR") == 1)
 					{
+						clickSound.Play();
 						trackButtons[buttonSelected].GetComponentInChildren<Button>().enabled = false;
 						selectPlayerNum = true;
 						minPlayersButton.Select();
@@ -262,7 +272,6 @@ public class UIManager : MonoBehaviour
 			{
 				dPadEnabled = false;
 				StartCoroutine(DPadInputCharacter(1, false));
-
 			}
 			else if(Input.GetAxis("D-PadLR") == -1 && dPadEnabled)   //move left
 			{
@@ -392,6 +401,7 @@ public class UIManager : MonoBehaviour
 
 	public void SwitchMap(string actualSceneName)
 	{
+		clickSound.Play ();
 		if(trackButtons[buttonSelected].GetComponentInChildren<Button>().enabled == false)
 		{
 			Debug.Log ("yup");
@@ -408,6 +418,7 @@ public class UIManager : MonoBehaviour
 
 	public void SwitchKart(string name)
 	{
+		clickSound.Play ();
 		for(int i = 0; i < racers.Length; i++)
 		{
 			if(racers[i].name == name)
@@ -416,6 +427,13 @@ public class UIManager : MonoBehaviour
 				cart = (GameObject)Instantiate(racers[i], Vector3.zero + Vector3.up * offset, prevCart.transform.rotation);
 				cart.name = racers[i].name;
 				Destroy (prevCart);
+
+				if(bigHeadToggle.isOn)
+				{
+					Debug.Log ("big head mode on");
+					ToggleBigHeadMode.BigHeadMode(true);
+				}
+
 				buttonSelected = i;
 				tagObj.transform.GetComponent<Tag>().charSprite.sprite = racers[i].GetComponent<PlayerData>().characterSprite;
 				tagObj.transform.GetComponent<Tag>().characterName.text = racers[i].GetComponent<PlayerData>().name;
@@ -453,7 +471,11 @@ public class UIManager : MonoBehaviour
 	{
 		minPlayers += i;
 		if(minPlayers < 1)
+		{
 			minPlayers = 1;
+			incorrectClick.Play ();
+		}
+		else clickSound.Play();
 		
 		yield return new WaitForSeconds(0.2f);
 		dPadEnabled = true;
@@ -463,14 +485,23 @@ public class UIManager : MonoBehaviour
 	{
 		if(value == 1)  // go up
 		{
-			if(buttonSelected-1 >= 0) 
-				buttonSelected -= 1;			
+			if(buttonSelected-1 >= 0)
+			{
+				buttonSelected -= 1;
+				clickSound.Play();
+			}
+			else incorrectClick.Play();
 		}
 		else // go down
 		{
 			if(buttonSelected+1 < trackButtons.Count)
+			{
+				clickSound.Play();
 				buttonSelected += 1;
+			}
+			else incorrectClick.Play();
 		}
+
 
 		if(buttonSelected < scrolledToPos)
 		{
