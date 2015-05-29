@@ -76,6 +76,8 @@ public class NetworkManager : MonoBehaviour
 		{
 			GameObject myCar = (GameObject)Instantiate(carPrefab, carPrefab.transform.position, carPrefab.transform.rotation);
 		}
+
+		RefreshHostList();
 	}
 
 	public void setRacer(GameObject cart)
@@ -143,7 +145,6 @@ public class NetworkManager : MonoBehaviour
 		switch(current)
 		{
 		case e_NetworkMode.SERVER_SELECT:
-			RefreshHostList();
 			if(hostList != null && !serversAdded)
 			{
 				for(int i = 0; i< hostList.Length; i++)
@@ -389,9 +390,12 @@ public class NetworkManager : MonoBehaviour
 		current = e_NetworkMode.RACE;
 	}
 
-	void RefreshHostList()
+	public void RefreshHostList()
 	{
+		Debug.Log ("yup");
 		MasterServer.RequestHostList (typeName);
+
+		serversAdded = false;
 	}
 
 	void OnMasterServerEvent(MasterServerEvent mse)

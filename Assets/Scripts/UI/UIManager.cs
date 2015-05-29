@@ -60,11 +60,17 @@ public class UIManager : MonoBehaviour
 	private bool enableChangePlayerCount = true;
 	private int minPlayers = 1;
 	public Text minPlayersLabel = null;
-	public GameObject minPlayersButton = null;
+
+	public Button minPlayersButton = null;
+	public Button incPlayers = null;
+	public Button decPlayers = null;
 
 	public GameObject trackUIPrefab = null;
 
 	public List<TrackData> tracks = new List<TrackData>();
+
+	private int scrolledToPos = 0;
+	public RectTransform levelScrollView;
 
 
 	public static UIManager GetInstance()
@@ -117,13 +123,12 @@ public class UIManager : MonoBehaviour
 		{
 			GameObject levelUIObject = (GameObject)Instantiate (trackUIPrefab, levelSelectList.transform.position, levelSelectList.transform.rotation);
 			levelUIObject.transform.SetParent(levelSelectList.transform);
-			levelUIObject.GetComponent<MapSelectUI>().SetUIData(track);
+			levelUIObject.GetComponentInChildren<MapSelectUI>().SetUIData(track);
 			levelUIObject.GetComponent<RectTransform>().localScale = Vector3.one;
 
 			trackButtons.Add (levelUIObject);
 			//serverButtons.Add (serverUIObject);	
 		}
-
 
 		//disables auto navigation on UI elements
 		eventSystem.sendNavigationEvents = false;
@@ -160,48 +165,63 @@ public class UIManager : MonoBehaviour
 				}
 				else emptyServerList.gameObject.SetActive(true);
 
+				if(Input.GetButtonDown("CameraFlip"))
+				{
+					NetworkManager.GetInstance().RefreshHostList();
+				}
+
 				if(Input.GetButtonDown("Fire1"))
 				{
-					SwapUI ("Create");
-					selectPlayerNum = false;
-					buttonSelected = 0;
-					current = e_UISubscreen.CREATE;
+					SwitchToCreate ();
 				}
 
 				if(Input.GetButtonDown("Submit"))
 				{
-					NetworkManager.GetInstance().JoinServer(buttonSelected, serverButtons[buttonSelected].GetComponent<GameServer>().mapName.text);
-					buttonSelected = 0;
-					SwapUI("Select");
+					if(serverButtons.Count > 0)
+					{
+						JoinServer ();
+					}
 				}
 			}
 			else
 			{
+				minPlayersLabel.text = minPlayers.ToString();
+
 				if(selectPlayerNum)
 				{
+					if(dPadEnabled) //gives small delay
+						minPlayersButton.Select();
 					if(Input.GetAxis("D-PadUD") == 1 && dPadEnabled)         //move up
 					{
 						//dPadEnabled = false;
 						//StartCoroutine(DPadInputServer(1));
+						incPlayers.Select();
 						StartCoroutine(ChangePlayerReq(1));
-						dPadEnabled = false;
-
-						
+						dPadEnabled = false;						
 					}
 					else if(Input.GetAxis("D-PadUD") == -1 && dPadEnabled)   //move down
 					{
 						//dPadEnabled = false;
 						//StartCoroutine(DPadInputServer(-1));
+						decPlayers.Select();
 						StartCoroutine(ChangePlayerReq(-1));
 						dPadEnabled = false;
 					}
 
-					minPlayersLabel.text = minPlayers.ToString();
-					//eventSystem.SetSelectedGameObject(serverButtons[buttonSelected]);
+					if(Input.GetAxis("D-PadLR") == -1)
+					{
+						trackButtons[buttonSelected].GetComponentInChildren<Button>().enabled = true;
+						selectPlayerNum = false;
+					}
+
+					if(Input.GetButtonDown("Submit"))
+					{					
+						CreateServer();
+					}
 				}
 				else if(trackButtons.Count > 0 )
 				{
-					Debug.Log("selecting Maps");
+					trackButtons[buttonSelected].GetComponentInChildren<Button>().Select();
 					if(Input.GetAxis("D-PadUD") == 1 && dPadEnabled)         //move up
 					{
 						dPadEnabled = false;
@@ -213,27 +233,26 @@ public class UIManager : MonoBehaviour
 						dPadEnabled = false;
 						StartCoroutine(DPadInputMaps(-1));
 					}
+
+					if(Input.GetAxis("D-PadLR") == 1)
+					{
+						trackButtons[buttonSelected].GetComponentInChildren<Button>().enabled = false;
+						selectPlayerNum = true;
+						minPlayersButton.Select();
+					}
 					
-					eventSystem.SetSelectedGameObject(trackButtons[buttonSelected]);
+					//eventSystem.SetSelectedGameObject(trackButtons[buttonSelected].transform.GetChild(0).gameObject);
+
+					if(Input.GetButtonDown("Submit"))
+					{
+						selectPlayerNum = true;
+						minPlayersButton.Select();
+					}
 				}
 
 				if(Input.GetButtonDown("Fire1"))
 				{
-					SwapUI ("Join");
-					buttonSelected = 0;
-					current = e_UISubscreen.JOIN;
-				}
-
-				if(Input.GetButtonDown("Submit") && !selectPlayerNum)
-				{
-					selectPlayerNum = true;
-					eventSystem.SetSelectedGameObject(minPlayersButton);
-				}
-				else if(Input.GetButtonDown("Submit"))
-				{					
-					NetworkManager.GetInstance().CreateServer(trackButtons[buttonSelected].GetComponent<MapSelectUI>().actualSceneName, minPlayers);
-					buttonSelected = 0;
-					SwapUI("Select");
+					SwitchToJoin();
 				}
 			}
 			break;
@@ -276,7 +295,8 @@ public class UIManager : MonoBehaviour
 				StartRace();
 			}
 
-			eventSystem.SetSelectedGameObject(characterButtons[buttonSelected]);
+			characterButtons[buttonSelected].GetComponent<Button>().Select();
+			//eventSystem.SetSelectedGameObject(characterButtons[buttonSelected]);
 
 			if(cart != null)
 				cart.transform.Rotate (Vector3.up * spinSpeed * Time.deltaTime);
@@ -303,6 +323,62 @@ public class UIManager : MonoBehaviour
 
 	}
 
+	public void ClearServerButtons()
+	{
+		foreach(GameObject go in serverButtons)
+		{
+			Destroy(go);
+		}
+
+		serverButtons.Clear ();
+	}
+
+	public void SwitchToJoin ()
+	{
+		SwapUI ("Join");
+		buttonSelected = 0;
+		current = e_UISubscreen.JOIN;
+	}
+
+	public void SwitchToCreate ()
+	{
+		SwapUI ("Create");
+		selectPlayerNum = false;
+		buttonSelected = 0;
+		current = e_UISubscreen.CREATE;
+	}
+
+	public void CreateServer()
+	{
+		NetworkManager.GetInstance().CreateServer(trackButtons[buttonSelected].GetComponentInChildren<MapSelectUI>().actualSceneName, minPlayers);
+		buttonSelected = 0;
+		SwapUI("Select");
+	}
+	
+	public void JoinServer()
+	{
+		NetworkManager.GetInstance().JoinServer(buttonSelected, serverButtons[buttonSelected].GetComponent<GameServer>().mapName.text);
+		buttonSelected = 0;
+		SwapUI("Select");
+	}
+	
+	public void DecreasePlayers()
+	{
+		if(minPlayers > 1)
+			minPlayers--;
+	}
+
+	public void IncreasePlayers()
+	{
+		minPlayers++;
+	}
+	
+	public void SelectPlayerNum()
+	{
+		trackButtons[buttonSelected].GetComponentInChildren<Button>().enabled = false;
+		selectPlayerNum = true;
+	}
+	
 	public void CreateServerButton(string serverName, string mapName, int currPlayers, int maxPlayers)
 	{
 		GameObject serverUIObject = (GameObject)Instantiate (serverUIPrefab, serverList.transform.position, serverList.transform.rotation);
@@ -312,6 +388,22 @@ public class UIManager : MonoBehaviour
 
 		serverButtons.Add (serverUIObject);
 
+	}
+
+	public void SwitchMap(string actualSceneName)
+	{
+		if(trackButtons[buttonSelected].GetComponentInChildren<Button>().enabled == false)
+		{
+			Debug.Log ("yup");
+			trackButtons[buttonSelected].GetComponentInChildren<Button>().enabled = true;
+			selectPlayerNum = false;
+		}
+		
+		for(int i = 0; i < trackButtons.Count; i++)
+		{
+			if(trackButtons[i].GetComponentInChildren<MapSelectUI>().actualSceneName == actualSceneName)
+				buttonSelected = i;
+		}
 	}
 
 	public void SwitchKart(string name)
@@ -359,33 +451,37 @@ public class UIManager : MonoBehaviour
 
 	public IEnumerator ChangePlayerReq(int i)
 	{
-		yield return new WaitForSeconds(0.4f);
-
 		minPlayers += i;
-
 		if(minPlayers < 1)
 			minPlayers = 1;
+		
+		yield return new WaitForSeconds(0.2f);
 		dPadEnabled = true;
 	}
 
 	public IEnumerator DPadInputMaps(int value)
 	{
-		Debug.Log ("changng buttons" + value);
 		if(value == 1)  // go up
 		{
-			if(buttonSelected-1 < 0)
-				buttonSelected = trackButtons.Count-1;
-			else buttonSelected -= 1;
-			
+			if(buttonSelected-1 >= 0) 
+				buttonSelected -= 1;			
 		}
 		else // go down
 		{
-			if(buttonSelected+1 >= trackButtons.Count)
-				buttonSelected = 0;
-			else buttonSelected += 1;
+			if(buttonSelected+1 < trackButtons.Count)
+				buttonSelected += 1;
 		}
 
-		Debug.Log (trackButtons [buttonSelected].GetComponentInChildren<Text> ().text);
+		if(buttonSelected < scrolledToPos)
+		{
+			scrolledToPos--;
+			levelScrollView.localPosition  = new Vector3(-230f, levelScrollView.localPosition.y - levelScrollView.rect.height/trackButtons.Count, 0);
+		}
+		else if(buttonSelected >= scrolledToPos + 3)
+		{
+			scrolledToPos++;
+			levelScrollView.localPosition  = new Vector3(-230f, levelScrollView.localPosition.y + levelScrollView.rect.height/trackButtons.Count, 0);
+		}
 
 		eventSystem.SetSelectedGameObject (trackButtons [buttonSelected]);		
 		yield return new WaitForSeconds(0.3f);

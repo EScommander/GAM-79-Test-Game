@@ -14,4 +14,9 @@ public class MapSelectUI : MonoBehaviour
 		levelName.text = trackdata.displayTrackName;
 		this.actualSceneName = trackdata.actualSceneName; 
 	}
+
+	public void SwitchMap()
+	{
+		UIManager.GetInstance().SwitchMap(actualSceneName);
+	}
 }
