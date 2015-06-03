@@ -17,7 +17,7 @@ public class Powerup : MonoBehaviour
 	public float power = 1.0f;
 
 	//this holds all health, time, ammo, energy, energy-esque values
-	public float energy = 1.0f;
+	public float energy = 5.0f;
 
 	public bool active = false;
 	

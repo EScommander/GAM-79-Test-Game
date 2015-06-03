@@ -135,6 +135,10 @@ public class CartController : MonoBehaviour
 	{
 		if(powerupObjs.Length == 3)
 		{
+			powerupObjs[0].parent = this;
+			powerupObjs[1].parent = this;
+			powerupObjs[2].parent = this;
+
 			switch(this.activePowerupType)
 			{
 				case Powerup.e_PowerupType.NONE:
@@ -446,7 +450,7 @@ public class CartController : MonoBehaviour
 		}
 		else
 		{
-			this.StartCoroutine (ResetCart(1.0f));
+			this.StartCoroutine (ResetCart(0.0f));
 		}
 	}
 	

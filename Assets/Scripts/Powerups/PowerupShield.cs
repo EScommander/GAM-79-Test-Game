@@ -33,6 +33,7 @@ public class PowerupShield : Powerup
 				this.parent.activePowerupType = e_PowerupType.NONE;
 				this.parent.activePowerup = null;
 			}
+			this.energy = 5.0f;
 			this.gameObject.SetActive(false);
 		}
 	}
