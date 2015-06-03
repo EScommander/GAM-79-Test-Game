@@ -18,10 +18,14 @@ public class NetworkSyncedCart : MonoBehaviour
 		internal Vector3 angularVelocity;
 		internal bool firing;
 		internal int activePowerupType;
+		internal int currentLap;
+		internal int currentCheckpoint;
+		internal float nextCheckpointDistance;
 	}
 
 	private List<State> m_BufferedState = new List<State>();
 	public CartController cartCont = null;
+	public CartLapController lapCont = null;
 	private Rigidbody m_rigidbody;
 	private NetworkView m_networkView;
 	private int m_TimestampCount;
@@ -36,6 +40,7 @@ public class NetworkSyncedCart : MonoBehaviour
 			enabled = false;
 		}
 		cartCont = transform.GetComponent<CartController>();
+		lapCont = transform.GetComponent<CartLapController>();
 	}
 
 	void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info)
@@ -50,6 +55,9 @@ public class NetworkSyncedCart : MonoBehaviour
 			Vector3 angularVelocity = m_rigidbody.angularVelocity;
 			bool firing = cartCont.firing;
 			int activePowerupType = (int)cartCont.activePowerupType;
+			int currentLap = lapCont.currentLap;
+			int currentCheckpoint = lapCont.currentCheckpoint;
+			float nextCheckpointDistance = lapCont.distanceToNext;
 
 			if(cartCont != null)
 				drift = cartCont.drifting;
@@ -62,6 +70,9 @@ public class NetworkSyncedCart : MonoBehaviour
 			stream.Serialize(ref angularVelocity);
 			stream.Serialize(ref firing);
 			stream.Serialize(ref activePowerupType);
+			stream.Serialize(ref currentLap);
+			stream.Serialize(ref currentCheckpoint);
+			stream.Serialize(ref nextCheckpointDistance);
 		}
 		else
 		{
@@ -73,6 +84,9 @@ public class NetworkSyncedCart : MonoBehaviour
 			Vector3 angularVelocity = Vector3.zero;
 			bool firing = false;
 			int activePowerupType = 0;
+			int currentLap = 0;
+			int currentCheckpoint = 0;
+			float nextCheckpointDistance = 100.0f;
 
 			stream.Serialize(ref pos);
 			stream.Serialize(ref rot);
@@ -82,6 +96,9 @@ public class NetworkSyncedCart : MonoBehaviour
 			stream.Serialize(ref angularVelocity);
 			stream.Serialize(ref firing);
 			stream.Serialize(ref activePowerupType);
+			stream.Serialize(ref currentLap);
+			stream.Serialize(ref currentCheckpoint);
+			stream.Serialize(ref nextCheckpointDistance);
 
 			State state = new State();
 			state.timestamp = info.timestamp;
@@ -93,6 +110,9 @@ public class NetworkSyncedCart : MonoBehaviour
 			state.angularVelocity = angularVelocity;
 			state.firing = firing;
 			state.activePowerupType = activePowerupType;
+			state.currentLap = currentLap;
+			state.currentCheckpoint = currentCheckpoint;
+			state.nextCheckpointDistance = nextCheckpointDistance;
 			m_BufferedState.Insert(0, state);
 
 			cartCont.UpdateTurnAnim(state.turnInput);
@@ -156,7 +176,6 @@ public class NetworkSyncedCart : MonoBehaviour
 						m_rigidbody.angularVelocity = lhs.angularVelocity;
 						cartCont.drifting = lhs.drift;
 						cartCont.firing = lhs.firing;
-
 						switch(lhs.activePowerupType)
 						{
 							case 0:
@@ -172,6 +191,10 @@ public class NetworkSyncedCart : MonoBehaviour
 								cartCont.activePowerupType = Powerup.e_PowerupType.SHIELD;
 								break;	
 						}
+						lapCont.currentLap = lhs.currentLap;
+						lapCont.currentCheckpoint = lhs.currentCheckpoint;
+						lapCont.distanceToNext = lhs.nextCheckpointDistance;
+
 						return;
 					}
 				}
