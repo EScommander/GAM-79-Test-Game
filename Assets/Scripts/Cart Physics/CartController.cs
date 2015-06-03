@@ -3,6 +3,7 @@ using System.Collections;
 
 public class CartController : MonoBehaviour 
 {
+
 	public static float cartGravity = 200.0f;
 	
 	public float handling = 10.0f;
@@ -69,6 +70,7 @@ public class CartController : MonoBehaviour
 	public float turnInput = 0.0f;
 	
 	public Powerup activePowerup;
+	public Powerup.e_PowerupType activePowerupType = Powerup.e_PowerupType.NONE;
 
 	public bool firing = false;
 
@@ -81,6 +83,8 @@ public class CartController : MonoBehaviour
 	public float animInputBlendSpeed = 0.2f;
 
 	public CartLapController lapController = null;
+
+	public Powerup[] powerupObjs;
 
 	private float animTurnInput = 0.0f;
 	private float animSpeedInput = 0.0f;	
@@ -129,10 +133,39 @@ public class CartController : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		if (NetworkManager.gameStarted && myView != null && myView.isMine) 
+		if(powerupObjs.Length == 3)
 		{
+			switch(this.activePowerupType)
+			{
+				case Powerup.e_PowerupType.NONE:
+					this.activePowerup = null;
+					powerupObjs[0].gameObject.SetActive(false);
+					powerupObjs[1].gameObject.SetActive(false);
+					powerupObjs[2].gameObject.SetActive(false);
+					break;
+				case Powerup.e_PowerupType.GATLINGGUN:
+					powerupObjs[0].gameObject.SetActive(true);
+					powerupObjs[1].gameObject.SetActive(false);
+					powerupObjs[2].gameObject.SetActive(false);
+					this.activePowerup = powerupObjs[0];
+					break;
+				case Powerup.e_PowerupType.ELECTRICTRAP:
+					powerupObjs[0].gameObject.SetActive(false);
+					powerupObjs[1].gameObject.SetActive(true);
+					powerupObjs[2].gameObject.SetActive(false);
+					this.activePowerup = powerupObjs[1];
+					break;
+				case Powerup.e_PowerupType.SHIELD:
+					powerupObjs[0].gameObject.SetActive(false);
+					powerupObjs[1].gameObject.SetActive(false);
+					powerupObjs[2].gameObject.SetActive(true);
+					this.activePowerup = powerupObjs[2];
+					break;
+			}
+		}
 
-			
+		if (NetworkManager.gameStarted && myView != null && myView.isMine) 
+		{	
 			if (drifting) {
 				if (this.driftFX != null) {
 					this.driftFX.enableEmission = true;
@@ -419,7 +452,7 @@ public class CartController : MonoBehaviour
 	
 	public void PowerupInit()
 	{
-		if(this.activePowerup != null)
+		/*if(this.activePowerup != null)
 		{
 			GameObject go = (GameObject)Instantiate(this.activePowerup.gameObject, this.GetConnectionPoint(this.activePowerup.connectionType).position, this.activePowerup.gameObject.transform.rotation);
 			
@@ -434,7 +467,7 @@ public class CartController : MonoBehaviour
 			go.transform.localPosition = Vector3.zero;
 			go.transform.localRotation = Quaternion.identity;
 			go.transform.localScale = Vector3.one;
-		}
+		}*/
 	}
 	
 	private Transform GetConnectionPoint(Powerup.e_connectionTypes connectionType)

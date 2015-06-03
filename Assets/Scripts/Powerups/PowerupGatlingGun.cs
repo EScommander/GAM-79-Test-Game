@@ -44,7 +44,12 @@ public class PowerupGatlingGun : Powerup
 
 		if(this.energy <= 0.0f)
 		{
-			Destroy(gameObject);
+			if(this.parent != null)
+			{
+				this.parent.activePowerupType = e_PowerupType.NONE;
+				this.parent.activePowerup = null; 
+			}
+			this.gameObject.SetActive(false);
 		}
 	}
 

@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Powerup : MonoBehaviour 
 {
+	public enum e_PowerupType{NONE, GATLINGGUN, ELECTRICTRAP,SHIELD};
+	public e_PowerupType powerupType;
+
 	public string Name = "Powerup";
 	public float[] chancesPerPlace;
 	public GameObject prefab;
@@ -17,6 +20,8 @@ public class Powerup : MonoBehaviour
 	public float energy = 1.0f;
 
 	public bool active = false;
+	
+	public CartController parent;
 
 	public virtual void Use()
 	{
