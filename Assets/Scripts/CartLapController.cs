@@ -14,6 +14,9 @@ public class CartLapController : MonoBehaviour
 
 	public int currentPlace = 1;
 
+	public AudioSource[] possiblePassingVoices;
+	public AudioSource[] possiblePassingLosingVoices;
+
 	private NetworkView myView;
 
 	public void OnFinishRace()
@@ -83,12 +86,30 @@ public class CartLapController : MonoBehaviour
 
 			this.currentPlace = placing;
 
-			//if(this.currentPlace != previousPlace)
-			//{
 			if(UIInGame.SceneInstance.racePostion != null)
 				UIInGame.SceneInstance.racePostion.gameObject.SetActive(true);
 			PlacementScript.UpdatePlace(this.currentPlace);
-			//}
+
+			
+			if(this.currentPlace < previousPlace && this.possiblePassingVoices != null && this.possiblePassingVoices.Length > 0)
+			{
+				int chosenPassingVO = Mathf.FloorToInt(Random.value * this.possiblePassingVoices.Length);
+
+				if(chosenPassingVO < this.possiblePassingVoices.Length && this.possiblePassingVoices[chosenPassingVO] != null)
+				{
+					this.possiblePassingVoices[chosenPassingVO].Play();
+				}
+			}
+
+			if(this.currentPlace > previousPlace && this.possiblePassingLosingVoices != null && this.possiblePassingLosingVoices.Length > 0)
+			{
+				int chosenPassingVO = Mathf.FloorToInt(Random.value * this.possiblePassingLosingVoices.Length);
+				
+				if(chosenPassingVO < this.possiblePassingLosingVoices.Length && this.possiblePassingLosingVoices[chosenPassingVO] != null)
+				{
+					this.possiblePassingLosingVoices[chosenPassingVO].Play();
+				}
+			}
 		}
 	}
 

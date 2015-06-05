@@ -10,6 +10,10 @@ public class CollisionAudioFX : MonoBehaviour
 
 	public bool isColliding = false;
 
+	public float cooldown = 2.0f;
+
+	private float cooldownTimer = 0.0f;
+
 	private void Awake()
 	{
 		BoxCollider collider = this.gameObject.GetComponent<BoxCollider> ();
@@ -43,6 +47,13 @@ public class CollisionAudioFX : MonoBehaviour
 			return;
 		}
 
+		if(this.cooldownTimer > 0)
+		{
+			return;
+		}
+
+		this.cooldownTimer = this.cooldown;
+
 		foreach(AudioSource source in genericCollisionAudio)
 		{
 			if(source != null)
@@ -66,11 +77,19 @@ public class CollisionAudioFX : MonoBehaviour
 		{
 			if(fxObj != null)
 			{
-				fxObj.SetActive(false);
+				fxObj.SetActive(true);
 			}
 		}
 
 		this.isColliding = true;
+	}
+
+	private void Update()
+	{
+		if(this.cooldownTimer > 0.0f)
+		{
+			this.cooldownTimer -= Time.deltaTime;
+		}
 	}
 
 	private void OnTriggerExit(Collider collision)
