@@ -70,11 +70,11 @@ public class CartLapController : MonoBehaviour
 				{
 					placing++;
 				}
-				else if(lapControllers[i].currentLap == this.currentLap && lapControllers[i].currentCheckpoint > this.currentCheckpoint)
+				else if(lapControllers[i].currentLap == this.currentLap && lapControllers[i].currentCheckpoint == 0 && this.currentCheckpoint != 0)
 				{
 					placing++;
 				}
-				else if(lapControllers[i].currentLap == this.currentLap && lapControllers[i].currentCheckpoint == 0 && this.currentCheckpoint != 0)
+				else if(lapControllers[i].currentLap == this.currentLap && (lapControllers[i].currentCheckpoint > this.currentCheckpoint || this.currentCheckpoint == 0))
 				{
 					placing++;
 				}
