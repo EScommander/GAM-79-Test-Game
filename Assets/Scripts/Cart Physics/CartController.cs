@@ -137,60 +137,6 @@ public class CartController : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		if(powerupObjs.Length == 3)
-		{
-			powerupObjs[0].parent = this;
-			powerupObjs[1].parent = this;
-			powerupObjs[2].parent = this;
-
-			switch(this.activePowerupType)
-			{
-				case Powerup.e_PowerupType.NONE:
-					this.activePowerup = null;	
-					firing = false;
-					powerupObjs[0].gameObject.SetActive(false);
-					powerupObjs[1].gameObject.SetActive(false);
-					powerupObjs[2].gameObject.SetActive(false);
-					break;
-				case Powerup.e_PowerupType.GATLINGGUN:
-					powerupObjs[0].gameObject.SetActive(true);
-					powerupObjs[1].gameObject.SetActive(false);
-					powerupObjs[2].gameObject.SetActive(false);
-					this.activePowerup = powerupObjs[0];
-					break;
-				case Powerup.e_PowerupType.ELECTRICTRAP:
-					powerupObjs[0].gameObject.SetActive(false);
-					powerupObjs[1].gameObject.SetActive(true);
-					powerupObjs[2].gameObject.SetActive(false);
-					this.activePowerup = powerupObjs[1];
-					break;
-				case Powerup.e_PowerupType.SHIELD:
-					powerupObjs[0].gameObject.SetActive(false);
-					powerupObjs[1].gameObject.SetActive(false);
-					powerupObjs[2].gameObject.SetActive(true);
-					this.activePowerup = powerupObjs[2];
-					break;
-			}
-
-		}
-
-		if((myView == null || !myView.isMine))
-		{
-			if(this.firing)
-			{
-				if(this.activePowerup != null)
-				{
-					this.activePowerup.Fire(true);
-				}
-			}
-			else if(!this.firing)
-			{
-				if(this.activePowerup != null)
-				{
-					this.activePowerup.Fire(false);
-				}
-			}
-		}
 
 		if (NetworkManager.gameStarted && myView != null && myView.isMine) 
 		{	
@@ -239,36 +185,6 @@ public class CartController : MonoBehaviour
 					sceneCamera.transform.position = Vector3.Lerp (sceneCamera.transform.position, transform.TransformPoint (cameraAttachPos), 0.5f);
 					sceneCamera.transform.rotation = Quaternion.Slerp (sceneCamera.transform.rotation, transform.rotation * cameraRot, 0.5f);
 				}				
-				
-				if (this.activePowerup != null) 
-				{
-					if(Input.GetButtonDown ("Fire1") || (!this.myView.isMine && this.firing))
-					{
-						if(this.myView.isMine)
-						{
-							this.firing = true;
-						}
-						this.activePowerup.Fire(true);
-					}
-					else if(Input.GetButtonUp("Fire1") || (!this.myView.isMine && !this.firing))
-					{
-						if(this.myView.isMine)
-						{
-							this.firing = false;
-						}
-						this.activePowerup.Fire(false);
-					}
-					/*GameObject glaiveObj = (GameObject)Network.Instantiate (this.Glaive, transform.position + (this.transform.forward * 5.5f), this.transform.rotation, 0);
-
-					prevShot = 0.0f;
-
-					SimpleMovement moveScript = glaiveObj.GetComponent<SimpleMovement>();
-
-					if(moveScript != null)
-					{
-						moveScript.movementVector = this.transform.forward;
-					}*/
-				}
 				
 				if (Input.GetButton ("Drift")) 
 				{
@@ -445,6 +361,61 @@ public class CartController : MonoBehaviour
 	
 	void Update()
 	{
+		if(powerupObjs.Length == 3)
+		{
+			powerupObjs[0].parent = this;
+			powerupObjs[1].parent = this;
+			powerupObjs[2].parent = this;
+			
+			switch(this.activePowerupType)
+			{
+			case Powerup.e_PowerupType.NONE:
+				this.activePowerup = null;	
+				firing = false;
+				powerupObjs[0].gameObject.SetActive(false);
+				powerupObjs[1].gameObject.SetActive(false);
+				powerupObjs[2].gameObject.SetActive(false);
+				break;
+			case Powerup.e_PowerupType.GATLINGGUN:
+				powerupObjs[0].gameObject.SetActive(true);
+				powerupObjs[1].gameObject.SetActive(false);
+				powerupObjs[2].gameObject.SetActive(false);
+				this.activePowerup = powerupObjs[0];
+				break;
+			case Powerup.e_PowerupType.ELECTRICTRAP:
+				powerupObjs[0].gameObject.SetActive(false);
+				powerupObjs[1].gameObject.SetActive(true);
+				powerupObjs[2].gameObject.SetActive(false);
+				this.activePowerup = powerupObjs[1];
+				break;
+			case Powerup.e_PowerupType.SHIELD:
+				powerupObjs[0].gameObject.SetActive(false);
+				powerupObjs[1].gameObject.SetActive(false);
+				powerupObjs[2].gameObject.SetActive(true);
+				this.activePowerup = powerupObjs[2];
+				break;
+			}
+			
+		}
+		
+		if((myView == null || !myView.isMine))
+		{
+			if(this.firing)
+			{
+				if(this.activePowerup != null)
+				{
+					this.activePowerup.Fire(true);
+				}
+			}
+			else if(!this.firing)
+			{
+				if(this.activePowerup != null)
+				{
+					this.activePowerup.Fire(false);
+				}
+			}
+		}
+		
 		if(NetworkManager.gameStarted)
 		{
 			animTurnInput = Mathf.Lerp(animTurnInput, Input.GetAxis ("Horizontal"), animInputBlendSpeed);
@@ -453,6 +424,36 @@ public class CartController : MonoBehaviour
 			{
 				UpdateTurnAnim(animTurnInput); 
 				UpdateSpeedAnim(animSpeedInput);
+
+				if (this.activePowerup != null) 
+				{
+					if(Input.GetButtonDown ("Fire1"))
+					{
+						if(this.myView.isMine)
+						{
+							this.firing = true;
+						}
+						this.activePowerup.Fire(true);
+					}
+					else if(Input.GetButtonUp("Fire1"))
+					{
+						if(this.myView.isMine)
+						{
+							this.firing = false;
+						}
+						this.activePowerup.Fire(false);
+					}
+					/*GameObject glaiveObj = (GameObject)Network.Instantiate (this.Glaive, transform.position + (this.transform.forward * 5.5f), this.transform.rotation, 0);
+
+					prevShot = 0.0f;
+
+					SimpleMovement moveScript = glaiveObj.GetComponent<SimpleMovement>();
+
+					if(moveScript != null)
+					{
+						moveScript.movementVector = this.transform.forward;
+					}*/
+				}
 			}
 		}
 	}
