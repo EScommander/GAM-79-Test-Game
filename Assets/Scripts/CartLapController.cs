@@ -101,16 +101,20 @@ public class CartLapController : MonoBehaviour
 				if(currentCheckpoint + 1 >= CartRacer.TrackManager.SceneInstance.checkpoints.Length)
 				{
 					currentCheckpoint = 0;
+				}
+				else if(currentCheckpoint == 0)
+				{
+					currentCheckpoint = 0;
 					currentLap++;
-
-					UIInGame.SceneInstance.lapCount.text = (this.currentLap+1)+"/"+CartLapController.numLaps;
-
+					
+					UIInGame.SceneInstance.lapCount.text = (this.currentLap)+"/"+CartLapController.numLaps;
+					
 					if(currentLap > CartLapController.numLaps)
 					{
 						this.OnFinishRace();
 					}
 				}
-				else
+				else 
 				{
 					currentCheckpoint++;
 				}

@@ -28,7 +28,47 @@ public class PowerupElectricityTrap : Powerup
 			
 			this.energy -= Time.deltaTime;
 
+			zapTimer += Time.deltaTime;
 
+			if(zapTimer >= this.zapInterval)
+			{
+				CartController[] possibleCarts = GameObject.FindObjectsOfType<CartController>();
+
+				List<int> indicies = new List<int>();
+
+				for(int i = 0 ; i < possibleCarts.Length; i++)
+				{
+					if(Vector3.Distance(possibleCarts[i].transform.position, this.transform.position) <= this.range && (this.parent == null || possibleCarts[i] != this.parent))
+					{
+						indicies.Add(i);
+					}
+				}
+
+				if(indicies.Count > 0)
+				{
+					int chosenCart = indicies[Mathf.FloorToInt(indicies.Count * Random.value)];
+
+					if(chosenCart < possibleCarts.Length && possibleCarts[chosenCart] != null)
+					{
+						possibleCarts[chosenCart].Damage();
+						this.StartCoroutine(this.PlayArc(possibleCarts[chosenCart].transform.position));
+						this.zapTimer = 0.0f;
+					}
+				}
+			}
+			
+			if(this.energy <= 0.0f)
+			{
+				if(this.parent != null)
+				{
+					this.parent.activePowerupType = e_PowerupType.NONE;
+					this.parent.activePowerup = null;
+				}
+
+				this.energy = 5.0f;
+				this.gameObject.SetActive(false);
+				//Destroy(gameObject);
+			}	
 		}
 		else
 		{
@@ -36,45 +76,6 @@ public class PowerupElectricityTrap : Powerup
 			{
 				this.FX.SetActive(false);
 			}
-		}
-
-		zapTimer += Time.deltaTime;
-
-		if(zapTimer >= this.zapInterval)
-		{
-			CartController[] possibleCarts = GameObject.FindObjectsOfType<CartController>();
-
-			List<int> indicies = new List<int>();
-
-			for(int i = 0 ; i < possibleCarts.Length; i++)
-			{
-				if(Vector3.Distance(possibleCarts[i].transform.position, this.transform.position) <= this.range && (this.parent == null || possibleCarts[i] != this.parent))
-				{
-					indicies.Add(i);
-				}
-			}
-
-			int chosenCart = indicies[Mathf.FloorToInt(indicies.Count * Random.value)];
-
-			if(chosenCart < possibleCarts.Length)
-			{
-				possibleCarts[chosenCart].Damage();
-				this.StartCoroutine(this.PlayArc(possibleCarts[chosenCart].transform.position));
-				this.zapTimer = 0.0f;
-			}
-		}
-		
-		if(this.energy <= 0.0f)
-		{
-			if(this.parent != null)
-			{
-				this.parent.activePowerupType = e_PowerupType.NONE;
-				this.parent.activePowerup = null;
-			}
-
-			this.energy = 5.0f;
-			this.gameObject.SetActive(false);
-			//Destroy(gameObject);
 		}
 	}
 	
