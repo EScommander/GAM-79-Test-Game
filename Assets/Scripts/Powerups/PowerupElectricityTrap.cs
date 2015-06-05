@@ -13,7 +13,7 @@ public class PowerupElectricityTrap : Powerup
 	public float zapInterval = 0.2f;
 	public float arcLifetime = 0.1f;
 
-	public float range = 6.0f;
+	private float range = 20.0f;
 
 	private float zapTimer = 0.0f;
 

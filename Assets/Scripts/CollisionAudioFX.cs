@@ -6,6 +6,8 @@ public class CollisionAudioFX : MonoBehaviour
 	public AudioSource[] genericCollisionAudio;
 	public AudioSource[] cartCollisionAudio;
 
+	public AudioSource[] genericCollisionVoice;
+
 	public GameObject[] FXObjs;
 
 	public bool isColliding = false;
@@ -59,6 +61,16 @@ public class CollisionAudioFX : MonoBehaviour
 			if(source != null)
 			{
 				source.Play();
+			}
+		}
+
+		if(this.genericCollisionVoice != null && this.genericCollisionVoice.Length > 0)
+		{
+			int chosenVoice = Mathf.FloorToInt(Random.value * this.genericCollisionVoice.Length);
+
+			if(chosenVoice < this.genericCollisionVoice.Length && this.genericCollisionVoice[chosenVoice] != null)
+			{
+				this.genericCollisionVoice[chosenVoice].Play();
 			}
 		}
 
