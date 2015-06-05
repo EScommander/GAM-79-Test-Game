@@ -44,14 +44,20 @@ public class UIManager : MonoBehaviour
 
 	public GameObject serverUIPrefab = null;
 
-	public enum e_UISubscreen {JOIN, CREATE};
-	public e_UISubscreen current = e_UISubscreen.JOIN;
+	public enum e_UISubscreen {JOIN, CREATE, LAYOUT};
+	public e_UISubscreen current = e_UISubscreen.LAYOUT;
 
+	public GameObject layoutDisplay = null;
 	public GameObject lobbyMenu = null;
 	public GameObject joinMenu = null;
 	public GameObject createMenu = null;
 	public GameObject charSelectMenu = null;
 	public GameObject charGrid = null;
+
+	public List<Tag> tags = new List<Tag>();
+	public GameObject tagGrid = null;
+	public GameObject tagPrefab = null;
+
 
 	public GameObject waitingForPlayers = null;
 	public Button serverStartRace = null;
@@ -79,6 +85,7 @@ public class UIManager : MonoBehaviour
 	public AudioSource clickSound = null;
 	public AudioSource incorrectClick = null;
 	public AudioSource confirmSound = null;
+	public AudioSource charSelectSound = null;
 
 	public Toggle bigHeadToggle = null;
 	bool prevHeadMode = false;
@@ -131,6 +138,7 @@ public class UIManager : MonoBehaviour
 		tagObj.transform.GetComponent<Tag>().characterName.text = racers[0].GetComponent<PlayerData>().name;
 		tagObj.transform.GetComponent<Tag>().status.text = "Choosing...";
 
+
 		//populate list of tracks
 		foreach(TrackData track in tracks)
 		{
@@ -147,7 +155,7 @@ public class UIManager : MonoBehaviour
 		eventSystem.sendNavigationEvents = false;
 
 		//always defaults to joining a server
-		SwapUI("Join");
+		SwapUI("Layout");
 	}
 
 	// Update is called once per frame
@@ -156,7 +164,14 @@ public class UIManager : MonoBehaviour
 		switch(NetworkManager.GetInstance().current)
 		{
 		case NetworkManager.e_NetworkMode.SERVER_SELECT:
-			if(current == e_UISubscreen.JOIN)
+			if(current == e_UISubscreen.LAYOUT)
+			{
+				if(Input.GetButtonDown("Submit"))
+				{
+					SwitchToJoin();
+				}
+			}
+			else if(current == e_UISubscreen.JOIN)
 			{
 				if(serverButtons.Count > 0)
 				{ 
@@ -180,7 +195,7 @@ public class UIManager : MonoBehaviour
 
 				if(Input.GetButtonDown("CameraFlip"))
 				{
-					NetworkManager.GetInstance().RefreshHostList();
+					RefreshHostList();
 				}
 
 				if(Input.GetButtonDown("Fire1"))
@@ -347,6 +362,13 @@ public class UIManager : MonoBehaviour
 
 	}
 
+	public void RefreshHostList()
+	{
+		clickSound.Play ();
+		ClearServerButtons();
+		NetworkManager.GetInstance().RefreshHostList();
+	}
+
 	public void ClearServerButtons()
 	{
 		foreach(GameObject go in serverButtons)
@@ -359,6 +381,7 @@ public class UIManager : MonoBehaviour
 
 	public void SwitchToJoin ()
 	{
+		confirmSound.Play ();
 		SwapUI ("Join");
 		buttonSelected = 0;
 		current = e_UISubscreen.JOIN;
@@ -366,6 +389,7 @@ public class UIManager : MonoBehaviour
 
 	public void SwitchToCreate ()
 	{
+		confirmSound.Play ();
 		SwapUI ("Create");
 		selectPlayerNum = false;
 		buttonSelected = 0;
@@ -374,26 +398,36 @@ public class UIManager : MonoBehaviour
 
 	public void CreateServer()
 	{
-		NetworkManager.GetInstance().CreateServer(trackButtons[buttonSelected].GetComponentInChildren<MapSelectUI>().actualSceneName, minPlayers);
+		confirmSound.Play ();
+		NetworkManager.GetInstance().CreateServer(trackButtons[buttonSelected].GetComponentInChildren<MapSelectUI>().actualSceneName, minPlayers-1);
 		buttonSelected = 0;
 		SwapUI("Select");
+		NetworkManager.GetInstance().UpdateCartInfo(racers[0].GetComponent<PlayerData>().name);
 	}
 	
 	public void JoinServer()
 	{
+		confirmSound.Play ();
 		NetworkManager.GetInstance().JoinServer(buttonSelected, serverButtons[buttonSelected].GetComponent<GameServer>().mapName.text);
 		buttonSelected = 0;
 		SwapUI("Select");
+
+		NetworkManager.GetInstance().UpdateCartInfo(racers[0].GetComponent<PlayerData>().name);
 	}
 	
 	public void DecreasePlayers()
 	{
 		if(minPlayers > 1)
+		{
+			clickSound.Play ();
 			minPlayers--;
+		}
+		else incorrectClick.Play();
 	}
 
 	public void IncreasePlayers()
 	{
+		clickSound.Play ();
 		minPlayers++;
 	}
 	
@@ -412,6 +446,56 @@ public class UIManager : MonoBehaviour
 
 		serverButtons.Add (serverUIObject);
 
+	}
+
+	public void CreatePlayerTags(int playerCount)
+	{
+		for(int i = 0; i < playerCount; i++)
+		{
+			GameObject go = Instantiate(tagPrefab);
+			go.transform.parent = tagGrid.transform;
+			go.GetComponent<RectTransform>().localScale = Vector3.one;
+
+			tags.Add (go.GetComponent<Tag>());
+		}
+	}
+
+	public void UpdatePlayerTag(int tagNum, string charName, int playerNum)
+	{
+		//my tag
+		if(tagNum == playerNum)
+		{
+			Debug.Log ("in my spot");
+			return;
+		}
+		Debug.Log ("attempting to change to " + charName);
+
+		if(tagNum > playerNum)
+		{
+			for(int i = 0; i < racers.Length; i++)
+			{				
+				if(racers[i].GetComponent<PlayerData>().name == charName)
+				{
+					PlayerData tempData = racers[i].GetComponent<PlayerData>();
+					tags[tagNum-1].charSprite.sprite = tempData.characterSprite;
+					tags[tagNum-1].characterName.text = tempData.name;
+					break;
+				}
+			}
+		}
+		else
+		{
+			for(int i = 0; i < racers.Length; i++)
+			{				
+				if(racers[i].GetComponent<PlayerData>().name == charName)
+				{
+					PlayerData tempData = racers[i].GetComponent<PlayerData>();
+					tags[tagNum].charSprite.sprite = tempData.characterSprite;
+					tags[tagNum].characterName.text = tempData.name;
+					break;
+				}
+			}
+		}
 	}
 
 	public void SwitchMap(string actualSceneName)
@@ -449,6 +533,8 @@ public class UIManager : MonoBehaviour
 				tagObj.transform.GetComponent<Tag>().charSprite.sprite = racers[i].GetComponent<PlayerData>().characterSprite;
 				tagObj.transform.GetComponent<Tag>().characterName.text = racers[i].GetComponent<PlayerData>().name;
 				tagObj.transform.GetComponent<Tag>().status.text = "Choosing...";
+
+				NetworkManager.GetInstance().UpdateCartInfo(characterButtons[buttonSelected].name);
 			}
 		}
 	}
@@ -457,7 +543,15 @@ public class UIManager : MonoBehaviour
 	{
 		switch(name)
 		{
+		case "Layout":
+			layoutDisplay.SetActive(true);
+			lobbyMenu.SetActive(false);
+			joinMenu.SetActive(true);
+			createMenu.SetActive(false);
+			charSelectMenu.SetActive(false);
+			break;
 		case "Join":
+			layoutDisplay.SetActive(false);
 			lobbyMenu.SetActive(true);
 			joinMenu.SetActive(true);
 			createMenu.SetActive(false);
@@ -536,15 +630,29 @@ public class UIManager : MonoBehaviour
 		if(value == 1)  // go up
 		{
 			if(buttonSelected-1 < 0)
+			{
 				buttonSelected = serverButtons.Count-1;
-			else buttonSelected -= 1;
+				incorrectClick.Play();
+			}
+			else 
+			{
+				buttonSelected -= 1;
+				clickSound.Play();
+			}
 
 		}
 		else // go down
 		{
 			if(buttonSelected+1 >= serverButtons.Count)
+			{
 				buttonSelected = 0;
-			else buttonSelected += 1;
+				incorrectClick.Play();
+			}
+			else 
+			{
+				buttonSelected += 1;
+				clickSound.Play();
+			}
 		}
 
 		
@@ -630,6 +738,17 @@ public class UIManager : MonoBehaviour
 
 	public void StartRace()
 	{
+		AudioClip[] tempSelectSounds = cart.GetComponent<PlayerData>().charSelectSounds;
+
+		if(tempSelectSounds.Length > 0)
+		{
+			int randomSound = Random.Range(0, tempSelectSounds.Length);
+
+			charSelectSound.clip = tempSelectSounds[randomSound];
+		}
+
+		charSelectSound.Play ();
+
 		charGrid.SetActive(false);
 		dPadEnabled = false;
 		waitingForPlayers.SetActive(true);

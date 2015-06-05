@@ -113,6 +113,7 @@ public class NetworkManager : MonoBehaviour
 
 	public void LoadRace()
 	{
+		MasterServer.UnregisterHost();
 		LoadFade.SceneInstance.FadeOut();
 		StartCoroutine(LoadRaceAfterFade());
 	}
@@ -128,7 +129,8 @@ public class NetworkManager : MonoBehaviour
 		// We need to stop receiving because first the level must be loaded.
 		// Once the level is loaded, RPC's and other state update attached to objects in the level are allowed to fire
 		Network.isMessageQueueRunning = false;
-		
+
+
 		DontDestroyOnLoad (gameObject);
 		Application.LoadLevel(levelToLoad);
 		StartCoroutine(WaitForScene(1f));
@@ -170,6 +172,7 @@ public class NetworkManager : MonoBehaviour
 		this.mapInfo = levelToLoad;
 		StartServer();
 		current = e_NetworkMode.CHARACTER_SELECT;
+		UIManager.GetInstance().CreatePlayerTags(maxPlayers);
 	}
 	
 	public void JoinServer(int i, string levelToLoad)
@@ -178,6 +181,7 @@ public class NetworkManager : MonoBehaviour
 		Network.Connect(hostList[i]);
 		maxPlayers = hostList[i].playerLimit;
 		current = e_NetworkMode.CHARACTER_SELECT;
+		UIManager.GetInstance().CreatePlayerTags(maxPlayers);
 	}
 
 	// Update is called once per frame
@@ -201,7 +205,7 @@ public class NetworkManager : MonoBehaviour
 		case e_NetworkMode.WAIT_RACERS:
 			if(!countDownStarted && Network.isServer)
 			{ 
-				if(clientsReady >= maxPlayers || overrideRaceStart)
+				if(clientsReady >= (maxPlayers+1) || overrideRaceStart)
 				{
 					maxPlayers = clients.Count;
 					clientsReady = 0;
@@ -321,6 +325,9 @@ public class NetworkManager : MonoBehaviour
 		clients.Add (Network.player);
 		connected = true;
 
+		myRacePos = Network.connections.Length;
+		Debug.Log ("my race pos: " + myRacePos);
+
 		Debug.Log ("Server Initialized");
 	}
 
@@ -338,9 +345,9 @@ public class NetworkManager : MonoBehaviour
 
 		Debug.Log ("Joined Server!");
 		connected = true;
+		myRacePos = Network.connections.Length;
+		Debug.Log ("my race pos: " + myRacePos);
 		JoinClientListOnServer ();
-
-
 	}
 
 	IEnumerator ServerCartInstantiate()
@@ -407,7 +414,6 @@ public class NetworkManager : MonoBehaviour
 
 	public void RefreshHostList()
 	{
-		Debug.Log ("yup");
 		MasterServer.RequestHostList (typeName);
 
 		serversAdded = false;
@@ -419,6 +425,19 @@ public class NetworkManager : MonoBehaviour
 		{
 			hostList = MasterServer.PollHostList();
 		}
+	}
+
+	[RPC]
+	public void UpdateCartInfo(string charName)
+	{
+		Debug.Log ("got here " + charName);
+		GetComponent<NetworkView>().RPC("ReceiveUpdatedCartInfo", RPCMode.OthersBuffered, myRacePos, charName);
+	}
+
+	[RPC] 
+	void ReceiveUpdatedCartInfo(int tagNum, string charName)
+	{
+		UIManager.GetInstance().UpdatePlayerTag(tagNum, charName, myRacePos);
 	}
 
 	[RPC] void AddToReadyCount()

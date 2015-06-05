@@ -146,7 +146,8 @@ public class CartController : MonoBehaviour
 			switch(this.activePowerupType)
 			{
 				case Powerup.e_PowerupType.NONE:
-					this.activePowerup = null;					
+					this.activePowerup = null;	
+					firing = false;
 					powerupObjs[0].gameObject.SetActive(false);
 					powerupObjs[1].gameObject.SetActive(false);
 					powerupObjs[2].gameObject.SetActive(false);
@@ -170,9 +171,7 @@ public class CartController : MonoBehaviour
 					this.activePowerup = powerupObjs[2];
 					break;
 			}
-			if(activePowerupType != Powerup.e_PowerupType.NONE)
-				UIInGame.SceneInstance.SetPowerUpIcon(activePowerupType.ToString());
-			else UIInGame.SceneInstance.PowerUpUsed();
+
 		}
 
 		if((myView == null || !myView.isMine))
@@ -195,6 +194,10 @@ public class CartController : MonoBehaviour
 
 		if (NetworkManager.gameStarted && myView != null && myView.isMine) 
 		{	
+			if(activePowerupType != Powerup.e_PowerupType.NONE)
+				UIInGame.SceneInstance.SetPowerUpIcon(activePowerupType.ToString());
+			else UIInGame.SceneInstance.PowerUpUsed();
+
 			if (drifting) {
 				if (this.driftFX != null) {
 					this.driftFX.enableEmission = true;
