@@ -88,7 +88,7 @@ public class NetworkManager : MonoBehaviour
 
 	public void setRacer(GameObject cart)
 	{
-		bigHeadModeEnabled = UIManager.GetInstance ().bigHeadToggle.isOn;
+		bigHeadModeEnabled = UIManager.GetInstance ().bigHeadOn;
 		selectedPrefab = cart;
 
 		AddToReadyCount();

@@ -53,6 +53,7 @@ public class UIManager : MonoBehaviour
 	public GameObject createMenu = null;
 	public GameObject charSelectMenu = null;
 	public GameObject charGrid = null;
+	public GameObject credit = null;
 
 	public List<Tag> tags = new List<Tag>();
 	public GameObject tagGrid = null;
@@ -87,8 +88,10 @@ public class UIManager : MonoBehaviour
 	public AudioSource confirmSound = null;
 	public AudioSource charSelectSound = null;
 
-	public Toggle bigHeadToggle = null;
+	public bool bigHeadOn = false;
 	bool prevHeadMode = false;
+
+	bool showCredits = false;
 
 
 	public static UIManager GetInstance()
@@ -289,11 +292,11 @@ public class UIManager : MonoBehaviour
 			}
 			break;
 		case NetworkManager.e_NetworkMode.CHARACTER_SELECT:
-			if(bigHeadToggle.isOn != prevHeadMode)
+			if(bigHeadOn != prevHeadMode)
 			{
-				prevHeadMode = bigHeadToggle.isOn;
+				prevHeadMode = bigHeadOn;
 
-				ToggleBigHeadMode.BigHeadMode(bigHeadToggle.isOn);
+				ToggleBigHeadMode.BigHeadMode(bigHeadOn);
 			}
 
 			// keyboard and joystick inputs
@@ -321,15 +324,41 @@ public class UIManager : MonoBehaviour
 
 			}
 
+			if(Input.GetButtonDown ("Back"))
+			{
+				ToggleBigHead();
+			}
+
+			if(Input.GetButtonDown("ResetCart"))
+			{
+				if(!showCredits)
+				{
+					showCredits = true;
+					dPadEnabled = false;
+					SwapUI("Credits");
+				}
+				else
+				{
+					showCredits = true;
+					dPadEnabled = false;
+					SwapUI("Select");
+				}
+			}
+
 			//zoom
 			if(Input.GetButtonDown ("Zoom"))
 			{
 				zoomed = !zoomed;
 			}
-			
+
 			if(Input.GetButtonDown("Submit"))
 			{
-				StartRace();
+				if(!showCredits)
+					StartRace();
+				else
+				{
+					BackToSelect();
+				}
 			}
 
 			characterButtons[buttonSelected].GetComponent<Button>().Select();
@@ -360,6 +389,27 @@ public class UIManager : MonoBehaviour
 		}
 	
 
+	}
+
+	public void ToggleBigHead()
+	{
+		bigHeadOn = !bigHeadOn;
+		Debug.Log (bigHeadOn);
+		//ToggleBigHeadMode.BigHeadMode(bigHeadOn);
+	}
+
+	public void ShowCredits()
+	{
+		showCredits = true;
+		dPadEnabled = false;
+		SwapUI("Credits");
+	}
+
+	public void BackToSelect()
+	{
+		showCredits = false;
+		dPadEnabled = false;
+		SwapUI("Select");
 	}
 
 	public void RefreshHostList()
@@ -520,7 +570,7 @@ public class UIManager : MonoBehaviour
 		clickSound.Play ();
 		for(int i = 0; i < racers.Length; i++)
 		{
-			ToggleBigHeadMode.BigHeadMode(bigHeadToggle.isOn);
+			ToggleBigHeadMode.BigHeadMode(bigHeadOn);
 
 			if(racers[i].name == name)
 			{
@@ -549,6 +599,7 @@ public class UIManager : MonoBehaviour
 			joinMenu.SetActive(true);
 			createMenu.SetActive(false);
 			charSelectMenu.SetActive(false);
+			credit.SetActive(false);
 			break;
 		case "Join":
 			layoutDisplay.SetActive(false);
@@ -556,18 +607,28 @@ public class UIManager : MonoBehaviour
 			joinMenu.SetActive(true);
 			createMenu.SetActive(false);
 			charSelectMenu.SetActive(false);
+			credit.SetActive(false);
 			break;
 		case "Create":
 			lobbyMenu.SetActive(true);
 			joinMenu.SetActive(false);
 			createMenu.SetActive(true);
 			charSelectMenu.SetActive(false);
+			credit.SetActive(false);
 			break;
 		case "Select":
 			lobbyMenu.SetActive(false);
 			joinMenu.SetActive(false);
 			createMenu.SetActive(false);
 			charSelectMenu.SetActive(true);
+			credit.SetActive(false);
+			break;
+		case "Credits":
+			lobbyMenu.SetActive(false);
+			joinMenu.SetActive(false);
+			createMenu.SetActive(false);
+			charSelectMenu.SetActive(false);
+			credit.SetActive(true);
 			break;
 		}
 	}
