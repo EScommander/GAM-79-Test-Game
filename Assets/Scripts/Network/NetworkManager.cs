@@ -43,7 +43,7 @@ public class NetworkManager : MonoBehaviour
 	public AudioClip clip;
 //	private CharacterUI charUI;
 
-	public Text countDownText = null;
+	//public Text countDownText = null;
 
 	public enum e_NetworkMode {SERVER_SELECT, CHARACTER_SELECT, WAIT_RACERS, RACE};
 	public e_NetworkMode current = e_NetworkMode.CHARACTER_SELECT;	
@@ -214,10 +214,6 @@ public class NetworkManager : MonoBehaviour
 
 		case e_NetworkMode.RACE:
 			GameObject countdownObj = GameObject.FindGameObjectWithTag("countdown");
-			if(countdownObj != null)
-			{
-				countDownText = countdownObj.GetComponent<Text>();
-			}
 
 			if(isOnline)
 			{
@@ -235,9 +231,10 @@ public class NetworkManager : MonoBehaviour
 						ToggleBigHeadMode.BigHeadMode(true);
 
 					int countDown = (int)(raceStart - Network.time) + 1;
-					if(countDownText != null)
+					if(UIInGame.SceneInstance.countdownText != null)
 					{
-						countDownText.text = countDown.ToString();
+						UIInGame.SceneInstance.countdownText.gameObject.SetActive(true);
+						UIInGame.SceneInstance.countdownText.text = countDown.ToString();
 					}
 
 				}
@@ -247,17 +244,17 @@ public class NetworkManager : MonoBehaviour
 				}
 				else if(gameStarted && raceStart + 2 > Network.time)
 				{
-					if(countDownText != null)
+					if(UIInGame.SceneInstance.countdownText != null)
 					{
 
-						countDownText.text = "GO!";
+						UIInGame.SceneInstance.countdownText.text = "GO!";
 					}
 				}
 				else if(gameStarted && raceStart + 2 < Network.time)
 				{
-					if(countDownText != null)
+					if(UIInGame.SceneInstance.countdownText != null)
 					{
-						countDownText.gameObject.SetActive(false);
+						UIInGame.SceneInstance.countdownText.gameObject.SetActive(false);
 					}
 				}
 			}

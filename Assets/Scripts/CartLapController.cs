@@ -21,6 +21,15 @@ public class CartLapController : MonoBehaviour
 		this.finishedRace = true;
 	}
 
+	void Start()
+	{
+		if(UIInGame.SceneInstance.lapCount != null)
+		{
+			UIInGame.SceneInstance.lapCount.text = (this.currentLap+1)+"/"+CartLapController.numLaps;
+			UIInGame.SceneInstance.lapCount.gameObject.SetActive(true);
+		}
+	}
+
 	private void Update()
 	{
 		if(myView == null)
@@ -76,7 +85,9 @@ public class CartLapController : MonoBehaviour
 
 			//if(this.currentPlace != previousPlace)
 			//{
-				PlacementScript.UpdatePlace(this.currentPlace);
+			if(UIInGame.SceneInstance.racePostion != null)
+				UIInGame.SceneInstance.racePostion.gameObject.SetActive(true);
+			PlacementScript.UpdatePlace(this.currentPlace);
 			//}
 		}
 	}
@@ -91,6 +102,8 @@ public class CartLapController : MonoBehaviour
 				{
 					currentCheckpoint = 0;
 					currentLap++;
+
+					UIInGame.SceneInstance.lapCount.text = (this.currentLap+1)+"/"+CartLapController.numLaps;
 
 					if(currentLap > CartLapController.numLaps)
 					{

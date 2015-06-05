@@ -146,7 +146,7 @@ public class CartController : MonoBehaviour
 			switch(this.activePowerupType)
 			{
 				case Powerup.e_PowerupType.NONE:
-					this.activePowerup = null;
+					this.activePowerup = null;					
 					powerupObjs[0].gameObject.SetActive(false);
 					powerupObjs[1].gameObject.SetActive(false);
 					powerupObjs[2].gameObject.SetActive(false);
@@ -170,6 +170,9 @@ public class CartController : MonoBehaviour
 					this.activePowerup = powerupObjs[2];
 					break;
 			}
+			if(activePowerupType != Powerup.e_PowerupType.NONE)
+				UIInGame.SceneInstance.SetPowerUpIcon(activePowerupType.ToString());
+			else UIInGame.SceneInstance.PowerUpUsed();
 		}
 
 		if((myView == null || !myView.isMine))
