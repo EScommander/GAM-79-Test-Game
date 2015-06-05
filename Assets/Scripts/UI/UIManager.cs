@@ -51,6 +51,10 @@ public class UIManager : MonoBehaviour
 	public GameObject joinMenu = null;
 	public GameObject createMenu = null;
 	public GameObject charSelectMenu = null;
+	public GameObject charGrid = null;
+
+	public GameObject waitingForPlayers = null;
+	public Button serverStartRace = null;
 
 	public GameObject serverList = null;
 	public GameObject levelSelectList = null;
@@ -96,6 +100,8 @@ public class UIManager : MonoBehaviour
 	// Use this for initialization
 	void Awake () 
 	{
+		waitingForPlayers.SetActive(false);
+
 		eventSystem = EventSystem.current;
 		_instance = this;
 
@@ -308,7 +314,6 @@ public class UIManager : MonoBehaviour
 			
 			if(Input.GetButtonDown("Submit"))
 			{
-				charSelectMenu.SetActive(false);
 				StartRace();
 			}
 
@@ -330,7 +335,9 @@ public class UIManager : MonoBehaviour
 
 			break;
 
-			case NetworkManager.e_NetworkMode.MAP_SELECT:
+			case NetworkManager.e_NetworkMode.WAIT_RACERS:
+				if(cart != null)
+					cart.transform.Rotate (Vector3.up * spinSpeed * Time.deltaTime);
 				break;
 
 			case NetworkManager.e_NetworkMode.RACE:
@@ -623,6 +630,14 @@ public class UIManager : MonoBehaviour
 
 	public void StartRace()
 	{
+		charGrid.SetActive(false);
+		dPadEnabled = false;
+		waitingForPlayers.SetActive(true);
+
+		if(Network.isServer)
+			serverStartRace.gameObject.SetActive(true);
+		else serverStartRace.gameObject.SetActive(false);
+
 		SelectCharacter ();
 	}
 }

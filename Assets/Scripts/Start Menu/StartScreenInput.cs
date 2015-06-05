@@ -14,6 +14,7 @@ public class StartScreenInput : MonoBehaviour
 	void Start () 
 	{
 		StartCoroutine(FadeAlpha(fadeDur)); 
+		LoadFade blurp = LoadFade.SceneInstance;
 	}
 	
 	// Update is called once per frame
@@ -21,11 +22,21 @@ public class StartScreenInput : MonoBehaviour
 	{
 		if(Input.anyKey)
 		{
-			//DontDestroyOnLoad(jukebox);
-			Application.LoadLevel("Menu_CharacterSelect");
+			StopAllCoroutines();
+			start.gameObject.SetActive(false);
+
+			StartCoroutine(DelayedLoad());
+
 		}
+	}
 
+	public IEnumerator DelayedLoad()
+	{
+		LoadFade.SceneInstance.FadeOut();
 
+		yield return new WaitForSeconds(LoadFade.SceneInstance.fadeDur);
+
+		Application.LoadLevel("Menu_CharacterSelect");
 	}
 
 	public IEnumerator FadeAlpha(float delay)
