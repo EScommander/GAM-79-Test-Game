@@ -95,7 +95,7 @@ public class CartLapController : MonoBehaviour
 			{
 				int chosenPassingVO = Mathf.FloorToInt(Random.value * this.possiblePassingVoices.Length);
 
-				if(chosenPassingVO < this.possiblePassingVoices.Length && this.possiblePassingVoices[chosenPassingVO] != null)
+				if(this.possiblePassingVoices.Length > 0 && chosenPassingVO < this.possiblePassingVoices.Length && this.possiblePassingVoices[chosenPassingVO] != null)
 				{
 					this.possiblePassingVoices[chosenPassingVO].Play();
 				}
@@ -105,7 +105,7 @@ public class CartLapController : MonoBehaviour
 			{
 				int chosenPassingVO = Mathf.FloorToInt(Random.value * this.possiblePassingLosingVoices.Length);
 				
-				if(chosenPassingVO < this.possiblePassingLosingVoices.Length && this.possiblePassingLosingVoices[chosenPassingVO] != null)
+				if(this.possiblePassingLosingVoices.Length > 0 && chosenPassingVO < this.possiblePassingLosingVoices.Length && this.possiblePassingLosingVoices[chosenPassingVO] != null)
 				{
 					this.possiblePassingLosingVoices[chosenPassingVO].Play();
 				}

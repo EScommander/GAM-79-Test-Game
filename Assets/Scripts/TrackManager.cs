@@ -32,7 +32,7 @@ namespace CartRacer
 		{
 			TrackManager.SceneInstance = this;
 
-			if(checkpoints != null && checkpoints.Length > 0)
+			/*if(checkpoints != null && checkpoints.Length > 0)
 			{
 				for(int i = 0 ; i < checkpoints.Length; i++)
 				{
@@ -41,7 +41,7 @@ namespace CartRacer
 						checkpoints[i].checkpointOrderIndex = i;
 					}
 				}
-			}
+			}*/
 		}
 
 		public GameObject[] trackNodes;
