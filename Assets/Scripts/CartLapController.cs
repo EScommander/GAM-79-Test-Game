@@ -34,7 +34,7 @@ public class CartLapController : MonoBehaviour
 			{
 				this.distanceToNext = Vector3.Distance(this.transform.position, CartRacer.TrackManager.SceneInstance.checkpoints[currentCheckpoint].transform.position);
 			}
-			else
+			else if(CartRacer.TrackManager.SceneInstance.checkpoints.Length > 0)
 			{
 				this.distanceToNext = Vector3.Distance(this.transform.position, CartRacer.TrackManager.SceneInstance.checkpoints[0].transform.position);
 			}
@@ -49,7 +49,20 @@ public class CartLapController : MonoBehaviour
 
 			for(int i = 0; i < lapControllers.Length; i++)
 			{
-				if(lapControllers[i].currentLap > this.currentLap || lapControllers[i].currentCheckpoint > this.currentCheckpoint || lapControllers[i].currentCheckpoint == 0)
+				if(lapControllers[i] == this)
+				{
+					continue;
+				}
+
+				if(lapControllers[i].currentLap > this.currentLap)
+				{
+					placing++;
+				}
+				else if(lapControllers[i].currentLap == this.currentLap && lapControllers[i].currentCheckpoint > this.currentCheckpoint)
+				{
+					placing++;
+				}
+				else if(lapControllers[i].currentLap == this.currentLap && lapControllers[i].currentCheckpoint == 0 && this.currentCheckpoint != 0)
 				{
 					placing++;
 				}
@@ -61,10 +74,10 @@ public class CartLapController : MonoBehaviour
 
 			this.currentPlace = placing;
 
-			if(this.currentPlace != previousPlace)
-			{
+			//if(this.currentPlace != previousPlace)
+			//{
 				PlacementScript.UpdatePlace(this.currentPlace);
-			}
+			//}
 		}
 	}
 

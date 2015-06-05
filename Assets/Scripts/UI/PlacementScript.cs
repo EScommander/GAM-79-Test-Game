@@ -10,6 +10,11 @@ public class PlacementScript : MonoBehaviour
 
 	public static void UpdatePlace(int place)
 	{
+		if(PlacementScript._instance == null)
+		{
+			PlacementScript._instance = GameObject.FindObjectOfType<PlacementScript>();
+		}
+
 		if(PlacementScript._instance != null)
 		{
 			PlacementScript._instance.UpdatePlaceInstance(place);
@@ -31,6 +36,11 @@ public class PlacementScript : MonoBehaviour
 
 	public void UpdatePlaceInstance(int place)
 	{
+		if(PlacementScript._instance == null)
+		{
+			PlacementScript._instance = this;
+		}
+
 		if (this.text == null) 
 		{
 			this.text = this.gameObject.GetComponent<Text>();

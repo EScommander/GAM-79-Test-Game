@@ -42,22 +42,24 @@ public class PowerupElectricityTrap : Powerup
 
 		if(zapTimer >= this.zapInterval)
 		{
-			List<CartController> possibleCarts = new List<CartController>();
+			CartController[] possibleCarts = GameObject.FindObjectsOfType<CartController>();
 
-			for(int i = 0 ; i < GameManager.SceneInstance.activeCarts.Count; i++)
+			List<int> indicies = new List<int>();
+
+			for(int i = 0 ; i < possibleCarts.Length; i++)
 			{
-				if(Vector3.Distance(GameManager.SceneInstance.activeCarts[i].transform.position, this.transform.position) <= this.range)
+				if(Vector3.Distance(possibleCarts[i].transform.position, this.transform.position) <= this.range && (this.parent == null || possibleCarts[i] != this.parent))
 				{
-					possibleCarts.Add(GameManager.SceneInstance.activeCarts[i]);
+					indicies.Add(i);
 				}
 			}
 
-			int chosenCart = Mathf.FloorToInt(possibleCarts.Count * Random.value);
+			int chosenCart = indicies[Mathf.FloorToInt(indicies.Count * Random.value)];
 
-			if(possibleCarts.Count > 0)
+			if(chosenCart < possibleCarts.Length)
 			{
-				GameManager.SceneInstance.activeCarts[chosenCart].Damage();
-				this.StartCoroutine(this.PlayArc(GameManager.SceneInstance.activeCarts[chosenCart].transform.position));
+				possibleCarts[chosenCart].Damage();
+				this.StartCoroutine(this.PlayArc(possibleCarts[chosenCart].transform.position));
 				this.zapTimer = 0.0f;
 			}
 		}

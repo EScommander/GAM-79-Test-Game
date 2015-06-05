@@ -93,7 +93,11 @@ public class CartController : MonoBehaviour
 	{	
 		if(this.lapController == null)
 		{
-			this.lapController = this.gameObject.AddComponent<CartLapController>();
+			this.lapController = this.gameObject.GetComponent<CartLapController>();
+			if(this.lapController == null)
+			{
+				this.lapController = this.gameObject.AddComponent<CartLapController>();
+			}
 		}
 	}
 
@@ -165,6 +169,24 @@ public class CartController : MonoBehaviour
 					powerupObjs[2].gameObject.SetActive(true);
 					this.activePowerup = powerupObjs[2];
 					break;
+			}
+		}
+
+		if((myView == null || !myView.isMine))
+		{
+			if(this.firing)
+			{
+				if(this.activePowerup != null)
+				{
+					this.activePowerup.Fire(true);
+				}
+			}
+			else if(!this.firing)
+			{
+				if(this.activePowerup != null)
+				{
+					this.activePowerup.Fire(false);
+				}
 			}
 		}
 

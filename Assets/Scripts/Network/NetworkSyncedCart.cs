@@ -82,7 +82,7 @@ public class NetworkSyncedCart : MonoBehaviour
 			float turnInput = 0.0f;
 			Vector3 velocity = Vector3.zero;
 			Vector3 angularVelocity = Vector3.zero;
-			bool firing = false;
+			bool firing = true;
 			int activePowerupType = 0;
 			int currentLap = 0;
 			int currentCheckpoint = 0;
