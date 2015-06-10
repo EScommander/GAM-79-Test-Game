@@ -403,7 +403,7 @@ public class NetworkManager : MonoBehaviour
 		}
 		
 		Debug.Log ("my pos is:" + pos);
-		int row = (pos-1)/4;
+		int row = (int)(pos/4);
 		
 		GameObject cartObject= (GameObject)Network.Instantiate(selectedPrefab, startPos.transform.position + 3f * startPos.transform.right * (pos%4) - 
 		                                                       startPos.transform.forward * selectedPrefab.transform.lossyScale.z * 5f * row, 
