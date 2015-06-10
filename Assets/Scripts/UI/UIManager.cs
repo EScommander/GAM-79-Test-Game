@@ -727,7 +727,7 @@ public class UIManager : MonoBehaviour
 		{
 			if(value == 1)  // go right in button list
 			{
-				if(buttonSelected + 1 < racers.Length-1)
+				if(buttonSelected + 1 < racers.Length)
 				{
 					buttonSelected = (buttonSelected + 1) % 3 + charsPerRow*(currentRow-1);//(buttonSelected + (charsPerRow * currentRow) + 1) % (charsPerRow * currentRow);
 					SwitchKart(characterButtons[buttonSelected].name);
