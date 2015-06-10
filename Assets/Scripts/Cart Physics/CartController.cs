@@ -3,8 +3,11 @@ using System.Collections;
 
 public class CartController : MonoBehaviour 
 {
-
 	public static float cartGravity = 200.0f;
+
+	public Material charMat = null;
+	private MapIconPosition icon = null;
+	private bool iconScaleSet = false;
 	
 	public float handling = 10.0f;
 	public float acceleration = 30.0f;
@@ -87,7 +90,7 @@ public class CartController : MonoBehaviour
 	public Powerup[] powerupObjs;
 
 	private float animTurnInput = 0.0f;
-	private float animSpeedInput = 0.0f;	
+	private float animSpeedInput = 0.0f;
 
 	private void Start()
 	{	
@@ -99,6 +102,14 @@ public class CartController : MonoBehaviour
 				this.lapController = this.gameObject.AddComponent<CartLapController>();
 			}
 		}
+
+		GameObject go = (GameObject)Instantiate(Resources.Load ("CharMapIcon"));
+		icon = go.GetComponent<MapIconPosition>();
+		icon.objectToFollow = gameObject;		
+
+		if(charMat != null)
+			icon.GetComponent<Renderer>().material = charMat;
+		else icon.gameObject.SetActive(false);
 	}
 
 	public void ActivateCart()
@@ -119,7 +130,6 @@ public class CartController : MonoBehaviour
 		
 		sceneCamera.transform.position = Vector3.Lerp (sceneCamera.transform.position, transform.TransformPoint (cameraAttachPos), 0.25f);
 		sceneCamera.transform.rotation = Quaternion.Slerp (sceneCamera.transform.rotation, transform.rotation * cameraRot, 0.25f);
-
 	}
 	
 	public IEnumerator ResetCart(float delay)
@@ -356,6 +366,11 @@ public class CartController : MonoBehaviour
 				
 				this.Speedometer = GetComponent<Rigidbody> ().velocity.magnitude;
 			}
+		}
+		else if(NetworkManager.gameStarted && myView == null && !iconScaleSet) //another player
+		{
+			icon.SetIconScale(0.7f);
+			iconScaleSet = true;
 		}
 	}
 	
