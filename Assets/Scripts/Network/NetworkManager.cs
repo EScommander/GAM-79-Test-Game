@@ -181,7 +181,7 @@ public class NetworkManager : MonoBehaviour
 		Network.Connect(hostList[i]);
 		maxPlayers = hostList[i].playerLimit;
 		current = e_NetworkMode.CHARACTER_SELECT;
-		UIManager.GetInstance().CreatePlayerTags(maxPlayers);
+		UIManager.GetInstance().CreatePlayerTags(maxPlayers-1);
 	}
 
 	// Update is called once per frame
@@ -325,7 +325,8 @@ public class NetworkManager : MonoBehaviour
 		clients.Add (Network.player);
 		connected = true;
 
-		myRacePos = Network.connections.Length;
+		myRacePos = 0;
+
 		Debug.Log ("my race pos: " + myRacePos);
 
 		Debug.Log ("Server Initialized");
@@ -345,7 +346,7 @@ public class NetworkManager : MonoBehaviour
 
 		Debug.Log ("Joined Server!");
 		connected = true;
-		myRacePos = Network.connections.Length;
+		int.TryParse(Network.player.ToString(), out myRacePos);
 		Debug.Log ("my race pos: " + myRacePos);
 		JoinClientListOnServer ();
 	}
